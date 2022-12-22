@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PanelController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">panel_management_rest_api_pm_dec_2022</a> &gt; <a href="index.source.html" class="el_package">com.zensar.pm.panel.controller</a> &gt; <span class="el_source">PanelController.java</span></div><h1>PanelController.java</h1><pre class="source lang-java linenums">package com.zensar.pm.panel.controller;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.zensar.pm.panel.dto.PanelListDTO;
+import com.zensar.pm.panel.entity.PanelList;
+import com.zensar.pm.panel.exception.InvalidDataException;
+import com.zensar.pm.panel.export.FileExporter;
+import com.zensar.pm.panel.service.ServiceInterface;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import net.bytebuddy.implementation.bytecode.Throw;
+
+
+
+@RestController
+@CrossOrigin(origins = &quot;*&quot;)
+@RequestMapping(&quot;/pm/panel-management&quot;)
+@OpenAPIDefinition(info = @Info(description = &quot;&lt;h2&gt;Master Data Management&lt;/h2&gt;&quot;, version = &quot;1.0.0&quot;))
+<span class="fc" id="L37">public class PanelController {</span>
+
+
+	@Autowired
+	private ServiceInterface PannelListt;
+	
+	@Autowired
+	private FileExporter exporter;
+		
+	    @GetMapping(value=&quot;/export/filter&quot;, produces=MediaType.APPLICATION_JSON_VALUE)
+	    public void exportByFilter
+	           (HttpServletResponse response,
+	            @RequestParam(required = false)String Panel_Id, 
+	            @RequestParam(required = false)String Role,
+	            @RequestParam(required = false)String Panel_Email, 
+	            @RequestParam(required = false)@DateTimeFormat(pattern=&quot;dd/MM/yyyy&quot;) LocalDate From_Date,
+	            @RequestParam(required = false)@DateTimeFormat(pattern=&quot;dd/MM/yyyy&quot;) LocalDate To_Date,
+	            @RequestParam(required = false)String Interview_Type, 
+	            @RequestParam(required = false)String Panel_Name,
+	            @RequestParam(required = false)String Availability_Status ) throws IOException 
+	  {
+<span class="fc" id="L58">	        List&lt;PanelListDTO&gt; p =PannelListt.filter(Panel_Id,Role,Panel_Email,From_Date,To_Date,Interview_Type,Panel_Name,Availability_Status);</span>
+<span class="fc" id="L59">	        exporter.exportToCSV(p,response,&quot;Panel_List&quot;);</span>
+	   
+<span class="fc" id="L61">	  }	  </span>
+	  
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

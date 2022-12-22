@@ -12,5 +12,9 @@ spring:
       properties:
          hibernate:
             dialect: org.hibernate.dialect.MySQL8Dialect
+      show-sql: true
    application:
      name: panel-management-service
+springdoc:
+    swagger-ui:
+      path: /myswaggerui

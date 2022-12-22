@@ -1,0 +1,11 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.export,FileExporter,0,136,0,2,0,17,0,3,0,2
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.dto,PanelListDTO,39,57,0,0,20,20,10,10,10,10
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.config,Config,0,7,0,0,0,2,0,2,0,2
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.exception,WrongDateException,7,6,0,0,3,3,2,1,2,1
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.exception,GlobalExceptionHandler,7,14,0,0,1,3,1,2,1,2
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.exception,InvalidDataException,4,10,0,0,1,4,1,2,1,2
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.entity,PanelList,113,3,0,0,39,2,20,1,20,1
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel,PanelManagementRestApiPmDec2022Application,5,7,0,0,2,2,1,2,1,2
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.service,ServiceImpl,239,3,50,0,42,2,35,1,10,1
+panel_management_rest_api_pm_dec_2022,com.zensar.pm.panel.controller,PanelController,0,22,0,0,0,4,0,2,0,2

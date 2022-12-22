@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">panel_management_rest_api_pm_dec_2022</a> &gt; <a href="index.source.html" class="el_package">com.zensar.pm.panel.service</a> &gt; <span class="el_source">ServiceImpl.java</span></div><h1>ServiceImpl.java</h1><pre class="source lang-java linenums">package com.zensar.pm.panel.service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+//import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Root;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.zensar.pm.panel.dto.PanelListDTO;
+import com.zensar.pm.panel.entity.PanelList;
+import com.zensar.pm.panel.exception.InvalidDataException;
+import com.zensar.pm.panel.exception.WrongDateException;
+import com.zensar.pm.panel.repository.Repos;
+
+
+
+
+@Service
+public class ServiceImpl implements ServiceInterface {
+
+	
+	Repos panelrepo;
+	
+	@Autowired 
+	ModelMapper modelmapper;
+	
+	@PersistenceContext
+    private EntityManager entityManager;
+	 
+	
+	public ServiceImpl(Repos employeeRepo, ModelMapper modelmapper) {
+<span class="nc" id="L43">		super();</span>
+<span class="nc" id="L44">		panelrepo = employeeRepo;</span>
+<span class="nc" id="L45">		this.modelmapper = modelmapper;</span>
+<span class="nc" id="L46">	}</span>
+
+
+	public Repos getEmployeeRepo() {
+<span class="nc" id="L50">		return panelrepo;</span>
+	}
+
+
+	public void setEmployeeRepo(Repos employeeRepo) {
+<span class="nc" id="L55">		panelrepo = employeeRepo;</span>
+<span class="nc" id="L56">	}</span>
+
+
+	public ModelMapper getModelmapper() {
+<span class="nc" id="L60">		return modelmapper;</span>
+	}
+
+
+	public void setModelmapper(ModelMapper modelmapper) {
+<span class="nc" id="L65">		this.modelmapper = modelmapper;</span>
+<span class="nc" id="L66">	}</span>
+
+
+	public EntityManager getEntityManager() {
+<span class="nc" id="L70">		return entityManager;</span>
+	}
+
+
+	public void setEntityManager(EntityManager entityManager) {
+<span class="nc" id="L75">		this.entityManager = entityManager;</span>
+<span class="nc" id="L76">	}</span>
+
+
+	@Override//// Here in this function we are not using crud repository
+	public List&lt;PanelListDTO&gt; filter(String panel_id, String panel_role,
+			String panel_email,LocalDate start_date,LocalDate end_date, String interview_type, String panel_name,
+			String Availability_status){
+<span class="nc" id="L83">		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();</span>
+<span class="nc" id="L84">		CriteriaQuery&lt;PanelList&gt; criteriaQuery=criteriaBuilder.createQuery(PanelList.class);</span>
+<span class="nc" id="L85">		Root&lt;PanelList&gt; rootEntity = criteriaQuery.from(PanelList.class);</span>
+		
+<span class="nc" id="L87">		List&lt;Predicate&gt; searchcriteria = new ArrayList&lt;&gt;();</span>
+		
+<span class="nc bnc" id="L89" title="All 4 branches missed.">		if(panel_name!=null &amp;&amp; panel_name!=&quot;&quot;)</span>
+<span class="nc" id="L90">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;panel_name&quot;),&quot;%&quot;+panel_name+&quot;%&quot; ));</span>
+<span class="nc bnc" id="L91" title="All 4 branches missed.">		if(panel_id!=null &amp;&amp; panel_name!=&quot;&quot;)</span>
+<span class="nc" id="L92">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;panel_id&quot;),panel_id));	</span>
+<span class="nc bnc" id="L93" title="All 4 branches missed.">		if(panel_role!=null &amp;&amp; panel_role!=&quot;&quot;)</span>
+<span class="nc" id="L94">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;panel_role&quot;),panel_role));//panel_role name must be same in databse</span>
+<span class="nc bnc" id="L95" title="All 4 branches missed.">		if(interview_type!=null &amp;&amp; interview_type!=&quot;&quot;)</span>
+<span class="nc" id="L96">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;interview_type&quot;),interview_type));	</span>
+<span class="nc bnc" id="L97" title="All 4 branches missed.">		if(panel_email!=null &amp;&amp; panel_email!=&quot;&quot;)</span>
+<span class="nc" id="L98">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;panel_email&quot;),panel_email));</span>
+<span class="nc bnc" id="L99" title="All 4 branches missed.">		if(Availability_status!=null &amp;&amp; Availability_status!=&quot;&quot;)</span>
+<span class="nc" id="L100">		searchcriteria.add(criteriaBuilder.like(rootEntity.get(&quot;availability_status&quot;),Availability_status));</span>
+		 //                                                      should be entity name
+		
+<span class="nc bnc" id="L103" title="All 4 branches missed.">		if(start_date!=null &amp;&amp; end_date!=null)</span>
+		{
+<span class="nc bnc" id="L105" title="All 2 branches missed.">		   if(end_date.isAfter(start_date)==true)		</span>
+<span class="nc" id="L106">		    {searchcriteria.add(criteriaBuilder.between(rootEntity.get(&quot;date&quot;),start_date,end_date));}// checking date in between start date and end date</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">		   else if(end_date.isAfter(start_date)==false)</span>
+<span class="nc" id="L108">	       throw new WrongDateException(&quot;From Date should be before To Date&quot;);	</span>
+		}
+		
+		
+<span class="nc bnc" id="L112" title="All 16 branches missed.">		if(panel_email==null &amp;&amp; panel_id==null &amp;&amp; panel_name==null &amp;&amp; panel_role==null </span>
+				&amp;&amp; interview_type==null &amp;&amp; Availability_status==null &amp;&amp; start_date==null &amp;&amp; end_date ==null)
+		{
+<span class="nc" id="L115">			List&lt;PanelList&gt; p=panelrepo.findAll();	</span>
+<span class="nc" id="L116">			return p.stream().map((dto) -&gt; modelmapper.map(dto,PanelListDTO.class)).collect(Collectors.toList());</span>
+		}
+		
+<span class="nc" id="L119">		criteriaQuery.select(rootEntity).where(criteriaBuilder.and(searchcriteria.toArray(new Predicate[searchcriteria.size()])));</span>
+		
+<span class="nc" id="L121">		List&lt;PanelList&gt; p = entityManager.createQuery(criteriaQuery).getResultList();</span>
+
+<span class="nc bnc" id="L123" title="All 2 branches missed.">		if(p.size()==0)</span>
+<span class="nc" id="L124">		{throw new InvalidDataException(&quot;Invalid data&quot;);}</span>
+
+		else
+<span class="nc" id="L127">		{return p.stream().map((dto) -&gt; modelmapper.map(dto,PanelListDTO.class)).collect(Collectors.toList());}</span>
+		
+	}
+
+
+	public ServiceImpl() {
+<span class="fc" id="L133">		super();</span>
+		// TODO Auto-generated constructor stub
+<span class="fc" id="L135">	}</span>
+
+}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

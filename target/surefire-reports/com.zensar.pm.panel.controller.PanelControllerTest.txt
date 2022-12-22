@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.zensar.pm.panel.controller.PanelControllerTest
+-------------------------------------------------------------------------------
+Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.756 s - in com.zensar.pm.panel.controller.PanelControllerTest

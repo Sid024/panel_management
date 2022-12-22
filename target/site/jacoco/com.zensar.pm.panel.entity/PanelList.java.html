@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PanelList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">panel_management_rest_api_pm_dec_2022</a> &gt; <a href="index.source.html" class="el_package">com.zensar.pm.panel.entity</a> &gt; <span class="el_source">PanelList.java</span></div><h1>PanelList.java</h1><pre class="source lang-java linenums">package com.zensar.pm.panel.entity;
+
+import java.time.LocalDate;
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = &quot;panel_management&quot;)
+public class PanelList {
+	 @Id
+	 @GeneratedValue(strategy = GenerationType.AUTO)
+	 private String panel_id;
+	 private String panel_name;
+	 private String panel_email;
+	 private String panel_contact;
+	 private String panel_role;
+	 private String interview_type;
+	 private LocalDate  date;
+	 private String slot_time;
+	 private String availability_status;
+	   /* PRIMARY KEY (panels_availability_id),
+	    FOREIGN KEY (panel_id) REFERENCES panels(id),
+	    FOREIGN KEY (availability_status_id) REFERENCES panels_availability_status(availability_status_id)*/
+	public String getPanel_id() {
+<span class="nc" id="L30">		return panel_id;</span>
+	}
+	public void setPanel_id(String panel_id) {
+<span class="nc" id="L33">		this.panel_id = panel_id;</span>
+<span class="nc" id="L34">	}</span>
+	public String getPanel_name() {
+<span class="nc" id="L36">		return panel_name;</span>
+	}
+	public void setPanel_name(String panel_name) {
+<span class="nc" id="L39">		this.panel_name = panel_name;</span>
+<span class="nc" id="L40">	}</span>
+	public String getPanel_email() {
+<span class="nc" id="L42">		return panel_email;</span>
+	}
+	public void setPanel_email(String panel_email) {
+<span class="nc" id="L45">		this.panel_email = panel_email;</span>
+<span class="nc" id="L46">	}</span>
+	public String getPanel_contact() {
+<span class="nc" id="L48">		return panel_contact;</span>
+	}
+	public void setPanel_contact(String panel_contact) {
+<span class="nc" id="L51">		this.panel_contact = panel_contact;</span>
+<span class="nc" id="L52">	}</span>
+	public String getPanel_role() {
+<span class="nc" id="L54">		return panel_role;</span>
+	}
+	public void setPanel_role(String panel_role) {
+<span class="nc" id="L57">		this.panel_role = panel_role;</span>
+<span class="nc" id="L58">	}</span>
+	public String getInterview_type() {
+<span class="nc" id="L60">		return interview_type;</span>
+	}
+	public void setInterview_type(String interview_type) {
+<span class="nc" id="L63">		this.interview_type = interview_type;</span>
+<span class="nc" id="L64">	}</span>
+	public LocalDate getDate() {
+<span class="nc" id="L66">		return date;</span>
+	}
+	public void setDate(LocalDate date) {
+<span class="nc" id="L69">		this.date = date;</span>
+<span class="nc" id="L70">	}</span>
+	public String getSlot_time() {
+<span class="nc" id="L72">		return slot_time;</span>
+	}
+	public PanelList() {
+<span class="fc" id="L75">		super();</span>
+		// TODO Auto-generated constructor stub
+<span class="fc" id="L77">	}</span>
+	public PanelList(String panel_id, String panel_name, String panel_email, String panel_contact,
+			String panel_role, String interview_type, LocalDate date, String slot_time, String availability_status) {
+<span class="nc" id="L80">		super();</span>
+<span class="nc" id="L81">		this.panel_id = panel_id;</span>
+<span class="nc" id="L82">		this.panel_name = panel_name;</span>
+<span class="nc" id="L83">		this.panel_email = panel_email;</span>
+<span class="nc" id="L84">		this.panel_contact = panel_contact;</span>
+<span class="nc" id="L85">		this.panel_role = panel_role;</span>
+<span class="nc" id="L86">		this.interview_type = interview_type;</span>
+<span class="nc" id="L87">		this.date = date;</span>
+<span class="nc" id="L88">		this.slot_time = slot_time;</span>
+<span class="nc" id="L89">		this.availability_status = availability_status;</span>
+<span class="nc" id="L90">	}</span>
+	@Override
+	public String toString() {
+<span class="nc" id="L93">		return &quot;PannelAvailabilityList [panel_id=&quot; + panel_id + &quot;, panel_name=&quot; + panel_name + &quot;, panel_email=&quot;</span>
+				+ panel_email + &quot;, panel_contact=&quot; + panel_contact + &quot;, panel_role=&quot; + panel_role
+				+ &quot;, interview_type=&quot; + interview_type + &quot;, date=&quot; + date + &quot;, Slot_time=&quot; + slot_time
+				+ &quot;, Availability_status=&quot; + availability_status + &quot;]&quot;;
+	}
+	public void setSlot_time(String slot_time) {
+<span class="nc" id="L99">		this.slot_time = slot_time;</span>
+<span class="nc" id="L100">	}</span>
+	public String getAvailability_status() {
+<span class="nc" id="L102">		return this.availability_status;</span>
+	}
+	public void setAvailability_status(String availability_status) {
+<span class="nc" id="L105">		this.availability_status = availability_status;</span>
+<span class="nc" id="L106">	}</span>
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

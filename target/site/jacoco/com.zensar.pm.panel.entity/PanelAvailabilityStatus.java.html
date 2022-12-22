@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PanelAvailabilityStatus.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">panel_management_rest_api_pm_dec_2022</a> &gt; <a href="index.source.html" class="el_package">com.zensar.pm.panel.entity</a> &gt; <span class="el_source">PanelAvailabilityStatus.java</span></div><h1>PanelAvailabilityStatus.java</h1><pre class="source lang-java linenums">package com.zensar.pm.panel.entity;
+
+import java.time.LocalDate;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+
+import lombok.Data;
+
+
+<span class="nc bnc" id="L14" title="All 64 branches missed.">@Data</span>
+
+@Entity
+public class PanelAvailabilityStatus {
+
+	
+
+	@Column(name = &quot;Email&quot;)
+<span class="nc" id="L22">	private String email;</span>
+
+<span class="nc" id="L24">	private LocalDate toDate;</span>
+<span class="nc" id="L25">	private LocalDate fromDate;</span>
+	
+	@Id
+	@Column(name = &quot;Panel Id&quot;)
+<span class="nc" id="L29">	private int panelId;</span>
+
+	@Column(name = &quot;Panal name&quot;)
+<span class="nc" id="L32">	private String panelName;</span>
+
+	@Column(name = &quot;Role&quot;)
+<span class="nc" id="L35">	private String panalRole;</span>
+
+	@Column(name = &quot;Interview Type&quot;)
+<span class="nc" id="L38">	private String interviewType;</span>
+
+	@Column(name = &quot;Availability Status&quot;)
+<span class="nc" id="L41">	private String availabilityStatus;</span>
+
+	
+
+	public PanelAvailabilityStatus(String email, LocalDate toDate, LocalDate fromDate, int panelId, String panelName,
+			String panalRole, String interviewType, String availabilityStatus) {
+<span class="fc" id="L47">		super();</span>
+<span class="fc" id="L48">		this.email = email;</span>
+<span class="fc" id="L49">		this.toDate = toDate;</span>
+<span class="fc" id="L50">		this.fromDate = fromDate;</span>
+<span class="fc" id="L51">		this.panelId = panelId;</span>
+<span class="fc" id="L52">		this.panelName = panelName;</span>
+<span class="fc" id="L53">		this.panalRole = panalRole;</span>
+<span class="fc" id="L54">		this.interviewType = interviewType;</span>
+<span class="fc" id="L55">		this.availabilityStatus = availabilityStatus;</span>
+<span class="fc" id="L56">	}</span>
+
+
+
+	public PanelAvailabilityStatus() {
+<span class="nc" id="L61">		super();</span>
+<span class="nc" id="L62">	}</span>
+
+	
+	
+	
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

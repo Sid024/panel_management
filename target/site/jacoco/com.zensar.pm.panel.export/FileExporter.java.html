@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileExporter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">panel_management_rest_api_pm_dec_2022</a> &gt; <a href="index.source.html" class="el_package">com.zensar.pm.panel.export</a> &gt; <span class="el_source">FileExporter.java</span></div><h1>FileExporter.java</h1><pre class="source lang-java linenums">package com.zensar.pm.panel.export;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
+
+import com.zensar.pm.panel.dto.PanelListDTO;
+
+
+
+<span class="fc" id="L19">public class FileExporter {</span>
+
+	public void exportToCSV(List&lt;PanelListDTO&gt; l2,HttpServletResponse response, String Name) throws IOException{
+		
+<span class="fc" id="L23">		DateFormat dateformat = new SimpleDateFormat(&quot;yyyy-mm-dd&quot;);</span>
+<span class="fc" id="L24">		String timeStamp = dateformat.format(new Date());</span>
+<span class="fc" id="L25">		String fileName = Name+timeStamp+&quot;.csv&quot;;</span>
+		
+<span class="fc" id="L27">		response.setContentType(&quot;text/csv&quot;);</span>
+		
+<span class="fc" id="L29">		String headerKey = &quot;Content-Disposition&quot;;</span>
+<span class="fc" id="L30">		String headerValue =&quot;attachment; filename =&quot;+fileName;</span>
+<span class="fc" id="L31">		response.setHeader(headerKey, headerValue);</span>
+		
+<span class="fc" id="L33">		ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);</span>
+		
+<span class="fc" id="L35">		String[] csvHeader = {&quot;Panel_ID&quot;,&quot;Panel_Name&quot;,&quot;Panel_Email&quot;,&quot;Panel_Contact&quot;,&quot;Panel_Role&quot;,&quot;Type&quot;,&quot;Date&quot;,&quot;Time&quot;,&quot;Status&quot;};</span>
+<span class="fc" id="L36">		String[] fieldMapping= {&quot;panel_id&quot;,&quot;panel_name&quot;,&quot;panel_email&quot;,&quot;panel_contact&quot;,&quot;panel_role&quot;,&quot;interview_type&quot;,&quot;date&quot;,&quot;Slot_time&quot;,&quot;Availability_status&quot;};</span>
+		
+<span class="fc" id="L38">		csvWriter.writeHeader(csvHeader);</span>
+		
+<span class="fc bfc" id="L40" title="All 2 branches covered.">		for(PanelListDTO p :l2)</span>
+		{
+			
+<span class="fc" id="L43">			csvWriter.write(p,fieldMapping);</span>
+<span class="fc" id="L44">		}</span>
+		
+<span class="fc" id="L46">		csvWriter.close();</span>
+<span class="fc" id="L47">	}</span>
+
+	
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
