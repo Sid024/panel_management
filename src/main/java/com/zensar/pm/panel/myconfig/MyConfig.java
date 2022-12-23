@@ -1,20 +1,21 @@
-package com.zensar.pm.panel.config;
+package com.zensar.pm.panel.myconfig;
 
 import org.modelmapper.ModelMapper;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class Config {
+public class MyConfig {
 
 	@Bean
-	public ModelMapper modelMapper() {
+	public ModelMapper modelmapper() {
 		return new ModelMapper();
 	}
-
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
-}
+
+} 
