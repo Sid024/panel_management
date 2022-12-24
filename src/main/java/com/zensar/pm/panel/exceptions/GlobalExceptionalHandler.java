@@ -28,4 +28,18 @@ public class GlobalExceptionalHandler extends RuntimeException {
     public ResponseEntity<String> handleException(InvalidAssociateNameException ex) {
         return new ResponseEntity<String>(ex.getErrorMessage(), HttpStatus.NOT_FOUND);
     }
+	@ExceptionHandler(value = EmptyListException.class)
+	public ResponseEntity<String> handleException(EmptyListException ex) {
+		return new ResponseEntity<String>(ex.getErrorMessage(), HttpStatus.NOT_FOUND);
+	}
+	@ExceptionHandler(WrongDateException.class)
+	public ResponseEntity<String> wrongdateexceptionhandler(WrongDateException f)
+	{
+		
+
+		return  new ResponseEntity<String>(f.getMessage(),HttpStatus.NOT_FOUND);
+	}
+	
+	
+	
 }

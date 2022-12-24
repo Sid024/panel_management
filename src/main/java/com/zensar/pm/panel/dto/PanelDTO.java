@@ -12,9 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class PanelDTO {
 
 	
@@ -54,6 +52,61 @@ public class PanelDTO {
 		this.associateName = associateName;
 		this.associateGrade = associateGrade;
 	}
+	public String getAssociateId() {
+		return associateId;
+	}
+	public void setAssociateId(String associateId) {
+		this.associateId = associateId;
+	}
+	public String getAssociateName() {
+		return associateName;
+	}
+	public void setAssociateName(String associateName) {
+		this.associateName = associateName;
+	}
+	public String getAssociateGrade() {
+		return associateGrade;
+	}
+	public void setAssociateGrade(String associateGrade) {
+		this.associateGrade = associateGrade;
+	}
+	public LocalDate getDate() {
+		return Date;
+	}
+	public void setDate(LocalDate date) {
+		Date = date;
+	}
+	public LocalTime getFromTime() {
+		return fromTime;
+	}
+	public void setFromTime(LocalTime fromTime) {
+		this.fromTime = fromTime;
+	}
+	public LocalTime getToTime() {
+		return toTime;
+	}
+	public void setToTime(LocalTime toTime) {
+		this.toTime = toTime;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public PanelDTO(String associateId, String associateName, String associateGrade, @NotNull LocalDate date,
+			@NotNull LocalTime fromTime, @NotNull LocalTime toTime, @NotNull String status) {
+		super();
+		this.associateId = associateId;
+		this.associateName = associateName;
+		this.associateGrade = associateGrade;
+		Date = date;
+		this.fromTime = fromTime;
+		this.toTime = toTime;
+		this.status = status;
+	}
+	
+	
 	
 	
 

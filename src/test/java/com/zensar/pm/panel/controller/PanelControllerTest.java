@@ -110,7 +110,7 @@ public class PanelControllerTest {
 	@Test
     public void testGetAssociateByNameFailure() throws Exception {
         List<PanelDTO> associates = new ArrayList<>();
-        PanelDTO associate = new PanelDTO();
+        PanelDTO associate = new PanelDTO("pavan23", "pavanreddy", "g0");
         associates.add(associate);
 
  

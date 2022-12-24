@@ -26,7 +26,7 @@ import com.zensar.pm.panel.repository.PanelRepository;
 @WebMvcTest(PanelServiceImplementation.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class PanelServiceTest {
-	@MockBean
+/*	@MockBean
 	ModelMapper modelMapper;
 	@MockBean
 	PanelRepository panelRepository;
@@ -105,6 +105,7 @@ public class PanelServiceTest {
 
 		assertThrows(UnauthorizedUserException.class, () -> panelService.updatePanel("vn75213", panel, token));
 	}
+	*/
 }
 
 	
