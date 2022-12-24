@@ -47,7 +47,7 @@ public class PanelServiceImplementation implements PanelService {
     RestTemplate restTemplate;
 	
 	@Autowired 
-	 private EntityManager entityManager;
+	private EntityManager entityManager;
 
 	@Autowired
 	private PanelAvailabilityListRepository repo;

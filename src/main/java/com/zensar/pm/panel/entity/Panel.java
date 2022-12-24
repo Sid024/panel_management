@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 
 @Entity(name = "panel-management-db")
-@Table(name = "panel_availability")
+@Table(name = "panel")
 public class Panel {
 
 
