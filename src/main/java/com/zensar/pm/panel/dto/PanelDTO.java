@@ -107,9 +107,9 @@ public class PanelDTO {
 	}
 	
 	
+	public PanelDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
-	
-
-	
-
 }
