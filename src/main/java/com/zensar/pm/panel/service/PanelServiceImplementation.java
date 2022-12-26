@@ -56,7 +56,7 @@ public class PanelServiceImplementation implements PanelService {
 	public PanelDTO updatePanel(String associateId, PanelDTO panelDTO, String jwtToken) {
 		
 		
-		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleEntity())) {
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
 			Panel existingPanel = panelRepository.findById(associateId).orElse(null);
 			if (existingPanel == null)
 				throw new InvalidPanelException("Panel not found");
@@ -85,7 +85,7 @@ public class PanelServiceImplementation implements PanelService {
     public List<PanelDTO> getByAssociateName(String name,String jwtToken) {
         List<Panel> findByAssociateName = panelRepository.findByTextIgnoreAssociates(name);
         
-        if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleEntity())) {
+        if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
         if(findByAssociateName.isEmpty()) {
             throw new InvalidAssociateNameException("Associate Not Found");
         }
@@ -116,7 +116,7 @@ public class PanelServiceImplementation implements PanelService {
             String email,LocalDate fromDate,LocalDate toDate, String interviewType, String panelName,
             String availabilityStatus,String jwtToken)    {
 
-    	if(Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleEntity()))
+    	if(Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName()))
 		  {
 		 
 
@@ -176,7 +176,7 @@ public class PanelServiceImplementation implements PanelService {
 		 
     	 
     	
-    		if(Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleEntity())) {
+    		if(Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PanelAvailabilityList> criteriaQuery = criteriaBuilder.createQuery(PanelAvailabilityList.class);
