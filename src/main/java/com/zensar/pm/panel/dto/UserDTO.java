@@ -2,29 +2,32 @@ package com.zensar.pm.panel.dto;
 
 import java.util.Objects;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
-//@Data
-//@AllArgsConstructor
-//@NoArgsConstructor
 
 public class UserDTO {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	
 	private int userId;
+	
+//	@NotNull(message = "username cannot be blank")
 	private String userName;
 	private String userPassword;
-	private String userEmail;
-	private String roleEntity;
+	
+	@Email
+//	@NotNull
+	private String email;
+//	private String roleEntity;
 	private String token;
 	private String confirmPassword;
 	private String roleName;
+	
+//	@NotNull
 	private int roleId;
 	
-	
+	private boolean isActive;
 
 	public UserDTO() {
 		super();
@@ -38,21 +41,21 @@ public class UserDTO {
 		this.userPassword = userPassword;
 	}
 
-	public String getUserEmail() {
-		return userEmail;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUserEmail(String userEmail) {
-		this.userEmail = userEmail;
+	public void setEmail(String userEmail) {
+		this.email = userEmail;
 	}
-
-	public String getRoleEntity() {
-		return roleEntity;
-	}
-
-	public void setRoleEntity(String roleEntity) {
-		this.roleEntity = roleEntity;
-	}
+//
+//	public String getRoleEntity() {
+//		return roleEntity;
+//	}
+//
+//	public void setRoleEntity(String roleEntity) {
+//		this.roleEntity = roleEntity;
+//	}
 
 	public String getToken() {
 		return token;
@@ -69,7 +72,36 @@ public class UserDTO {
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
 	}
+	public boolean getIsActive() {
+		return isActive;
+	}
 
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+	
+
+	public UserDTO(int userId, @NotBlank(message = "username cannot be blank") String userName, String userPassword,
+			@Email  String userEmail,
+			 String token, String confirmPassword, String roleName, @NotNull int roleId,
+			boolean isActive) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.email = userEmail;
+		this.token = token;
+		this.confirmPassword = confirmPassword;
+		this.roleName = roleName;
+		this.roleId = roleId;
+		this.isActive = isActive;
+	}
+
+	public UserDTO(String email,int userId) {
+		super();
+		this.userId = userId;
+		this.email = email;
+	}
 	public UserDTO(String userName, String userPassword) {
 		super();
 		this.userPassword = userPassword;
@@ -80,25 +112,28 @@ public class UserDTO {
 		super();
 		this.userId = id;
 		this.userName = userName;
-		this.userEmail = email;
-		this.roleEntity = role;
+		this.email = email;
+		this.roleName = role;
 
 	}
 
-	public UserDTO(@NotEmpty String userEmail, @NotEmpty String userPassword, @NotEmpty String confirmPassword) {
+	public UserDTO(@NotEmpty String email, @NotEmpty String userPassword, @NotEmpty String confirmPassword) {
 		super();
-		this.userEmail = userEmail;
+		this.email = email;
 		this.userPassword = userPassword;
 		this.confirmPassword = confirmPassword;
 	}
-	
-	
-	
-	
 
-	public UserDTO(String userEmail) {
+	public UserDTO(int userId, String userName, String email) {
 		super();
-		this.userEmail = userEmail;
+		this.userId = userId;
+		this.userName = userName;
+		this.email = email;
+	}
+
+	public UserDTO(String email) {
+		super();
+		this.email = email;
 	}
 
 	public UserDTO(int userId, String userPassword, String userName, String roleName, int roleId) {
@@ -142,16 +177,18 @@ public class UserDTO {
 		this.roleId = roleId;
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "UserDTO [userId=" + userId + ", userPassword=" + userPassword + ", userName=" + userName + ", roleName="
-				+ roleName + ", roleId=" + roleId + "]";
+		return "UserDTO [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword + ", email="
+				+ email + ", token=" + token + ", confirmPassword=" + confirmPassword + ", roleName=" + roleName
+				+ ", roleId=" + roleId + ", isActive=" + isActive + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(confirmPassword, userPassword, roleEntity, roleId, roleName, token, userEmail, userId, userName,
-				userPassword);
+		return Objects.hash(confirmPassword, email, isActive, roleId, roleName, token, userId, userName, userPassword);
 	}
 
 	@Override
@@ -163,11 +200,15 @@ public class UserDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDTO other = (UserDTO) obj;
-		return Objects.equals(confirmPassword, other.confirmPassword) && Objects.equals(userPassword, other.userPassword)
-				&& Objects.equals(roleEntity, other.roleEntity) && roleId == other.roleId
-				&& Objects.equals(roleName, other.roleName) && Objects.equals(token, other.token)
-				&& Objects.equals(userEmail, other.userEmail) && userId == other.userId
+		return Objects.equals(confirmPassword, other.confirmPassword) && Objects.equals(email, other.email)
+				&& isActive == other.isActive && roleId == other.roleId && Objects.equals(roleName, other.roleName)
+				&& Objects.equals(token, other.token) && userId == other.userId
 				&& Objects.equals(userName, other.userName) && Objects.equals(userPassword, other.userPassword);
 	}
 
+	
+
 }
+
+//(regexp = ".*@.*\\..*", message = "invalid email address")
+//@NotNull
