@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
+@Entity
 public class InterviewType {
 	@Id
 	@Column(name="type_id")

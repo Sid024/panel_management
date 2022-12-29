@@ -187,22 +187,5 @@ public class PanelAvailablityDTO {
 				panelAvailablityStatusEntity, panelId, startTime, updatedBy, updatedOn);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PanelAvailablityEntity other = (PanelAvailablityEntity) obj;
-		return Objects.equals(createdBy, this.createdBy) && Objects.equals(createdOn, this.createdOn)
-				&& Objects.equals(date, this.date) && Objects.equals(deletedBy, this.deletedBy)
-				&& Objects.equals(deletedOn, this.deletedOn) && Objects.equals(endTime, this.endTime)
-				&& isDeleted == this.isDeleted && panelAvailablityId == this.panelAvailablityId
-				&& Objects.equals(panelAvailablityStatusEntity, this.panelAvailablityStatusEntity)
-				&& Objects.equals(panelId, this.panelId) && Objects.equals(startTime, this.startTime)
-				&& Objects.equals(updatedBy, this.updatedBy) && Objects.equals(updatedOn, this.updatedOn);
-	}
 
 }

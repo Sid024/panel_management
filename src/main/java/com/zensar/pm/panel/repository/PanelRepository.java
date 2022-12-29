@@ -10,8 +10,11 @@ import com.zensar.pm.panel.entity.Panel;
 
 @Repository
 public interface PanelRepository extends JpaRepository<Panel, String> {
-	//Panel findByAssociateId(String name);
-	@Query("SELECT text FROM panel-management-db text WHERE " +
-            "text.associateName LIKE CONCAT('%',:searchText, '%')")
-    List<Panel> findByTextIgnoreAssociates(String searchText);
+	/*
+	 * //Panel findByAssociateId(String name);
+	 * 
+	 * @Query("SELECT text FROM panel-management-db text WHERE " +
+	 * "text.associateName LIKE CONCAT('%',:searchText, '%')") List<Panel>
+	 * findByTextIgnoreAssociates(String searchText);
+	 */
 }

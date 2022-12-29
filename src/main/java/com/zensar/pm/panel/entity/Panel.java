@@ -14,8 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-@Entity(name = "panel-management-db")
-@Table(name = "panel")
+@Entity
 public class Panel {
 
 

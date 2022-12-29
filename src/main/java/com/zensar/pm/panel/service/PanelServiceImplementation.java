@@ -83,28 +83,22 @@ public class PanelServiceImplementation implements PanelService {
 	}
 	@Override
     public List<PanelDTO> getByAssociateName(String name,String jwtToken) {
-        List<Panel> findByAssociateName = panelRepository.findByTextIgnoreAssociates(name);
-        
-        if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
-        if(findByAssociateName.isEmpty()) {
-            throw new InvalidAssociateNameException("Associate Not Found");
-        }
-        else {
-        List<PanelDTO> collect = findByAssociateName.stream()
-                .map((e) -> modelMapper.map(e, PanelDTO.class)).collect(Collectors.toList());
-        return collect;
-        }
-    }
-        else {
-            throw new UnauthorizedUserException("Invalid User");
-            }
-        }
-
-    public void setAssociateRepository(PanelRepository associateRepository) {
-        this.panelRepository= associateRepository;
-    }
-    public void setMapper(ModelMapper mapper) {
-        this.modelMapper = mapper;
+		return null;
+		/*
+		 * List<Panel> findByAssociateName =
+		 * panelRepository.findByTextIgnoreAssociates(name);
+		 * 
+		 * if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(
+		 * jwtToken).getRoleName())) { if(findByAssociateName.isEmpty()) { throw new
+		 * InvalidAssociateNameException("Associate Not Found"); } else { List<PanelDTO>
+		 * collect = findByAssociateName.stream() .map((e) -> modelMapper.map(e,
+		 * PanelDTO.class)).collect(Collectors.toList()); return collect; } } else {
+		 * throw new UnauthorizedUserException("Invalid User"); } }
+		 * 
+		 * public void setAssociateRepository(PanelRepository associateRepository) {
+		 * this.panelRepository= associateRepository; } public void
+		 * setMapper(ModelMapper mapper) { this.modelMapper = mapper;
+		 */
     }
     
     
