@@ -28,7 +28,6 @@ import com.zensar.pm.panel.export.FileExporter;
 import com.zensar.pm.panel.service.PanelService;
 import com.zensar.pm.panel.service.PanelServiceImplementation;
 
-
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 
@@ -38,34 +37,31 @@ import io.swagger.v3.oas.annotations.info.Info;
 @Validated
 @CrossOrigin("*")
 public class PanelController {
+
+	////////////////////////////////////////////////////////////////
+
 	@Autowired
 	private PanelService impl;
 
 	@PutMapping(value = "/panel/{associateId}", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<PanelDTO> updatePanel(@PathVariable("associateId") String AssociateId, @RequestBody PanelDTO panelDTO,@RequestHeader("Authorization") String token) {
-		PanelDTO panel = impl.updatePanel(AssociateId, panelDTO,token);
+	public ResponseEntity<PanelDTO> updatePanel(@PathVariable("associateId") String AssociateId,
+			@RequestBody PanelDTO panelDTO, @RequestHeader("Authorization") String token) {
+		PanelDTO panel = impl.updatePanel(AssociateId, panelDTO, token);
 		return new ResponseEntity<PanelDTO>(panel, HttpStatus.CREATED);
 	}
+
 	@GetMapping(value = "/associate/name/{associateName}", produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE })
-    public ResponseEntity<List<PanelDTO>> getAssociateByName(@PathVariable("associateName") String associateName,@RequestHeader("Authorization") String token) {
+			MediaType.APPLICATION_XML_VALUE })
+	public ResponseEntity<List<PanelDTO>> getAssociateByName(@PathVariable("associateName") String associateName,
+			@RequestHeader("Authorization") String token) {
 
- 
+		return new ResponseEntity<List<PanelDTO>>(impl.getByAssociateName(associateName, token), HttpStatus.FOUND);
+	}
 
-        return new ResponseEntity<List<PanelDTO>>(impl.getByAssociateName(associateName,token), HttpStatus.FOUND);
-    }
-	
-	
-	
-	
-	
-	
-	///  Our Project
-	
-	
-	
+	/// Our Project
+
 	@Autowired
 	private FileExporter exporter;
 
@@ -114,14 +110,5 @@ public class PanelController {
 		// return null;
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }
