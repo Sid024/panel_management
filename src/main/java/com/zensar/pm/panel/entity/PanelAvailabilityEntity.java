@@ -1,4 +1,4 @@
-package com.zensar.pm.panel.dto;
+package com.zensar.pm.panel.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,50 +6,69 @@ import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-import com.zensar.pm.panel.entity.PanelAvailablityEntity;
-import com.zensar.pm.panel.entity.PanelAvailablityStatusEntity;
-import com.zensar.pm.panel.entity.PanelEnitity;
 
-public class PanelAvailablityDTO {
 
+@Entity
+@Table(name="")
+public class PanelAvailabilityEntity {
+
+	@Id
+	@GeneratedValue
+	@Column(name="panels_availability_id")
 	private int panelAvailablityId;
-
-	private PanelEnitity panelId; // FK to PanelEntity
-
+	
+	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id")
+	private PanelEntity panelId;  //FK to PanelEntity
+	
+	@Column(name="available_date")
 	private LocalDate date;
-
+	
+	@Column(name="start_time")
 	private String startTime;
-
+	
+	@Column(name="end_time")
 	private String endTime;
+	
+	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "availability_status_id")
+	private PanelAvailabilityStatusEntity availablityStatusId; //FK to PanelAvailablityStatusEntity
 
-	private PanelAvailablityStatusEntity panelAvailablityStatusEntity; // FK to PanelAvailablityStatusEntity
-
+	@Column(name="created_by")
 	private String createdBy;
-
+	
+	@Column(name="created_on")
 	private LocalDateTime createdOn;
-
+	
+	@Column(name="updated_by")
 	private String updatedBy;
-
+	
+	@Column(name="updated_on")
 	private LocalDateTime updatedOn;
-
+	
+	@Column(name="deleted_by")
 	private String deletedBy;
-
+	
+	@Column(name="deleted_on")
 	private LocalDateTime deletedOn;
-
+	
+	@Column(name="is_deleted")
 	private boolean isDeleted;
 
-	public PanelAvailablityDTO() {
+	public PanelAvailabilityEntity() {
 		super();
 	}
 
-	public PanelAvailablityDTO(int panelAvailablityId, PanelEnitity panelId, LocalDate date, String startTime,
-			String endTime, PanelAvailablityStatusEntity panelAvailablityStatusEntity, String createdBy,
+	public PanelAvailabilityEntity(int panelAvailablityId, PanelEntity panelId, LocalDate date, String startTime,
+			String endTime, PanelAvailabilityStatusEntity panelAvailabilityStatusEntity, String createdBy,
 			LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
 			LocalDateTime deletedOn, boolean isDeleted) {
 		super();
@@ -58,7 +77,7 @@ public class PanelAvailablityDTO {
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.panelAvailablityStatusEntity = panelAvailablityStatusEntity;
+		this.availablityStatusId = panelAvailabilityStatusEntity;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 		this.updatedBy = updatedBy;
@@ -66,6 +85,15 @@ public class PanelAvailablityDTO {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 		this.isDeleted = isDeleted;
+	}
+
+	public PanelAvailabilityEntity(String startTime, String endTime, LocalDate date, PanelEntity panelEntity) {
+
+		super();
+		this.panelId = panelEntity;
+		this.date = date;
+		this.startTime = startTime;
+		this.endTime = endTime;
 	}
 
 	public int getPanelAvailablityId() {
@@ -76,11 +104,11 @@ public class PanelAvailablityDTO {
 		this.panelAvailablityId = panelAvailablityId;
 	}
 
-	public PanelEnitity getPanelId() {
+	public PanelEntity getPanelId() {
 		return panelId;
 	}
 
-	public void setPanelId(PanelEnitity panelId) {
+	public void setPanelId(PanelEntity panelId) {
 		this.panelId = panelId;
 	}
 
@@ -108,12 +136,12 @@ public class PanelAvailablityDTO {
 		this.endTime = endTime;
 	}
 
-	public PanelAvailablityStatusEntity getPanelAvailablityStatusEntity() {
-		return panelAvailablityStatusEntity;
+	public PanelAvailabilityStatusEntity getPanelAvailablityStatusEntity() {
+		return availablityStatusId;
 	}
 
-	public void setPanelAvailablityStatusEntity(PanelAvailablityStatusEntity panelAvailablityStatusEntity) {
-		this.panelAvailablityStatusEntity = panelAvailablityStatusEntity;
+	public void setPanelAvailablityStatusEntity(PanelAvailabilityStatusEntity panelAvailabilityStatusEntity) {
+		this.availablityStatusId = panelAvailabilityStatusEntity;
 	}
 
 	public String getCreatedBy() {
@@ -176,7 +204,7 @@ public class PanelAvailablityDTO {
 	public String toString() {
 		return "PanelAvailablityEntity [panelAvailablityId=" + panelAvailablityId + ", panelId=" + panelId + ", date="
 				+ date + ", startTime=" + startTime + ", endTime=" + endTime + ", panelAvailablityStatusEntity="
-				+ panelAvailablityStatusEntity + ", createdBy=" + createdBy + ", createdOn=" + createdOn
+				+ availablityStatusId + ", createdBy=" + createdBy + ", createdOn=" + createdOn
 				+ ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", deletedBy=" + deletedBy + ", deletedOn="
 				+ deletedOn + ", isDeleted=" + isDeleted + "]";
 	}
@@ -184,8 +212,26 @@ public class PanelAvailablityDTO {
 	@Override
 	public int hashCode() {
 		return Objects.hash(createdBy, createdOn, date, deletedBy, deletedOn, endTime, isDeleted, panelAvailablityId,
-				panelAvailablityStatusEntity, panelId, startTime, updatedBy, updatedOn);
+				availablityStatusId, panelId, startTime, updatedBy, updatedOn);
 	}
 
-
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PanelAvailabilityEntity other = (PanelAvailabilityEntity) obj;
+		return Objects.equals(createdBy, other.createdBy) && Objects.equals(createdOn, other.createdOn)
+				&& Objects.equals(date, other.date) && Objects.equals(deletedBy, other.deletedBy)
+				&& Objects.equals(deletedOn, other.deletedOn) && Objects.equals(endTime, other.endTime)
+				&& isDeleted == other.isDeleted && panelAvailablityId == other.panelAvailablityId
+				&& Objects.equals(availablityStatusId, other.availablityStatusId)
+				&& Objects.equals(panelId, other.panelId) && Objects.equals(startTime, other.startTime)
+				&& Objects.equals(updatedBy, other.updatedBy) && Objects.equals(updatedOn, other.updatedOn);
+	}
+	
+	
 }

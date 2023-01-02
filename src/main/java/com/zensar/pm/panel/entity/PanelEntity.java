@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity(name = "panel-management-db")
 @Table(name = "panels")
-public class PanelEnitity {
+public class PanelEntity {
 	@Id
 	@Column(name="id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -53,14 +53,18 @@ public class PanelEnitity {
 	@JoinColumn(name = "type_id") // FK column
 	private InterviewType interviewType;
 	
-	public PanelEnitity() {
+	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "roleId") // FK column
+	private RoleEntity roleType;
+	
+	public PanelEntity() {
 		super();
 	}
 
-	public PanelEnitity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
+	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, String remark, String createdBy, LocalDateTime createdOn,
 			String updatedBy, LocalDateTime updatedOn, boolean isDeleted, String deletedBy, LocalDateTime deletedOn,
-			InterviewType interviewType) {
+			InterviewType interviewType, RoleEntity roleType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -76,6 +80,16 @@ public class PanelEnitity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 		this.interviewType = interviewType;
+		this.roleType = roleType;
+	}
+
+
+
+
+
+	public PanelEntity(int id) {
+		super();
+		this.id = id;
 	}
 
 	public int getId() {
@@ -189,40 +203,25 @@ public class PanelEnitity {
 	public void setInterviewType(InterviewType interviewType) {
 		this.interviewType = interviewType;
 	}
+	
+	
+
+	public RoleEntity getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(RoleEntity roleType) {
+		this.roleType = roleType;
+	}
 
 	@Override
 	public String toString() {
-		return "Panels [id=" + id + ", userEntity=" + userEntity + ", contact=" + contact + ", gradeEntity="
+		return "PanelEntity [id=" + id + ", userEntity=" + userEntity + ", contact=" + contact + ", gradeEntity="
 				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", remark=" + remark + ", createdBy="
 				+ createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn
 				+ ", isDeleted=" + isDeleted + ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn
-				+ ", interviewType=" + interviewType + "]";
+				+ ", interviewType=" + interviewType + ", roleType=" + roleType + "]";
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(contact, createdBy, createdOn, deletedBy, deletedOn, gradeEntity, id, interviewType,
-				isDeleted, panelLevelEntity, remark, updatedBy, updatedOn, userEntity);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PanelEnitity other = (PanelEnitity) obj;
-		return Objects.equals(contact, other.contact) && Objects.equals(createdBy, other.createdBy)
-				&& Objects.equals(createdOn, other.createdOn) && Objects.equals(deletedBy, other.deletedBy)
-				&& Objects.equals(deletedOn, other.deletedOn) && Objects.equals(gradeEntity, other.gradeEntity)
-				&& id == other.id && Objects.equals(interviewType, other.interviewType) && isDeleted == other.isDeleted
-				&& Objects.equals(panelLevelEntity, other.panelLevelEntity) && Objects.equals(remark, other.remark)
-				&& Objects.equals(updatedBy, other.updatedBy) && Objects.equals(updatedOn, other.updatedOn)
-				&& Objects.equals(userEntity, other.userEntity);
-	}
-	
-	
 	
 }

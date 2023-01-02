@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zensar.pm.panel.dto.PanelAvailabilityListDto;
 import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.export.FileExporter;
-import com.zensar.pm.panel.service.PanelAvailablityService;
+import com.zensar.pm.panel.service.PanelAvailabilityService;
 import com.zensar.pm.panel.service.PanelService;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -39,7 +39,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 public class PanelController {
 
 	@Autowired
-	private PanelAvailablityService panelAvailablityService;
+	private PanelAvailabilityService panelAvailabilityService;
 
 	////////////////////////////////////////////////////////////////
 

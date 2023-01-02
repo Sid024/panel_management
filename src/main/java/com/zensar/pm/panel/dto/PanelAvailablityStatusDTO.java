@@ -1,52 +1,29 @@
-package com.zensar.pm.panel.entity;
+package com.zensar.pm.panel.dto;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public class PanelAvailablityStatusDTO {
 
-@Entity(name="panels_availability_status")
-@Table(name="panels_availability_status")
-public class PanelAvailablityStatusEntity {
+
+	private int availablityStatusId;
 	
-	@Id
-	@GeneratedValue
-	@Column(name="availability_status_id")
-	private String availablityStatusId;
-	
-	@Column(name="availability_status")
 	private String availablityStatus;
 	
-	@Column(name="created_by")
 	private String createdBy;
 	
-	@Column(name="created_on")
 	private LocalDateTime createdOn;
 	
-	@Column(name="updated_by")
 	private String updatedBy;
 	
-	@Column(name="updated_on")
 	private LocalDateTime updatedOn;
 	
-	@Column(name="deleted_by")
 	private String deletedBy;
 	
-	@Column(name="deleted_on")
 	private LocalDateTime deletedOn;
 	
-	@Column(name="is_deleted")
 	private boolean isDeleted;
 
-	public PanelAvailablityStatusEntity() {
-		super();
-	}
-
-	public PanelAvailablityStatusEntity(String availablityStatusId, String availablityStatus, String createdBy,
+	public PanelAvailablityStatusDTO(int availablityStatusId, String availablityStatus, String createdBy,
 			LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
 			LocalDateTime deletedOn, boolean isDeleted) {
 		super();
@@ -61,11 +38,15 @@ public class PanelAvailablityStatusEntity {
 		this.isDeleted = isDeleted;
 	}
 
-	public String getAvailablityStatusId() {
+	public PanelAvailablityStatusDTO() {
+		super();
+	}
+
+	public int getAvailablityStatusId() {
 		return availablityStatusId;
 	}
 
-	public void setAvailablityStatusId(String availablityStatusId) {
+	public void setAvailablityStatusId(int availablityStatusId) {
 		this.availablityStatusId = availablityStatusId;
 	}
 
@@ -135,33 +116,10 @@ public class PanelAvailablityStatusEntity {
 
 	@Override
 	public String toString() {
-		return "PanelAvailablityStatusEntity [availablityStatusId=" + availablityStatusId + ", availablityStatus="
+		return "PanelAvailablityStatusDTO [availablityStatusId=" + availablityStatusId + ", availablityStatus="
 				+ availablityStatus + ", createdBy=" + createdBy + ", createdOn=" + createdOn + ", updatedBy="
 				+ updatedBy + ", updatedOn=" + updatedOn + ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn
 				+ ", isDeleted=" + isDeleted + "]";
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(availablityStatus, availablityStatusId, createdBy, createdOn, deletedBy, deletedOn,
-				isDeleted, updatedBy, updatedOn);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PanelAvailablityStatusEntity other = (PanelAvailablityStatusEntity) obj;
-		return Objects.equals(availablityStatus, other.availablityStatus)
-				&& Objects.equals(availablityStatusId, other.availablityStatusId)
-				&& Objects.equals(createdBy, other.createdBy) && Objects.equals(createdOn, other.createdOn)
-				&& Objects.equals(deletedBy, other.deletedBy) && Objects.equals(deletedOn, other.deletedOn)
-				&& isDeleted == other.isDeleted && Objects.equals(updatedBy, other.updatedBy)
-				&& Objects.equals(updatedOn, other.updatedOn);
 	}
 	
 	

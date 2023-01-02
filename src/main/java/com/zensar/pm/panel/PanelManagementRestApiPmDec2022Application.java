@@ -1,4 +1,4 @@
-package com.zensar.pm.panel;
+	package com.zensar.pm.panel;
 
 
 import org.springframework.boot.SpringApplication;
@@ -20,9 +20,6 @@ public class PanelManagementRestApiPmDec2022Application {
     public FileExporter fileExport() {
         return new FileExporter();
     }
-	
-	
-	
 	
 
 }

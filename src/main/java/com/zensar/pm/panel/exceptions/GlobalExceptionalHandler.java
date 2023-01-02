@@ -40,6 +40,9 @@ public class GlobalExceptionalHandler extends RuntimeException {
 		return  new ResponseEntity<String>(f.getMessage(),HttpStatus.NOT_FOUND);
 	}
 	
-	
+	@ExceptionHandler(value = DuplicateStatusException.class)
+	public ResponseEntity<String> duplicateStatus(DuplicateStatusException ex) {
+		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+	}
 	
 }
