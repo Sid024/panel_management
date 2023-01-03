@@ -11,7 +11,7 @@ import com.zensar.pm.panel.entity.PanelEntity;
 
 
 @Repository
-public interface PanelAvailablityRepository extends JpaRepository<PanelAvailabilityEntity, Integer>{
+public interface PanelAvailabilityRepository extends JpaRepository<PanelAvailabilityEntity, Integer>{
 
 public boolean existsByStartTime(String startTime);
 
