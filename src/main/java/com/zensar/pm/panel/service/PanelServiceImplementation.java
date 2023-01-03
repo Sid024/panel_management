@@ -35,7 +35,8 @@ import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
-import com.zensar.pm.panel.repository.PanelAvailabilitystatus;
+import com.zensar.pm.panel.repository.PanelAvailabilityStatusRepository;
+
 
 
 @Service
@@ -60,7 +61,7 @@ public class PanelServiceImplementation implements PanelService {
 
 	
 	@Autowired
-	PanelAvailabilitystatus panelAvailabilityStatusRepo;// status entity
+	PanelAvailabilityStatusRepository panelAvailabilityStatusRepo;// status entity
 	
 	
 	/// Update --> table need to change--> not done
