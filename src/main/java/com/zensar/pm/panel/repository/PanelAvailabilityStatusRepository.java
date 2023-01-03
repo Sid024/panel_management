@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 
 @Repository
-public interface PanelAvailablityStatusRepository extends JpaRepository<PanelAvailabilityStatusEntity, Integer>{
+public interface PanelAvailabilityStatusRepository extends JpaRepository<PanelAvailabilityStatusEntity, Integer>{
 
       PanelAvailabilityStatusEntity findByAvailablityStatusId(int availablityStatusId);
 
