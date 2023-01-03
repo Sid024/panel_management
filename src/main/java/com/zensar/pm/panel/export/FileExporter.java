@@ -12,10 +12,11 @@ import org.supercsv.io.CsvBeanWriter;
 import org.supercsv.io.ICsvBeanWriter;
 import org.supercsv.prefs.CsvPreference;
 
-import com.zensar.pm.panel.dto.PanelAvailabilityListDto;
+import com.zensar.pm.panel.dto.PanelAvailabilityListDTO;
+import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 
 public class FileExporter {
-	public void exportToCSV(List<PanelAvailabilityListDto> fileExportCSV,HttpServletResponse response, String csvName) throws IOException{
+	public void exportToCSV(List<PanelAvailabilityListDTO> fileExportCSV,HttpServletResponse response, String csvName) throws IOException{
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
         String timeStamp = dateFormat.format(new Date());
@@ -34,7 +35,7 @@ public class FileExporter {
 
         csvWriter.writeHeader(csvHeader);
 
-        for(PanelAvailabilityListDto p :fileExportCSV)
+        for(PanelAvailabilityListDTO p :fileExportCSV)
         {
 
             csvWriter.write(p,fieldMapping);
