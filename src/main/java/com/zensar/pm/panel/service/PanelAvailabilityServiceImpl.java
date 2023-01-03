@@ -59,29 +59,29 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		return dto;
 		}
 
-	@Override
-	public PanelsGetAllResponseDTO getAllPanels() {
-		List<PanelEntity> panelEntity=panelRepo.findAll();
-		if(!(panelEntity.isEmpty())) {
-			List<PanelsGetAllDTO> dtoList=new ArrayList<>();
-			for(PanelEntity panel:panelEntity) {
-				PanelsGetAllDTO dto=new PanelsGetAllDTO();
-				dto.setPanelId(panel.getId());
-				UserEntity userEntity=userRepo.findById(panel.getId()).get();
-				dto.setPanelName(userEntity.getUserName());
-				PanelEntity pan=panelRepo.findById(panel.getId()).get();
-				dto.setPanelRole(pan.getRoleType().getRoleName());
-				
-				dtoList.add(dto);
-			}
-			PanelsGetAllResponseDTO responseDTO=new PanelsGetAllResponseDTO();
-			responseDTO.setList(dtoList);
-			return responseDTO;
-		}
-		
-		
-		return null;
-	}
+//	@Override
+//	public PanelsGetAllResponseDTO getAllPanels() {
+//		List<PanelEntity> panelEntity=panelRepo.findAll();
+//		if(!(panelEntity.isEmpty())) {
+//			List<PanelsGetAllDTO> dtoList=new ArrayList<>();
+//			for(PanelEntity panel:panelEntity) {
+//				PanelsGetAllDTO dto=new PanelsGetAllDTO();
+//				dto.setPanelId(panel.getId());
+//				UserEntity userEntity=userRepo.findById(panel.getId()).get();
+//				dto.setPanelName(userEntity.getUserName());
+//				PanelEntity pan=panelRepo.findById(panel.getId()).get();
+//				dto.setPanelRole(pan.getRoleType().getRoleName());
+//				
+//				dtoList.add(dto);
+//			}
+//			PanelsGetAllResponseDTO responseDTO=new PanelsGetAllResponseDTO();
+//			responseDTO.setList(dtoList);
+//			return responseDTO;
+//		}
+//		
+//		
+//		return null;
+//	}
 		
 	}
 

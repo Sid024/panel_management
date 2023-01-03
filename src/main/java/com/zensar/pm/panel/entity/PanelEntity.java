@@ -33,6 +33,9 @@ public class PanelEntity {
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "panel_level_id") // FK column
 	private PanelLevelEntity panelLevelEntity;
+	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "id") // FK column
+	private PanelCandidateRolesEntity panelCandidateRolesEntity;
 	@Column(name="remark")
 	private String remark;
 	@Column(name = "created_by")
@@ -62,15 +65,16 @@ public class PanelEntity {
 	}
 
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
-			PanelLevelEntity panelLevelEntity, String remark, String createdBy, LocalDateTime createdOn,
-			String updatedBy, LocalDateTime updatedOn, boolean isDeleted, String deletedBy, LocalDateTime deletedOn,
-			InterviewType interviewType, RoleEntity roleType) {
+			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
+			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
+			String deletedBy, LocalDateTime deletedOn, InterviewType interviewType, RoleEntity roleType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
 		this.contact = contact;
 		this.gradeEntity = gradeEntity;
 		this.panelLevelEntity = panelLevelEntity;
+		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
 		this.remark = remark;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
@@ -82,10 +86,16 @@ public class PanelEntity {
 		this.interviewType = interviewType;
 		this.roleType = roleType;
 	}
+	
+	
 
+	public PanelCandidateRolesEntity getPanelCandidateRolesEntity() {
+		return panelCandidateRolesEntity;
+	}
 
-
-
+	public void setPanelCandidateRolesEntity(PanelCandidateRolesEntity panelCandidateRolesEntity) {
+		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
+	}
 
 	public PanelEntity(int id) {
 		super();
