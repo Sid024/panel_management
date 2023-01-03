@@ -17,11 +17,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.zensar.pm.panel.dto.PanelDTO;
+
 import com.zensar.pm.panel.dto.UserDTO;
-import com.zensar.pm.panel.entity.Panel;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
-import com.zensar.pm.panel.repository.PanelRepository;
+
 
 @WebMvcTest(PanelServiceImplementation.class)
 @AutoConfigureMockMvc(addFilters = false)
