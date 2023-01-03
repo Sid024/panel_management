@@ -1,24 +1,47 @@
 package com.zensar.pm.panel.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.zensar.pm.panel.dto.PanelAvailabilityListDto;
-import com.zensar.pm.panel.dto.PanelDTO;
+import org.springframework.http.ResponseEntity;
+
+import com.zensar.pm.panel.dto.PanelAvailabilityListDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilityStatusDTO;
+import com.zensar.pm.panel.dto.RoleDto;
+import com.zensar.pm.panel.dto.InterviewTypeDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
+import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
+import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 
 public interface PanelService {
 
-	public PanelDTO updatePanel(String associateId, PanelDTO panelDTO,String jwtToken);
-	public List<PanelDTO> getByAssociateName(String name,String jwtToken);
+
+	       	
 	
-	
-	
-	public List<PanelAvailabilityListDto> SearchPanelBYFilter(String panelId, String panelName, String email,
-            String availabilityStatus, LocalDate fromDate, LocalDate toDate,
-            String role, String interviewType,int pageNo, int pageSize, String jwtToken);
-	
-    public List<PanelAvailabilityListDto> ExportPanelBYFilter(String panelId, String role,
+	public List<PanelAvailabilityListDTO> ExportPanelBYFilter(int panelId, String role,
             String email,LocalDate fromDate,LocalDate toDate, String interviewType, String panelName,
             String availabilityStatus,String jwtToken);
+	public ShowPanelAvailabilityListDTO  SearchPanelBYFilter(int panelId, String panelName, String email,
+			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
+			int pageNo, int pageSize, String jwtToken);
+	
+	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId, PanelAvailabilityDTO panelAvailablityDTO,String jwtToken);
+
+
+
+
+	public List<PanelAvailabilityStatusDTO> getByAvailabilityStatus();
+	
+	
+	
+	//dropdown
+
+	public Set<String> DropDownConvertorStatus();
+	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
+	 public List<RoleDto> DropDownConvertorRole();
+
 
 }
