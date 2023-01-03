@@ -19,8 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "Grade")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class GradeEntity {
 	@GeneratedValue
 	@Id
