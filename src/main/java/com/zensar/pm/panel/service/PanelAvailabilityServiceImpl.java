@@ -16,8 +16,8 @@ import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
 import com.zensar.pm.panel.exceptions.DuplicateStatusException;
-import com.zensar.pm.panel.repository.PanelAvailablityRepository;
-import com.zensar.pm.panel.repository.PanelAvailablityStatusRepository;
+import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
+import com.zensar.pm.panel.repository.PanelAvailabilityStatusRepository;
 import com.zensar.pm.panel.repository.PanelEntityRepository;
 import com.zensar.pm.panel.repository.UserRepository;
 
@@ -25,13 +25,13 @@ import com.zensar.pm.panel.repository.UserRepository;
 public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 	@Autowired
-	PanelAvailablityRepository repository;
+	PanelAvailabilityRepository repository;
 
 	@Autowired
 	PanelEntityRepository panelRepo;
 
 	@Autowired
-	PanelAvailablityStatusRepository panelStatusRepo;
+	PanelAvailabilityStatusRepository panelStatusRepo;
 	
 	@Autowired
 	UserRepository userRepo;
