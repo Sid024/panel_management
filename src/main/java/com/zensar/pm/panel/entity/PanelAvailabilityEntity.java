@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="")
+@Table(name="panels_availability")
 public class PanelAvailabilityEntity {
 
 	@Id
