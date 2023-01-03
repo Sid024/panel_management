@@ -3,17 +3,39 @@ package com.zensar.pm.panel.dto;
 import java.time.LocalDate;
 import java.util.Date;
 
-public class PanelAvailabilityListDto {
+public class PanelAvailabilityListDTO {
 
 	private String email;
 	private LocalDate date;
-	private String panelId;
+	private int panelId;
 	private String contact;
 	private String slotTime;
 	private String panelName;
 	private String role;
 	private String interviewType;
 	private String availabilityStatus;
+	private int panelAvailabilityId;
+	private String gradeId;
+	
+	
+	
+
+
+	public int getPanelAvailabilityId() {
+		return panelAvailabilityId;
+	}
+
+	public void setPanelAvailabilityId(int panelAvailabilityId) {
+		this.panelAvailabilityId = panelAvailabilityId;
+	}
+
+	public String getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(String gradeId) {
+		this.gradeId = gradeId;
+	}
 
 	public String getEmail() {
 		return email;
@@ -31,11 +53,11 @@ public class PanelAvailabilityListDto {
 		this.date = date;
 	}
 
-	public String getPanelId() {
+	public int getPanelId() {
 		return panelId;
 	}
 
-	public void setPanelId(String panelId) {
+	public void setPanelId(int panelId) {
 		this.panelId = panelId;
 	}
 
@@ -87,8 +109,9 @@ public class PanelAvailabilityListDto {
 		this.availabilityStatus = availabilityStatus;
 	}
 
-	public PanelAvailabilityListDto(String email, LocalDate date, String panelId, String contact, String slotTime,
-			String panelName, String role, String interviewType, String availabilityStatus) {
+	public PanelAvailabilityListDTO(String email, LocalDate date, int panelId, String contact, String slotTime,
+			String panelName, String role, String interviewType, String availabilityStatus, int panelAvailabilityId,
+			String gradeId) {
 		super();
 		this.email = email;
 		this.date = date;
@@ -99,11 +122,15 @@ public class PanelAvailabilityListDto {
 		this.role = role;
 		this.interviewType = interviewType;
 		this.availabilityStatus = availabilityStatus;
+		this.panelAvailabilityId = panelAvailabilityId;
+		this.gradeId = gradeId;
 	}
 
-	public PanelAvailabilityListDto() {
+	public PanelAvailabilityListDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 }
