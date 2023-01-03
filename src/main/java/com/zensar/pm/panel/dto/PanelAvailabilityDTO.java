@@ -14,12 +14,12 @@ import javax.persistence.OneToOne;
 
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
-import com.zensar.pm.panel.entity.PanelEnitity;
+import com.zensar.pm.panel.entity.PanelEntity;
 
 public class PanelAvailabilityDTO {
 
  private int panelAvailablityId;
- private PanelEnitity panelId; // FK to PanelEntity
+ private PanelEntity panelId; // FK to PanelEntity
  private LocalDate date;
  private String startTime;
  private String endTime;
@@ -38,10 +38,10 @@ public int getPanelAvailablityId() {
 public void setPanelAvailablityId(int panelAvailablityId) {
 	this.panelAvailablityId = panelAvailablityId;
 }
-public PanelEnitity getPanelId() {
+public PanelEntity getPanelId() {
 	return panelId;
 }
-public void setPanelId(PanelEnitity panelId) {
+public void setPanelId(PanelEntity panelId) {
 	this.panelId = panelId;
 }
 public LocalDate getDate() {
@@ -116,7 +116,7 @@ public boolean isDeleted() {
 public void setDeleted(boolean isDeleted) {
 	this.isDeleted = isDeleted;
 }
-public PanelAvailabilityDTO(int panelAvailablityId, PanelEnitity panelId, LocalDate date, String startTime,
+public PanelAvailabilityDTO(int panelAvailablityId, PanelEntity panelId, LocalDate date, String startTime,
 		String endTime, PanelAvailabilityStatusEntity panelAvailablityStatusEntity, int availablityStatusId,
 		String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
 		LocalDateTime deletedOn, boolean isDeleted) {
