@@ -34,7 +34,7 @@ public class PanelEntity {
 	@JoinColumn(name = "panel_level_id") // FK column
 	private PanelLevelEntity panelLevelEntity;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id") // FK column
+	@JoinColumn(name = "candidate_id") // FK column
 	private PanelCandidateRolesEntity panelCandidateRolesEntity;
 	@Column(name="remark")
 	private String remark;

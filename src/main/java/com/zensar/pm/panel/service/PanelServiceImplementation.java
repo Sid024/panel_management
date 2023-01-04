@@ -27,8 +27,10 @@ import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
+import com.zensar.pm.panel.entity.InterviewType;
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
+import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
 import com.zensar.pm.panel.entity.UserRoleEntity;
@@ -37,6 +39,8 @@ import com.zensar.pm.panel.exceptions.CustomNullPointerException;
 import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
+import com.zensar.pm.panel.repository.CandidateRoleRepository;
+import com.zensar.pm.panel.repository.InterviewTypeRepository;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
 import com.zensar.pm.panel.repository.PanelAvailabilityStatusRepository;
 import com.zensar.pm.panel.repository.RolesRepository;
@@ -253,7 +257,7 @@ public class PanelServiceImplementation implements PanelService {
 		  }
 
 			if (role!=null && !role.isEmpty())
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("roleType").get("roleName"),role));
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));
 			
 			if (email!=null && !email.isEmpty())
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("email"),"%"+email+"%"));
@@ -338,10 +342,9 @@ public class PanelServiceImplementation implements PanelService {
 		if (panelName!=null && !panelName.isEmpty())
 			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("userName"),"%"+panelName+"%"));
 
-
 		if (role!=null && !role.isEmpty())
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("roleType").get("roleName"),role));
-		
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));	
+
 		if (interviewType!=null && !interviewType.isEmpty())
 			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("interviewType").get("type"),"%"+interviewType+"%"));
        
@@ -391,7 +394,7 @@ public class PanelServiceImplementation implements PanelService {
 	        panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
 	        panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
 	       // panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
-	        panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
+	        panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
 			panelDtoList.add(panelDto);
 		}
 		return panelDtoList;
@@ -415,56 +418,43 @@ public class PanelServiceImplementation implements PanelService {
 	}
 
 	/// dynamic dropdown
-
-    @Override
-    public Set<String> DropDownConvertorStatus()
-    {
-        Set<String> stringSet = new HashSet<String>();
-
-        List<PanelAvailabilityEntity> stringList = repo.findAll();
-
-        for(PanelAvailabilityEntity x : stringList)
-        {
-            stringSet.add(x.getPanelAvailablityStatusEntity().getAvailablityStatus());            
-        }
-
-
-    return stringSet;
-    }
-
+    @Autowired
+    CandidateRoleRepository candidateRoleRepo;
     @Override
     public List<RoleDto> DropDownConvertorRole()
     {
  
 
-        List<PanelAvailabilityEntity> stringList = repo.findAll();
+        List<PanelCandidateRolesEntity> stringList = candidateRoleRepo.findAll();
         List<RoleDto> roleDToList = new ArrayList<>(); 
-        for(PanelAvailabilityEntity x : stringList)
+        for(PanelCandidateRolesEntity x : stringList)
         {
         	RoleDto roleDto = new RoleDto(); 
                        
-            roleDto.setRoleId(x.getPanelId().getRoleType().getRoleId());
-            roleDto.setRoleString(x.getPanelId().getRoleType().getRoleName());
+            roleDto.setRoleId(x.getId());
+            roleDto.setRoleString(x.getRole());
             roleDToList.add(roleDto);
         }
 
 
     return roleDToList;
     }
-
+@Autowired
+InterviewTypeRepository interviewTypeRepo;
+    
 @Override
 public List<InterviewTypeDTO> DropDownConvertorInterviewType()
 {
 
 
-    List<PanelAvailabilityEntity> stringList = repo.findAll();
+    List<InterviewType> stringList = interviewTypeRepo.findAll();
     List<InterviewTypeDTO> interviewDToList = new ArrayList<>(); 
-    for(PanelAvailabilityEntity x : stringList)
+    for(InterviewType x : stringList)
     {
     	InterviewTypeDTO roleDto = new InterviewTypeDTO(); 
                    
-        roleDto.setInterviewType(x.getPanelId().getInterviewType().getType());
-        roleDto.setInterviewID(x.getPanelId().getInterviewType().getTypeId());
+        roleDto.setInterviewType(x.getType());
+        roleDto.setInterviewID(x.getTypeId());
         interviewDToList.add(roleDto);
     }
 
