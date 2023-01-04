@@ -23,13 +23,13 @@ public interface PanelService {
 
 	       	
 	
-//	public List<PanelAvailabilityListDTO> ExportPanelBYFilter(int panelId, String role,
-//            String email,LocalDate fromDate,LocalDate toDate, String interviewType, String panelName,
-//            String availabilityStatus,String jwtToken);
-//	public ShowPanelAvailabilityListDTO  SearchPanelBYFilter(int panelId, String panelName, String email,
-//			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
-//			int pageNo, int pageSize, String jwtToken);
-//	
+	public List<PanelAvailabilityListDTO> ExportPanelBYFilter(int panelId, String role,
+            String email,LocalDate fromDate,LocalDate toDate, String interviewType, String panelName,
+            String availabilityStatus,String jwtToken);
+	public ShowPanelAvailabilityListDTO  SearchPanelBYFilter(int panelId, String panelName, String email,
+			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
+			int pageNo, int pageSize, String jwtToken);
+	
 	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId, PanelAvailabilityDTO panelAvailablityDTO,String jwtToken);
 	
 	public PanelDTO getAllPanel();
@@ -45,9 +45,9 @@ public interface PanelService {
 	
 	//dropdown
 
-//	public Set<String> DropDownConvertorStatus();
-//	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
-//	public List<RoleDto> DropDownConvertorRole();
+	public Set<String> DropDownConvertorStatus();
+	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
+	public List<RoleDto> DropDownConvertorRole();
 
 
 }

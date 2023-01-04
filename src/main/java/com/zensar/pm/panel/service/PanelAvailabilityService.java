@@ -11,5 +11,5 @@ public interface PanelAvailabilityService {
 
 	public PanelAvailabilityDTO addPanelAvailablitySingle( PanelAvailabilityDTO dto);
 
-	//public PanelsGetAllResponseDTO getAllPanels();
+	public PanelsGetAllResponseDTO getAllPanels();
 }

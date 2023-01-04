@@ -32,7 +32,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 	@Autowired
 	PanelAvailabilityStatusRepository panelStatusRepo;
-	
+
 	@Autowired
 	UserRepository userRepo;
 
@@ -43,49 +43,48 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 	public PanelAvailabilityDTO addPanelAvailablitySingle(PanelAvailabilityDTO dto) {
 
 		PanelAvailabilityEntity entity = modelMapper.map(dto, PanelAvailabilityEntity.class);
-		boolean panel=repository.existsByPanelId(entity.getPanelId());
-		boolean startTime=repository.existsByStartTime(entity.getStartTime());
-		LocalDate date=dto.getDate();
-		boolean existDate=repository.existsByDate(date);
-		if(panel && startTime && existDate) {
-			throw new DuplicateStatusException("You are already booked");}
+		boolean panel = repository.existsByPanelId(entity.getPanelId());
+		boolean startTime = repository.existsByStartTime(entity.getStartTime());
+		LocalDate date = dto.getDate();
+		boolean existDate = repository.existsByDate(date);
+		if (panel && startTime && existDate) {
+			throw new DuplicateStatusException("You are already booked");
+		}
 		PanelEntity panelEntity = panelRepo.findById(entity.getPanelId().getId()).get();
-		PanelAvailabilityStatusEntity statusEntity=panelStatusRepo.findById(1).get();
+		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1).get();
 
-		int idAll=repository.findAll().size();
-		int id=repository.findById(idAll+1).get().getPanelAvailablityId();
-		entity.setPanelAvailablityId(id+1);
+		int idAll = repository.findAll().size();
+		int id = repository.findById(idAll + 1).get().getPanelAvailablityId();
+		entity.setPanelAvailablityId(id + 1);
 		entity.setPanelId(panelEntity);
 		entity.setPanelAvailablityStatusEntity(statusEntity);
 		repository.save(entity);
 
 		return dto;
-		}
-
-//	@Override
-//	public PanelsGetAllResponseDTO getAllPanels() {
-//		List<PanelEntity> panelEntity=panelRepo.findAll();
-//		if(!(panelEntity.isEmpty())) {
-//			List<PanelsGetAllDTO> dtoList=new ArrayList<>();
-//			for(PanelEntity panel:panelEntity) {
-//				PanelsGetAllDTO dto=new PanelsGetAllDTO();
-//				dto.setPanelId(panel.getId());
-//				UserEntity userEntity=userRepo.findById(panel.getId()).get();
-//				dto.setPanelName(userEntity.getUserName());
-//				PanelEntity pan=panelRepo.findById(panel.getId()).get();
-//				dto.setPanelRole(pan.getRoleType().getRoleName());
-//				
-//				dtoList.add(dto);
-//			}
-//			PanelsGetAllResponseDTO responseDTO=new PanelsGetAllResponseDTO();
-//			responseDTO.setList(dtoList);
-//			return responseDTO;
-//		}
-//		
-//		
-//		return null;
-//	}
-		
 	}
 
+	@Override
+	public PanelsGetAllResponseDTO getAllPanels() {
 
+		List<PanelEntity> panelEntity = panelRepo.findAll();
+		if (!(panelEntity.isEmpty())) {
+			List<PanelsGetAllDTO> dtoList = new ArrayList<>();
+			for (PanelEntity panel : panelEntity) {
+				PanelsGetAllDTO dto = new PanelsGetAllDTO();
+				dto.setPanelId(panel.getId());
+				UserEntity userEntity = userRepo.findById(panel.getId()).get();
+				dto.setPanelName(userEntity.getUserName());
+				PanelEntity pan = panelRepo.findById(panel.getId()).get();
+				dto.setPanelRole(pan.getRoleType().getRoleName());
+
+				dtoList.add(dto);
+			}
+			PanelsGetAllResponseDTO responseDTO = new PanelsGetAllResponseDTO();
+			responseDTO.setList(dtoList);
+			return responseDTO;
+		}
+
+		return null;
+	}
+
+}
