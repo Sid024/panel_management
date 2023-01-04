@@ -5,10 +5,14 @@ import java.util.List;
 public class PanelsGetAllResponseDTO {
 
 	private List<PanelsGetAllDTO> list;
+	private String roleName;
+	
+	
 
-	public PanelsGetAllResponseDTO(List<PanelsGetAllDTO> list) {
+	public PanelsGetAllResponseDTO(List<PanelsGetAllDTO> list, String roleName) {
 		super();
 		this.list = list;
+		this.roleName = roleName;
 	}
 
 	public PanelsGetAllResponseDTO() {
@@ -23,10 +27,20 @@ public class PanelsGetAllResponseDTO {
 		this.list = list;
 	}
 
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
 	@Override
 	public String toString() {
-		return "PanelsGetAllResponseDTO [list=" + list + "]";
+		return "PanelsGetAllResponseDTO [list=" + list + ", roleName=" + roleName + "]";
 	}
+
+	
 	
 	
 }

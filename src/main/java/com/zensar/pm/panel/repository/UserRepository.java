@@ -7,4 +7,6 @@ import com.zensar.pm.panel.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 
+	UserEntity findByUserName(String userName);
+
 }

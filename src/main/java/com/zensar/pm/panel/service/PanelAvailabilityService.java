@@ -4,12 +4,15 @@ import org.springframework.stereotype.Service;
 
 import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
 import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
-import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 
 @Service
 public interface PanelAvailabilityService {
 
 	public PanelAvailabilityDTO addPanelAvailablitySingle( PanelAvailabilityDTO dto);
 
-	public PanelsGetAllResponseDTO getAllPanels();
+	public PanelsGetAllResponseDTO getLoginRole(String token);
+
+	public PanelsGetAllResponseDTO filterByPanelName(String panelName);
+
+	/* public PanelsGetAllResponseDTO getAllPanels(); */
 }

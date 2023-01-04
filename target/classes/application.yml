@@ -16,6 +16,11 @@ spring:
       show-sql: true
    application:
      name: panel-management-service
+     
+   jackson :
+     serialization :
+        fail-on-empty-beans : false
+        
 springdoc:
     swagger-ui:
       path: /myswaggerui

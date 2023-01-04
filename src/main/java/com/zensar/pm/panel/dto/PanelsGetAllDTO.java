@@ -1,20 +1,18 @@
 package com.zensar.pm.panel.dto;
 
-import com.zensar.pm.panel.entity.RoleEntity;
-
 public class PanelsGetAllDTO {
 	
 	private int panelId;
 	
 	private String panelName;
 	
-	private String panelRole;
+	private String panelGrade;
 
-	public PanelsGetAllDTO(int panelId, String panelName, String panelRole) {
+	public PanelsGetAllDTO(int panelId, String panelName, String panelGrade) {
 		super();
 		this.panelId = panelId;
 		this.panelName = panelName;
-		this.panelRole = panelRole;
+		this.panelGrade = panelGrade;
 	}
 
 	public PanelsGetAllDTO() {
@@ -37,17 +35,17 @@ public class PanelsGetAllDTO {
 		this.panelName = panelName;
 	}
 
-	public String getPanelRole() {
-		return panelRole;
+	public String getPanelGrade() {
+		return panelGrade;
 	}
 
-	public void setPanelRole(String panelRole) {
-		this.panelRole = panelRole;
+	public void setPanelGrade(String panelGrade) {
+		this.panelGrade = panelGrade;
 	}
 
 	@Override
 	public String toString() {
-		return "PanelsGetAllDTO [panelId=" + panelId + ", panelName=" + panelName + ", panelRole=" + panelRole + "]";
+		return "PanelsGetAllDTO [panelId=" + panelId + ", panelName=" + panelName + ", panelGrade=" + panelGrade + "]";
 	}
 	
 	

@@ -34,6 +34,7 @@ import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
 import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
+import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
 import com.zensar.pm.panel.export.FileExporter;
@@ -57,13 +58,18 @@ public class PanelAvailabilityController {
 		return new ResponseEntity<PanelAvailabilityDTO>(service.addPanelAvailablitySingle(dto),HttpStatus.OK);
 	}
 	
-	
-	@GetMapping(value = "/panels/getAll", produces = MediaType.APPLICATION_JSON_VALUE)
-	public PanelsGetAllResponseDTO getAllPanels() {
-		PanelsGetAllResponseDTO panelsDTO=service.getAllPanels();
-		return panelsDTO;
+	@GetMapping(value="/panel/availability/getRole",produces = MediaType.APPLICATION_JSON_VALUE)
+	public PanelsGetAllResponseDTO searchRole(@RequestHeader("Authorization") String token) {
+		
+		PanelsGetAllResponseDTO dto=service.getLoginRole(token);
+		return dto;
 	}
 	
+	@GetMapping(value="panel/availability/filter",produces = MediaType.APPLICATION_JSON_VALUE)
+	public PanelsGetAllResponseDTO filterByPanelName(@RequestParam(required = true) String panelName ){
+		PanelsGetAllResponseDTO panelNameList=service.filterByPanelName(panelName);
+		return panelNameList;
+	}
 	
 	//team 10
 	
