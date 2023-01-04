@@ -35,6 +35,19 @@ private int availabilityStatusId;
 	public void setAvailabilityStatus(String availablityStatus) {
 		this.availabilityStatus = availablityStatus;
 	}
+
+
+	public PanelAvailabilityStatusDTO(int availabilityStatusId, String availabilityStatus) {
+		super();
+		this.availabilityStatusId = availabilityStatusId;
+		this.availabilityStatus = availabilityStatus;
+	}
+
+
+	public PanelAvailabilityStatusDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	

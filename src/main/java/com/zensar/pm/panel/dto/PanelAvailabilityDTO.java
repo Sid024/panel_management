@@ -140,7 +140,14 @@ public PanelAvailabilityDTO() {
 	super();
 	// TODO Auto-generated constructor stub
 }
- 
+
+public PanelAvailabilityDTO(int panelAvailablityId, String startTime, String endTime, int availablityStatusId) {
+	super();
+	this.panelAvailablityId = panelAvailablityId;
+	this.startTime = startTime;
+	this.endTime = endTime;
+	this.availablityStatusId = availablityStatusId;
+}
 
 }
 
