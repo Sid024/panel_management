@@ -17,11 +17,12 @@ import javax.persistence.Table;
 
 
 @Entity
+
 @Table(name="panels_availability")
 public class PanelAvailabilityEntity {
 
 	@Id
-	@GeneratedValue
+	
 	@Column(name="panels_availability_id")
 	private int panelAvailablityId;
 	
