@@ -198,11 +198,7 @@ public class PanelAvailabilityController {
     return panelService.DropDownConvertorInterviewType();    
     }
 
-    @GetMapping(value = "/Availability/Status",produces = MediaType.APPLICATION_JSON_VALUE)
-    public Set<String> DropDownAvailabilityStatus()
-    {
-    return panelService.DropDownConvertorStatus();    
-    }
+  
 
     @GetMapping(value = "/role",produces = MediaType.APPLICATION_JSON_VALUE)
     public List<RoleDto> DropDownRole()

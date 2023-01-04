@@ -45,7 +45,7 @@ public interface PanelService {
 	
 	//dropdown
 
-	public Set<String> DropDownConvertorStatus();
+
 	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
 	public List<RoleDto> DropDownConvertorRole();
 
