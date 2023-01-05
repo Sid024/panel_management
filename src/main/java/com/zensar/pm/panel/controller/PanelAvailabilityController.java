@@ -3,7 +3,6 @@ package com.zensar.pm.panel.controller;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -23,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zensar.pm.panel.dto.InterviewTypeDTO;
@@ -34,7 +34,6 @@ import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
 import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
-import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
 import com.zensar.pm.panel.export.FileExporter;
@@ -212,4 +211,30 @@ public class PanelAvailabilityController {
     return panelService.DropDownConvertorRole();
     }
 ///team 10
+    
+    @PostMapping(value="/panel",
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public @ResponseBody ResponseEntity<String> createPanel(@RequestHeader(value = "Authorization") String token,@RequestBody @Valid PanelDTO panelDTO) {
+		panelDTO = panelService.createPanel(panelDTO,token);
+		if(panelDTO!=null){
+			return new ResponseEntity("Created Successfully", HttpStatus.CREATED);
+		}else {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+		}	
+	}
+	
+	@PutMapping(value="/panel",
+			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, 
+			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+	public @ResponseBody ResponseEntity<String> updatePanel(@RequestHeader(value = "Authorization") String token,@RequestBody @Valid PanelDTO panelDTO) {
+		panelDTO = panelService.updatePanel(panelDTO,token);
+		if(panelDTO!=null){
+			return new ResponseEntity("Updated Successfully", HttpStatus.OK);
+		}else {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+
+		}	
+	}
 }

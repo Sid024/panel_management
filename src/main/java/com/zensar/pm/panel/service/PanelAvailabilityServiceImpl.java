@@ -100,7 +100,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			return dto;
 
 		} else if (roleName.equals("PANEL")) {
-			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName());
+			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName()).get(0);
 			String name = userEntity.getUserName();
 			int id = userEntity.getUserId();
 			PanelEntity entity=panelRepo.findByUserEntity(userEntity);

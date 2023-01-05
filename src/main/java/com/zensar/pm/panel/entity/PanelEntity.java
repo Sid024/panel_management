@@ -1,7 +1,6 @@
 package com.zensar.pm.panel.entity;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,18 +13,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-
-@Entity(name = "panel-management-db")
+@Entity
 @Table(name = "panels")
 public class PanelEntity {
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id") // FK column
 	private UserEntity userEntity;
-	@Column(name="contact")
+	@Column(name = "contact")
 	private String contact;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "grade_id") // FK column
@@ -34,9 +32,10 @@ public class PanelEntity {
 	@JoinColumn(name = "panel_level_id") // FK column
 	private PanelLevelEntity panelLevelEntity;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "panel_candidate_roles_id") // FK column
+
+	@JoinColumn(name = "panel_candidate_role_id") // FK column
 	private PanelCandidateRolesEntity panelCandidateRolesEntity;
-	@Column(name="remark")
+	@Column(name = "remark")
 	private String remark;
 	@Column(name = "created_by")
 	private String createdBy;
@@ -54,20 +53,21 @@ public class PanelEntity {
 	private LocalDateTime deletedOn;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id") // FK column
-	private InterviewType interviewType;
-	
+	private InterviewTypes interviewType;
+
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "roleId") // FK column
 	private RolesEntity roleType;
-	
+
 	public PanelEntity() {
 		super();
 	}
 
+
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewType interviewType, RolesEntity roleType) {
+			String deletedBy, LocalDateTime deletedOn, InterviewTypes interviewType, RolesEntity roleType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -85,9 +85,9 @@ public class PanelEntity {
 		this.deletedOn = deletedOn;
 		this.interviewType = interviewType;
 		this.roleType = roleType;
+
 	}
-	
-	
+
 
 	public PanelCandidateRolesEntity getPanelCandidateRolesEntity() {
 		return panelCandidateRolesEntity;
@@ -206,15 +206,13 @@ public class PanelEntity {
 		this.deletedOn = deletedOn;
 	}
 
-	public InterviewType getInterviewType() {
+	public InterviewTypes getInterviewType() {
 		return interviewType;
 	}
 
-	public void setInterviewType(InterviewType interviewType) {
+	public void setInterviewType(InterviewTypes interviewType) {
 		this.interviewType = interviewType;
 	}
-	
-	
 
 	public RolesEntity getRoleType() {
 		return roleType;
@@ -224,14 +222,14 @@ public class PanelEntity {
 		this.roleType = roleType;
 	}
 
+
 	@Override
 	public String toString() {
 		return "PanelEntity [id=" + id + ", userEntity=" + userEntity + ", contact=" + contact + ", gradeEntity="
-				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", remark=" + remark + ", createdBy="
-				+ createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn
-				+ ", isDeleted=" + isDeleted + ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn
-				+ ", interviewType=" + interviewType + ", roleType=" + roleType + "]";
+				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", panelCandidateRolesEntity="
+				+ panelCandidateRolesEntity + ", remark=" + remark + ", createdBy=" + createdBy + ", createdOn="
+				+ createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted
+				+ ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn + ", interviewType=" + interviewType + "]";
 	}
 
-	
 }

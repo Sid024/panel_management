@@ -44,5 +44,57 @@ public class GlobalExceptionalHandler extends RuntimeException {
 	public ResponseEntity<String> duplicateStatus(DuplicateStatusException ex) {
 		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 	}
+	@ExceptionHandler(value = AssociateIdAlreadyExistsException.class)
+	public ResponseEntity<String> handleException(AssociateIdAlreadyExistsException ex) {
+		return new ResponseEntity<String>("Associate Id Already Exists", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = EmailAlreadyExistException.class)
+	public ResponseEntity<String> handleException(EmailAlreadyExistException ex) {
+		return new ResponseEntity<String>("Email Already Exists", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = GradeNotFoundException.class)
+	public ResponseEntity<String> handleException(GradeNotFoundException ex) {
+		return new ResponseEntity<String>("Grade not found", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = InterviewTypeNotFoundException.class)
+	public ResponseEntity<String> handleException(InterviewTypeNotFoundException ex) {
+		return new ResponseEntity<String>("Interview Type not found", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = NoSuchRoleFoundException.class)
+	public ResponseEntity<String> handleException(NoSuchRoleFoundException ex) {
+		return new ResponseEntity<String>("No Such Role found", HttpStatus.BAD_REQUEST);
+	}
+    
+	@ExceptionHandler(value = PanelAlreadyExists.class)
+	public ResponseEntity<String> handleException(PanelAlreadyExists ex) {
+		return new ResponseEntity<String>("Panel Already Exists", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(value = PanelCandidateRoleNotFoundException.class)
+	public ResponseEntity<String> handleException(PanelCandidateRoleNotFoundException ex) {
+		return new ResponseEntity<String>("Panel Candidate Role Not Found", HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler (value = UserNotFoundException.class)
+	public ResponseEntity<String> handleException(UserNotFoundException ex){
+		return new ResponseEntity<String>("User Not Found", HttpStatus.BAD_REQUEST);
+		
+	}
+	@ExceptionHandler (value = PanelNotFound.class)
+    public ResponseEntity<String> handleException(PanelNotFound ex){
+        return new ResponseEntity<String>("Panel Not Found", HttpStatus.BAD_REQUEST);
+
+    }
+	
+	@ExceptionHandler(MailNotSentException.class)
+    public ResponseEntity<String> exception(MailNotSentException exception) {
+        //ExceptionEntity message = new ExceptionEntity(exception.getMessage());
+        return new ResponseEntity<>("Something went wrong while sending the mail", HttpStatus.BAD_GATEWAY);
+    }
+	
 	
 }

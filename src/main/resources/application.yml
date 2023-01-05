@@ -17,6 +17,18 @@ spring:
    application:
      name: panel-management-service
      
+   mail:
+    host: smtp.gmail.com
+    username: prateekzensar@gmail.com
+    password: uavoirxcxxerdzyo
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+     
    jackson :
      serialization :
         fail-on-empty-beans : false

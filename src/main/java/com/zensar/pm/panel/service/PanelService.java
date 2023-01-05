@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 
 import com.zensar.pm.panel.dto.PanelAvailabilityListDTO;
@@ -48,6 +50,8 @@ public interface PanelService {
 
 	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
 	public List<RoleDto> DropDownConvertorRole();
+	public PanelDTO createPanel(PanelDTO panelDTO, String token) ;
+    public PanelDTO updatePanel(PanelDTO panelDTO, String token) ;
 
 
 }

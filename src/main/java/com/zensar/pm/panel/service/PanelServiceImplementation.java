@@ -3,9 +3,8 @@ package com.zensar.pm.panel.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -27,25 +26,38 @@ import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
-import com.zensar.pm.panel.entity.InterviewType;
+import com.zensar.pm.panel.entity.GradeEntity;
+import com.zensar.pm.panel.entity.InterviewTypes;
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
+import com.zensar.pm.panel.entity.RoleEntity;
 import com.zensar.pm.panel.entity.UserEntity;
 import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.enums.Constants;
 import com.zensar.pm.panel.exceptions.CustomNullPointerException;
+import com.zensar.pm.panel.exceptions.EmailAlreadyExistException;
 import com.zensar.pm.panel.exceptions.EmptyListException;
+import com.zensar.pm.panel.exceptions.GradeNotFoundException;
+import com.zensar.pm.panel.exceptions.InterviewTypeNotFoundException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
+import com.zensar.pm.panel.exceptions.NoSuchRoleFoundException;
+import com.zensar.pm.panel.exceptions.PanelAlreadyExists;
+import com.zensar.pm.panel.exceptions.PanelCandidateRoleNotFoundException;
+import com.zensar.pm.panel.exceptions.PanelNotFound;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
-import com.zensar.pm.panel.repository.CandidateRoleRepository;
+import com.zensar.pm.panel.exceptions.UserNotFoundException;
+import com.zensar.pm.panel.repository.GradeRepository;
 import com.zensar.pm.panel.repository.InterviewTypeRepository;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
 import com.zensar.pm.panel.repository.PanelAvailabilityStatusRepository;
+import com.zensar.pm.panel.repository.PanelCandidateRolesRepository;
+import com.zensar.pm.panel.repository.PanelEntityRepository;
 import com.zensar.pm.panel.repository.RolesRepository;
 import com.zensar.pm.panel.repository.UserRepository;
 import com.zensar.pm.panel.repository.UserRolesRepository;
+import com.zensar.pm.panel.utils.UserCreatedSuccessfullyMail;
 
 @Service
 public class PanelServiceImplementation implements PanelService {
@@ -73,6 +85,19 @@ public class PanelServiceImplementation implements PanelService {
 	UserRolesRepository userRolesRepository;
 	@Autowired
 	RolesRepository rolesRepository;
+	@Autowired
+	PanelEntityRepository panelEntityRepository;
+	@Autowired
+	GradeRepository gradeRepository;
+
+	@Autowired
+	InterviewTypeRepository interviewTypeRepository;
+
+	@Autowired
+	PanelCandidateRolesRepository panelCandidateRolesRepository;
+	
+	@Autowired
+	UserCreatedSuccessfullyMail userCreatedSuccessfullyMail;
 
 	/// Update --> table need to change--> not done
 
@@ -395,7 +420,7 @@ public class PanelServiceImplementation implements PanelService {
 			panelDto.setAvailabilityStatus(entityList.get(x).getPanelAvailablityStatusEntity().getAvailablityStatus());
 	        panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
 	        panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
-	       // panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
+	        //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
 	        panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
 	        panelDto.setFromTime(entityList.get(x).getStartTime());
 	        panelDto.setToTime(entityList.get(x).getEndTime());
@@ -424,7 +449,7 @@ public class PanelServiceImplementation implements PanelService {
 
 	/// dynamic dropdown
     @Autowired
-    CandidateRoleRepository candidateRoleRepo;
+    PanelCandidateRolesRepository candidateRoleRepo;
     @Override
     public List<RoleDto> DropDownConvertorRole()
     {
@@ -452,20 +477,214 @@ public List<InterviewTypeDTO> DropDownConvertorInterviewType()
 {
 
 
-    List<InterviewType> stringList = interviewTypeRepo.findAll();
+    List<InterviewTypes> stringList = interviewTypeRepo.findAll();
     List<InterviewTypeDTO> interviewDToList = new ArrayList<>(); 
-    for(InterviewType x : stringList)
+    for(InterviewTypes x : stringList)
     {
     	InterviewTypeDTO roleDto = new InterviewTypeDTO(); 
                    
         roleDto.setInterviewType(x.getType());
-        roleDto.setInterviewID(x.getTypeId());
+        //roleDto.setInterviewID(x.getTypeId());
         interviewDToList.add(roleDto);
     }
 interviewDToList.add(new InterviewTypeDTO("Select Interview Type",0));
 
 return interviewDToList;
 }
+
+
+@Override
+public PanelDTO createPanel(PanelDTO panelDTO, String token) {
+	
+	String roleName = loginDelegate.isTokenValid(token).getRoleName();
+	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
+
+	if(panelEntityRepository.findByUserId(panelDTO.getPanelId())==null) {
+	PanelEntity panelEntity = new PanelEntity();
+	panelEntity.setContact(panelDTO.getContact());
+	String userName = loginDelegate.isTokenValid(token).getUserName();
+	panelEntity.setCreatedBy(userName);
+	panelEntity.setCreatedOn(LocalDateTime.now());
+	
+	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
+	if(findByUserId.size()>0) {
+		UserRolesEntity userRoleEntity=findByUserId.get(0);
+		if(userRepository.existsByUserId(panelDTO.getPanelId())) {
+			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
+			setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
+		}else {
+			throw new UserNotFoundException("User Not Found");
+		}
+		
+	}else {
+		UserRolesEntity userRoleEntity = new UserRolesEntity();
+		UserEntity userEntity = new UserEntity();
+		setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
+	}
+	
+	if (userRepository.existsByUserId(panelDTO.getPanelId())) {
+		Optional<UserEntity> findById = userRepository.findById(panelDTO.getPanelId());
+		panelEntity.setUserEntity(findById.get());
+	} else {
+		throw new UserNotFoundException("User Not Found");
+	}
+	if (gradeRepository.existsByGradeId(panelDTO.getGradeId())) {
+		GradeEntity findByGradeId = gradeRepository.findByGradeId(panelDTO.getGradeId());
+		panelEntity.setGradeEntity(findByGradeId);
+	} else {
+		throw new GradeNotFoundException("Grade not found");
+	}
+	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
+		InterviewTypes findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+		panelEntity.setInterviewType(findByTypeId);
+	} else {
+		throw new InterviewTypeNotFoundException("Interview Type not found");
+	}
+	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
+		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
+				.findById(panelDTO.getPanelRoleId());
+		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
+	} else {
+		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
+	}
+	PanelEntity save = panelEntityRepository.save(panelEntity);
+	PanelDTO map = modelMapper.map(save, PanelDTO.class);
+
+	return map;
+	}else {
+		throw new PanelAlreadyExists("Panel Already Exists");
+	}
+}else {
+	return null;
+}
+	
+}
+@Override
+public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
+	String roleName = loginDelegate.isTokenValid(token).getRoleName();
+	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
+	PanelEntity panelEntity = panelEntityRepository.findByUserId(panelDTO.getPanelId());
+	if(panelEntity!=null) {
+	panelEntity.setContact(panelDTO.getContact());
+	String userName = loginDelegate.isTokenValid(token).getUserName();
+	panelEntity.setUpdatedBy(userName);
+	panelEntity.setUpdatedOn(LocalDateTime.now());
+	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
+	if(findByUserId.size()==1) {
+		UserRolesEntity userRolesEntity=findByUserId.get(0);
+		if(userRepository.existsByUserId(panelDTO.getPanelId())) {
+			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
+			setUpdateUserEntity(panelDTO, userEntity, userRolesEntity,token);
+		}else {
+			throw new UserNotFoundException("User Not Found");
+		}
+	}
+	
+	if (userRepository.existsByUserId(panelDTO.getPanelId())) {
+		Optional<UserEntity> findById = userRepository.findById(panelDTO.getPanelId());
+		panelEntity.setUserEntity(findById.get());
+	} else {
+		throw new UserNotFoundException("User Not Found");
+	}
+	if (gradeRepository.existsByGradeId(panelDTO.getGradeId())) {
+		GradeEntity findByGradeId = gradeRepository.findByGradeId(panelDTO.getGradeId());
+		panelEntity.setGradeEntity(findByGradeId);
+	} else {
+		throw new GradeNotFoundException("Grade not found");
+	}
+	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
+		InterviewTypes findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+		panelEntity.setInterviewType(findByTypeId);
+	} else {
+		throw new InterviewTypeNotFoundException("Interview Type not found");
+	}
+	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
+		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
+				.findById(panelDTO.getPanelRoleId());
+		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
+	} else {
+		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
+	}
+	PanelEntity save = panelEntityRepository.save(panelEntity);
+	PanelDTO map = modelMapper.map(save, PanelDTO.class);
+
+	return map;
+	}else {
+		throw new PanelNotFound("Panel not found");
+	}
+	}else {
+		return null;
+	}
+}
+public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRolesEntity userRoleEntity,String token) {
+	
+	userEntity.setUserId(panelDTO.getPanelId());
+	userEntity.setUserName(panelDTO.getPanelName());
+	userEntity.setActive(panelDTO.getIsActive());
+	userEntity.setCreatedOn(LocalDateTime.now()); // created userEntity
+    String userName = loginDelegate.isTokenValid(token).getUserName();
+    userEntity.setCreatedBy(userName);
+    String common = "@ZEN^";
+    String passwordUserName = panelDTO.getPanelName().substring(0, 3);
+    int passwordNumber = 100 + (int) (Math.random() * 999);
+    common = common + passwordUserName + passwordNumber;
+    userEntity.setUserPassword(common);
+	if (!userRepository.existsByUserIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
+		userEntity.setEmail(panelDTO.getEmail());
+	} else {
+		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
+	}
+	List<RoleEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+	RoleEntity rolesEntity = findByRoleName.get(0);
+	if (rolesEntity != null) {
+		userRoleEntity.setUserEntity(userEntity);
+		userRoleEntity.setRoleEntity(rolesEntity);
+		userRoleEntity.setActive(userEntity.getIsActive());
+		userRoleEntity.setActive(userEntity.getIsActive());
+		userRoleEntity.setCreatedBy(userEntity.getCreatedBy());
+		userRoleEntity.setCreatedOn(userEntity.getCreatedOn());
+		if (userEntity.getIsActive()) {
+			userCreatedSuccessfullyMail.userCreatedSuccessfully(userEntity.getUserName(), userEntity.getEmail(),
+					userEntity.getUserPassword());
+		}
+		userRolesRepository.save(userRoleEntity);	
+	}else {
+		throw new NoSuchRoleFoundException("No Such Role Found");
+	}
+	
+}
+
+public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRolesEntity userRoleEntity,String token) {
+	
+	userEntity.setUserId(panelDTO.getPanelId());
+	userEntity.setUserName(panelDTO.getPanelName());
+	userEntity.setActive(panelDTO.getIsActive());
+	userEntity.setUpdatedOn(LocalDateTime.now()); // created userEntity
+    String userName = loginDelegate.isTokenValid(token).getUserName();
+    userEntity.setUpdatedBy(userName);
+	if (!userRepository.existsByUserIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
+		userEntity.setEmail(panelDTO.getEmail());
+	} else {
+		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
+	}
+	List<RoleEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+	RoleEntity rolesEntity = findByRoleName.get(0);
+	if (rolesEntity != null) {
+		userRoleEntity.setUserEntity(userEntity);
+		userRoleEntity.setRoleEntity(rolesEntity);
+		userRoleEntity.setActive(userEntity.getIsActive());
+		userRoleEntity.setActive(userEntity.getIsActive());
+		userRoleEntity.setUpdatedBy(userEntity.getCreatedBy());
+		userRoleEntity.setUpdatedOn(userEntity.getCreatedOn());
+		userRolesRepository.save(userRoleEntity);
+
+	}else {
+		throw new NoSuchRoleFoundException("No Such Role Found");
+	}
+	
+}
+
+
 
 
 }
