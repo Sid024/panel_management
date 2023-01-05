@@ -32,7 +32,7 @@ import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
-import com.zensar.pm.panel.entity.RoleEntity;
+import com.zensar.pm.panel.entity.RolesEntity;
 import com.zensar.pm.panel.entity.UserEntity;
 import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.enums.Constants;
@@ -634,11 +634,11 @@ public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
 	} else {
 		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
 	}
-	List<RoleEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
-	RoleEntity rolesEntity = findByRoleName.get(0);
+	List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+	RolesEntity rolesEntity = findByRoleName.get(0);
 	if (rolesEntity != null) {
 		userRoleEntity.setUserEntity(userEntity);
-		userRoleEntity.setRoleEntity(rolesEntity);
+		userRoleEntity.setRolesEntity(rolesEntity);
 		userRoleEntity.setActive(userEntity.getIsActive());
 		userRoleEntity.setActive(userEntity.getIsActive());
 		userRoleEntity.setCreatedBy(userEntity.getCreatedBy());
@@ -667,11 +667,11 @@ public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
 	} else {
 		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
 	}
-	List<RoleEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
-	RoleEntity rolesEntity = findByRoleName.get(0);
+	List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+	RolesEntity rolesEntity = findByRoleName.get(0);
 	if (rolesEntity != null) {
 		userRoleEntity.setUserEntity(userEntity);
-		userRoleEntity.setRoleEntity(rolesEntity);
+		userRoleEntity.setRolesEntity(rolesEntity);
 		userRoleEntity.setActive(userEntity.getIsActive());
 		userRoleEntity.setActive(userEntity.getIsActive());
 		userRoleEntity.setUpdatedBy(userEntity.getCreatedBy());

@@ -16,10 +16,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	
 	public List<UserEntity> findByUserName(String userName);
 
-<<<<<<< HEAD
 	UserEntity findByUserId(int i);
 
-=======
 	Optional<UserEntity> findByEmail(String email);
 	
 	public boolean existsByEmail(String email);
@@ -34,5 +32,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	boolean existsByUserId(int panelId);
 
 	boolean existsByUserIdNotAndEmail(int userId, String email);
->>>>>>> branch 'main' of https://github.com/anand-zensar/panel_management_rest_api_pm_dec_2022
 }
