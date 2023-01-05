@@ -34,7 +34,7 @@ public class PanelEntity {
 	@JoinColumn(name = "panel_level_id") // FK column
 	private PanelLevelEntity panelLevelEntity;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "candidate_id") // FK column
+	@JoinColumn(name = "panel_candidate_roles_id") // FK column
 	private PanelCandidateRolesEntity panelCandidateRolesEntity;
 	@Column(name="remark")
 	private String remark;
@@ -58,7 +58,7 @@ public class PanelEntity {
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "roleId") // FK column
-	private RoleEntity roleType;
+	private RolesEntity roleType;
 	
 	public PanelEntity() {
 		super();
@@ -67,7 +67,7 @@ public class PanelEntity {
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewType interviewType, RoleEntity roleType) {
+			String deletedBy, LocalDateTime deletedOn, InterviewType interviewType, RolesEntity roleType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -216,11 +216,11 @@ public class PanelEntity {
 	
 	
 
-	public RoleEntity getRoleType() {
+	public RolesEntity getRoleType() {
 		return roleType;
 	}
 
-	public void setRoleType(RoleEntity roleType) {
+	public void setRoleType(RolesEntity roleType) {
 		this.roleType = roleType;
 	}
 

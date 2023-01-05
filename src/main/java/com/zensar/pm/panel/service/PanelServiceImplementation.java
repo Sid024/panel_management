@@ -33,7 +33,7 @@ import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
-import com.zensar.pm.panel.entity.UserRoleEntity;
+import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.enums.Constants;
 import com.zensar.pm.panel.exceptions.CustomNullPointerException;
 import com.zensar.pm.panel.exceptions.EmptyListException;
@@ -117,10 +117,10 @@ public class PanelServiceImplementation implements PanelService {
 
 	@Override
 	public PanelDTO getAllPanel() {
-		List<UserRoleEntity> listUserRolesEntity = userRolesRepository.findByRoleId(3);
+		List<UserRolesEntity> listUserRolesEntity = userRolesRepository.findByRoleId(3);
 		List<Integer> listPanelId = new ArrayList<>();
 		List<String> listPanelNames = new ArrayList<>();
-		for (UserRoleEntity userRolesEntity : listUserRolesEntity) {
+		for (UserRolesEntity userRolesEntity : listUserRolesEntity) {
 			int userId = userRolesEntity.getUserEntity().getUserId();
 			listPanelId.add(userId);
 			UserEntity userEntity = userRepository.findById(userId).get();

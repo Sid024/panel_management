@@ -16,14 +16,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class UserRoleEntity {
+public class UserRolesEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "role_id") // FK column
-	private RoleEntity roleEntity;
+	private RolesEntity rolesEntity;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id") // FK column
 	private UserEntity userEntity;
@@ -44,7 +44,7 @@ public class UserRoleEntity {
 	@Column(name = "deleted_on")
 	private LocalDateTime deletedOn;
 
-	public UserRoleEntity() {
+	public UserRolesEntity() {
 		super();
 	}
 
@@ -132,12 +132,12 @@ public class UserRoleEntity {
 		this.deletedOn = deletedOn;
 	}
 
-	public RoleEntity getRoleEntity() {
-		return roleEntity;
+	public RolesEntity getRoleEntity() {
+		return rolesEntity;
 	}
 
-	public void setRoleEntity(RoleEntity roleEntity) {
-		this.roleEntity = roleEntity;
+	public void setRoleEntity(RolesEntity rolesEntity) {
+		this.rolesEntity = rolesEntity;
 	}
 
 	public UserEntity getUserEntity() {
@@ -150,7 +150,7 @@ public class UserRoleEntity {
 
 	@Override
 	public String toString() {
-		return "UserRoleEntity [id=" + id + ", RoleEntity=" + roleEntity + ", userEntity=" + userEntity
+		return "UserRoleEntity [id=" + id + ", RoleEntity=" + rolesEntity + ", userEntity=" + userEntity
 				+ ", isActive=" + isActive + ", createdBy=" + createdBy + ", createdOn=" + createdOn + ", updatedBy="
 				+ updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted + ", deletedBy=" + deletedBy
 				+ ", deletedOn=" + deletedOn + "]";

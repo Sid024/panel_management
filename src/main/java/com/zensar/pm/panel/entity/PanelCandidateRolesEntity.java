@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 public class PanelCandidateRolesEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "id")
+	@Column(name = "panel_candidate_roles_id")
 	private int id;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id") // FK column

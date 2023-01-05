@@ -25,7 +25,7 @@ import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
-import com.zensar.pm.panel.entity.UserRoleEntity;
+import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.exceptions.DuplicateStatusException;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
@@ -65,20 +65,22 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 	public PanelAvailabilityDTO addPanelAvailablitySingle(PanelAvailabilityDTO dto) {
 
 		PanelAvailabilityEntity entity = modelMapper.map(dto, PanelAvailabilityEntity.class);
-		boolean panel = repository.existsByPanelId(entity.getPanelId());
+		UserEntity userEntity=userRepo.findById(entity.getPanelId().getId()).get();
+		boolean panel = repository.existsByUserEntity(userEntity);
 		boolean startTime = repository.existsByStartTime(entity.getStartTime());
 		LocalDate date = dto.getDate();
 		boolean existDate = repository.existsByDate(date);
 		if (panel && startTime && existDate) {
 			throw new DuplicateStatusException("You are already booked");
 		}
-		PanelEntity panelEntity = panelRepo.findById(entity.getPanelId().getId()).get();
+		
+		
+		PanelEntity panelEntity = panelRepo.findByUserEntity(userEntity);
 		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1).get();
 
-		int idAll = repository.findAll().size();
-		int id = repository.findById(idAll + 1).get().getPanelAvailablityId();
-		entity.setPanelAvailablityId(id + 1);
+		
 		entity.setPanelId(panelEntity);
+		entity.setUserEntity(userEntity);
 		entity.setPanelAvailablityStatusEntity(statusEntity);
 		repository.save(entity);
 
@@ -101,12 +103,13 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName());
 			String name = userEntity.getUserName();
 			int id = userEntity.getUserId();
-			String grade = panelRepo.findById(id).get().getGradeEntity().getGrade();
+			PanelEntity entity=panelRepo.findByUserEntity(userEntity);
+			String grade=entity.getGradeEntity().getGrade();
 
 			PanelsGetAllDTO returnDTO = new PanelsGetAllDTO();
-			returnDTO.setPanelGrade(grade);
 			returnDTO.setPanelId(id);
 			returnDTO.setPanelName(name);
+			returnDTO.setPanelGrade(grade);
 
 			List<PanelsGetAllDTO> list = Arrays.asList(returnDTO);
 

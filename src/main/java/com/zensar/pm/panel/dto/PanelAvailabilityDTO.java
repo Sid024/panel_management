@@ -2,19 +2,10 @@ package com.zensar.pm.panel.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
-import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
+import com.zensar.pm.panel.entity.UserEntity;
 
 public class PanelAvailabilityDTO {
 
@@ -32,6 +23,7 @@ public class PanelAvailabilityDTO {
  private String deletedBy;
  private LocalDateTime deletedOn;
  private boolean isDeleted;
+ private UserEntity userEntity;
 public int getPanelAvailablityId() {
 	return panelAvailablityId;
 }
@@ -109,6 +101,13 @@ public LocalDateTime getDeletedOn() {
 }
 public void setDeletedOn(LocalDateTime deletedOn) {
 	this.deletedOn = deletedOn;
+}
+
+public UserEntity getUserEntity() {
+	return userEntity;
+}
+public void setUserEntity(UserEntity userEntity) {
+	this.userEntity = userEntity;
 }
 public boolean isDeleted() {
 	return isDeleted;

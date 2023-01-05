@@ -52,7 +52,7 @@ public class PanelAvailabilityController {
 	
 	
 
-	@PostMapping(value = "/panel/availablity", consumes = { MediaType.APPLICATION_JSON_VALUE,
+	@PostMapping(value = "/panel/availability", consumes = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE })
     public ResponseEntity<PanelAvailabilityDTO> addPanelAvailablity(@RequestBody PanelAvailabilityDTO dto) {
 		return new ResponseEntity<PanelAvailabilityDTO>(service.addPanelAvailablitySingle(dto),HttpStatus.OK);

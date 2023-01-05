@@ -22,12 +22,12 @@ import javax.persistence.Table;
 public class PanelAvailabilityEntity {
 
 	@Id
-	
+	@GeneratedValue
 	@Column(name="panels_availability_id")
 	private int panelAvailablityId;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "panel_id")
 	private PanelEntity panelId;  //FK to PanelEntity
 	
 	@Column(name="available_date")
@@ -63,22 +63,27 @@ public class PanelAvailabilityEntity {
 	
 	@Column(name="is_deleted")
 	private boolean isDeleted;
+	
+	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private UserEntity userEntity;
 
 	public PanelAvailabilityEntity() {
 		super();
 	}
 
+
 	public PanelAvailabilityEntity(int panelAvailablityId, PanelEntity panelId, LocalDate date, String startTime,
-			String endTime, PanelAvailabilityStatusEntity panelAvailabilityStatusEntity, String createdBy,
+			String endTime, PanelAvailabilityStatusEntity availablityStatusId, String createdBy,
 			LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
-			LocalDateTime deletedOn, boolean isDeleted) {
+			LocalDateTime deletedOn, boolean isDeleted, UserEntity userEntity) {
 		super();
 		this.panelAvailablityId = panelAvailablityId;
 		this.panelId = panelId;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.availablityStatusId = panelAvailabilityStatusEntity;
+		this.availablityStatusId = availablityStatusId;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 		this.updatedBy = updatedBy;
@@ -86,7 +91,9 @@ public class PanelAvailabilityEntity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 		this.isDeleted = isDeleted;
+		this.userEntity = userEntity;
 	}
+
 
 	public PanelAvailabilityEntity(String startTime, String endTime, LocalDate date, PanelEntity panelEntity) {
 
@@ -200,6 +207,28 @@ public class PanelAvailabilityEntity {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+	
+	
+
+	public PanelAvailabilityStatusEntity getAvailablityStatusId() {
+		return availablityStatusId;
+	}
+
+
+	public void setAvailablityStatusId(PanelAvailabilityStatusEntity availablityStatusId) {
+		this.availablityStatusId = availablityStatusId;
+	}
+
+
+	public UserEntity getUserEntity() {
+		return userEntity;
+	}
+
+
+	public void setUserEntity(UserEntity userEntity) {
+		this.userEntity = userEntity;
+	}
+
 
 	@Override
 	public String toString() {
@@ -233,6 +262,5 @@ public class PanelAvailabilityEntity {
 				&& Objects.equals(panelId, other.panelId) && Objects.equals(startTime, other.startTime)
 				&& Objects.equals(updatedBy, other.updatedBy) && Objects.equals(updatedOn, other.updatedOn);
 	}
-	
 	
 }

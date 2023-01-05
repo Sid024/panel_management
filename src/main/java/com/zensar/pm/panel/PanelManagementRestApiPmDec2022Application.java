@@ -1,4 +1,4 @@
-	package com.zensar.pm.panel;
+package com.zensar.pm.panel;
 
 
 import org.springframework.boot.SpringApplication;
