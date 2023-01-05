@@ -6,13 +6,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.zensar.pm.panel.entity.UserRoleEntity;
+import com.zensar.pm.panel.entity.UserRolesEntity;
 
 
 @Repository
-public interface UserRolesRepository extends JpaRepository<UserRoleEntity, Integer> {
-	@Query("Select u from UserRoleEntity u where u.userEntity.userId=?1")
-	List<UserRoleEntity> findByUserId(int userId);
-	@Query("Select u from UserRoleEntity u where u.roleEntity.roleId=?1")
-	List<UserRoleEntity> findByRoleId(int roleId);
+public interface UserRolesRepository extends JpaRepository<UserRolesEntity, Integer> {
+	@Query("Select u from UserRolesEntity u where u.userEntity.userId=?1")
+	List<UserRolesEntity> findByUserId(int userId);
+	@Query("Select u from UserRolesEntity u where u.roleEntity.roleId=?1")
+	List<UserRolesEntity> findByRoleId(int roleId);
+	
 }

@@ -13,4 +13,6 @@ import com.zensar.pm.panel.entity.RoleEntity;
 public interface RolesRepository extends JpaRepository<RoleEntity, Integer> {
 
 	public List<RoleEntity> findByRoleId(int roleId);
+
+	public List<RoleEntity> findByRoleName(String roleName);
 }

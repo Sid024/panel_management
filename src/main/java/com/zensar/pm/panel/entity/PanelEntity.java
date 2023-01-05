@@ -15,7 +15,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
-@Entity(name = "panel-management-db")
+@Entity
 @Table(name = "panels")
 public class PanelEntity {
 	@Id
@@ -34,7 +34,7 @@ public class PanelEntity {
 	@JoinColumn(name = "panel_level_id") // FK column
 	private PanelLevelEntity panelLevelEntity;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "candidate_id") // FK column
+	@JoinColumn(name = "panel_candidate_role_id") // FK column
 	private PanelCandidateRolesEntity panelCandidateRolesEntity;
 	@Column(name="remark")
 	private String remark;
@@ -54,11 +54,8 @@ public class PanelEntity {
 	private LocalDateTime deletedOn;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id") // FK column
-	private InterviewType interviewType;
+	private InterviewTypes interviewType;
 	
-	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "roleId") // FK column
-	private RoleEntity roleType;
 	
 	public PanelEntity() {
 		super();
@@ -67,7 +64,7 @@ public class PanelEntity {
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewType interviewType, RoleEntity roleType) {
+			String deletedBy, LocalDateTime deletedOn, InterviewTypes interviewType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -84,7 +81,7 @@ public class PanelEntity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 		this.interviewType = interviewType;
-		this.roleType = roleType;
+		
 	}
 	
 	
@@ -206,32 +203,27 @@ public class PanelEntity {
 		this.deletedOn = deletedOn;
 	}
 
-	public InterviewType getInterviewType() {
+	public InterviewTypes getInterviewType() {
 		return interviewType;
 	}
 
-	public void setInterviewType(InterviewType interviewType) {
+	public void setInterviewType(InterviewTypes interviewType) {
 		this.interviewType = interviewType;
-	}
-	
-	
-
-	public RoleEntity getRoleType() {
-		return roleType;
-	}
-
-	public void setRoleType(RoleEntity roleType) {
-		this.roleType = roleType;
 	}
 
 	@Override
 	public String toString() {
 		return "PanelEntity [id=" + id + ", userEntity=" + userEntity + ", contact=" + contact + ", gradeEntity="
-				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", remark=" + remark + ", createdBy="
-				+ createdBy + ", createdOn=" + createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn
-				+ ", isDeleted=" + isDeleted + ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn
-				+ ", interviewType=" + interviewType + ", roleType=" + roleType + "]";
+				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", panelCandidateRolesEntity="
+				+ panelCandidateRolesEntity + ", remark=" + remark + ", createdBy=" + createdBy + ", createdOn="
+				+ createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted
+				+ ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn + ", interviewType=" + interviewType + "]";
 	}
+	
+	
+
+
+
 
 	
 }

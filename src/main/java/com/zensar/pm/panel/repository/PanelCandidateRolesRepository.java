@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
 
-public interface CandidateRoleRepository extends JpaRepository<PanelCandidateRolesEntity, Integer> {
-
+public interface PanelCandidateRolesRepository extends JpaRepository<PanelCandidateRolesEntity, Integer> {
+	PanelCandidateRolesEntity findById(int id);
 }

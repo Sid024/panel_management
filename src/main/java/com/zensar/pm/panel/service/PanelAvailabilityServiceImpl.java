@@ -25,7 +25,7 @@ import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
-import com.zensar.pm.panel.entity.UserRoleEntity;
+import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.exceptions.DuplicateStatusException;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
@@ -98,7 +98,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			return dto;
 
 		} else if (roleName.equals("PANEL")) {
-			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName());
+			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName()).get(0);
 			String name = userEntity.getUserName();
 			int id = userEntity.getUserId();
 			String grade = panelRepo.findById(id).get().getGradeEntity().getGrade();

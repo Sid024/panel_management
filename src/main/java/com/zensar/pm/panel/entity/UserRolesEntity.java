@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class UserRoleEntity {
+public class UserRolesEntity {
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +44,7 @@ public class UserRoleEntity {
 	@Column(name = "deleted_on")
 	private LocalDateTime deletedOn;
 
-	public UserRoleEntity() {
+	public UserRolesEntity() {
 		super();
 	}
 

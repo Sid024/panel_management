@@ -10,8 +10,11 @@ public class PanelDTO {
 	private String contact;
 	private String email;
 	private boolean isActive;
+	private int gradeId;
 	private String grade;
+	private String interviewTypeId;
 	private String interviewType;
+	private int panelRoleId;
 	public  String panelRoles;
 	public List<Integer> listPanelId;
 	public List<String> listPanelNames;
@@ -80,7 +83,7 @@ public class PanelDTO {
 		this.email = email;
 	}
 
-	public boolean isActive() {
+	public boolean getIsActive() {
 		return isActive;
 	}
 
@@ -127,12 +130,39 @@ public class PanelDTO {
 	public void setListPanelNames(List<String> listPanelNames) {
 		this.listPanelNames = listPanelNames;
 	}
+	
+
+	public int getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(int gradeId) {
+		this.gradeId = gradeId;
+	}
+
+	public String getInterviewTypeId() {
+		return interviewTypeId;
+	}
+
+	public void setInterviewTypeId(String interviewTypeId) {
+		this.interviewTypeId = interviewTypeId;
+	}
+
+	public int getPanelRoleId() {
+		return panelRoleId;
+	}
+
+	public void setPanelRoleId(int panelRoleId) {
+		this.panelRoleId = panelRoleId;
+	}
 
 	@Override
 	public String toString() {
 		return "PanelDTO [panelId=" + panelId + ", panelName=" + panelName + ", contact=" + contact + ", email=" + email
-				+ ", isActive=" + isActive + ", grade=" + grade + ", interviewType=" + interviewType + ", panelRoles="
-				+ panelRoles + ", listPanelId=" + listPanelId + ", listPanelNames=" + listPanelNames + "]";
+				+ ", isActive=" + isActive + ", gradeId=" + gradeId + ", grade=" + grade + ", interviewTypeId="
+				+ interviewTypeId + ", interviewType=" + interviewType + ", panelRoleId=" + panelRoleId
+				+ ", panelRoles=" + panelRoles + ", listPanelId=" + listPanelId + ", listPanelNames=" + listPanelNames
+				+ "]";
 	}
 
 	@Override
