@@ -644,7 +644,7 @@ public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
 		userRoleEntity.setCreatedBy(userEntity.getCreatedBy());
 		userRoleEntity.setCreatedOn(userEntity.getCreatedOn());
 		if (userEntity.getIsActive()) {
-			userCreatedSuccessfullyMail.userCreatedSuccessfully(userEntity.getUserName(), userEntity.getEmail(),
+			userCreatedSuccessfullyMail.userCreatedSuccessfully(userEntity.getUserId(),userEntity.getUserName(), userEntity.getEmail(),
 					userEntity.getUserPassword());
 		}
 		userRolesRepository.save(userRoleEntity);	

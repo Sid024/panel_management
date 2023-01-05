@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "panels")
 public class PanelEntity {
 	@Id
-	@Column(name = "id")
+	@Column(name = "panel_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
@@ -55,10 +55,6 @@ public class PanelEntity {
 	@JoinColumn(name = "type_id") // FK column
 	private InterviewTypes interviewType;
 
-	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "roleId") // FK column
-	private RolesEntity roleType;
-
 	public PanelEntity() {
 		super();
 	}
@@ -67,7 +63,7 @@ public class PanelEntity {
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewTypes interviewType, RolesEntity roleType) {
+			String deletedBy, LocalDateTime deletedOn, InterviewTypes interviewType) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -84,7 +80,6 @@ public class PanelEntity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 		this.interviewType = interviewType;
-		this.roleType = roleType;
 
 	}
 
@@ -214,14 +209,6 @@ public class PanelEntity {
 		this.interviewType = interviewType;
 	}
 
-	public RolesEntity getRoleType() {
-		return roleType;
-	}
-
-	public void setRoleType(RolesEntity roleType) {
-		this.roleType = roleType;
-	}
-
 
 	@Override
 	public String toString() {
@@ -231,5 +218,8 @@ public class PanelEntity {
 				+ createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted
 				+ ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn + ", interviewType=" + interviewType + "]";
 	}
+
+	
+	
 
 }

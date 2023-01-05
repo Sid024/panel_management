@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class PanelCandidateRolesEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "panel_candidate_roles_id")
+	@Column(name = "panel_candidate_role_id")
 	private int id;
 	@Column(name = "role", nullable = false)
 	private String role;
