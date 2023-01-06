@@ -263,7 +263,7 @@ public class PanelServiceImplementation implements PanelService {
 
 		
 		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("userId"), panelId));
+			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
 	     
 			if(fromDate!=null || toDate!=null)
 		 {      if (fromDate != null && toDate != null) 
@@ -344,7 +344,7 @@ public class PanelServiceImplementation implements PanelService {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		
 		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("userId"), panelId));
+			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
      
 		if(fromDate!=null || toDate!=null)
 	 {      if (fromDate != null && toDate != null) 
