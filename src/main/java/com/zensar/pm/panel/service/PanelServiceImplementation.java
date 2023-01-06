@@ -263,7 +263,7 @@ public class PanelServiceImplementation implements PanelService {
 
 		
 		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("panelId"), panelId));
+			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("userId"), panelId));
 	     
 			if(fromDate!=null || toDate!=null)
 		 {      if (fromDate != null && toDate != null) 
@@ -344,7 +344,7 @@ public class PanelServiceImplementation implements PanelService {
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		
 		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("panelId"), panelId));
+			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("userId"), panelId));
      
 		if(fromDate!=null || toDate!=null)
 	 {      if (fromDate != null && toDate != null) 
@@ -411,7 +411,7 @@ public class PanelServiceImplementation implements PanelService {
 		for (int x = 0; x < size; x++) {
 			PanelAvailabilityListDTO panelDto = new PanelAvailabilityListDTO();
 			panelDto.setDate(entityList.get(x).getDate());
-			panelDto.setPanelId(entityList.get(x).getPanelId().getId());
+			panelDto.setPanelId(entityList.get(x).getUserEntity().getUserId());
 			panelDto.setContact(entityList.get(x).getPanelId().getContact());
 			panelDto.setEmail(entityList.get(x).getPanelId().getUserEntity().getEmail());
 			panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
@@ -484,7 +484,7 @@ public List<InterviewTypeDTO> DropDownConvertorInterviewType()
     	InterviewTypeDTO roleDto = new InterviewTypeDTO(); 
                    
         roleDto.setInterviewType(x.getType());
-        //roleDto.setInterviewID(x.getTypeId());
+        roleDto.setInterviewID(Integer.parseInt(x.getTypeId()));
         interviewDToList.add(roleDto);
     }
 interviewDToList.add(new InterviewTypeDTO("Select Interview Type",0));
