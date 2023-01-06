@@ -76,7 +76,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		
 		
 		PanelEntity panelEntity = panelRepo.findByUserEntity(userEntity);
-		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1).get();
+		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1);
 
 		
 		entity.setPanelId(panelEntity);

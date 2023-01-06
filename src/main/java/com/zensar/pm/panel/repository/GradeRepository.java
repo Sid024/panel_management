@@ -6,8 +6,4 @@ import com.zensar.pm.panel.entity.GradeEntity;
 
 public interface GradeRepository extends JpaRepository<GradeEntity, Integer>{
 	
-	GradeEntity findByGradeId(int gradeId);
-	
-	boolean existsByGradeId(int gradeId);
-
 }

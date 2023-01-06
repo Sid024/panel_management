@@ -8,6 +8,6 @@ import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 @Repository
 public interface PanelAvailabilityStatusRepository extends JpaRepository<PanelAvailabilityStatusEntity, Integer>{
 
-      PanelAvailabilityStatusEntity findByAvailablityStatusId(int availablityStatusId);
+      PanelAvailabilityStatusEntity findById(int availablityStatusId);
 
 }

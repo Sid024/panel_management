@@ -110,7 +110,7 @@ public class PanelServiceImplementation implements PanelService {
 				) {
 			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
 			PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
-					.findById(panelAvailablityDTO.getAvailablityStatusId()).get();
+					.findById(panelAvailablityDTO.getAvailablityStatusId());
 			if (existingPanel == null)
 				throw new InvalidPanelException("Panel not found");
 			else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
@@ -509,7 +509,7 @@ public PanelDTO createPanel(PanelDTO panelDTO, String token) {
 	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
 	if(findByUserId.size()>0) {
 		UserRolesEntity userRoleEntity=findByUserId.get(0);
-		if(userRepository.existsByUserId(panelDTO.getPanelId())) {
+		if(userRepository.existsById(panelDTO.getPanelId())) {
 			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
 			setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
 		}else {
@@ -522,27 +522,27 @@ public PanelDTO createPanel(PanelDTO panelDTO, String token) {
 		setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
 	}
 	
-	if (userRepository.existsByUserId(panelDTO.getPanelId())) {
-		Optional<UserEntity> findById = userRepository.findById(panelDTO.getPanelId());
-		panelEntity.setUserEntity(findById.get());
+	if (userRepository.existsById(panelDTO.getPanelId())) {
+		UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
+		panelEntity.setUserEntity(findById);
 	} else {
 		throw new UserNotFoundException("User Not Found");
 	}
-	if (gradeRepository.existsByGradeId(panelDTO.getGradeId())) {
-		GradeEntity findByGradeId = gradeRepository.findByGradeId(panelDTO.getGradeId());
+	if (gradeRepository.existsById(panelDTO.getGradeId())) {
+		GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
 		panelEntity.setGradeEntity(findByGradeId);
 	} else {
 		throw new GradeNotFoundException("Grade not found");
 	}
-	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
-		InterviewTypesEntity findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+	if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
+		InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId()).get();
 		panelEntity.setInterviewType(findByTypeId);
 	} else {
 		throw new InterviewTypeNotFoundException("Interview Type not found");
 	}
 	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
 		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
-				.findById(panelDTO.getPanelRoleId());
+				.findById(panelDTO.getPanelRoleId()).get();
 		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
 	} else {
 		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
@@ -572,7 +572,7 @@ public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
 	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
 	if(findByUserId.size()==1) {
 		UserRolesEntity userRolesEntity=findByUserId.get(0);
-		if(userRepository.existsByUserId(panelDTO.getPanelId())) {
+		if(userRepository.existsById(panelDTO.getPanelId())) {
 			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
 			setUpdateUserEntity(panelDTO, userEntity, userRolesEntity,token);
 		}else {
@@ -580,27 +580,27 @@ public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
 		}
 	}
 	
-	if (userRepository.existsByUserId(panelDTO.getPanelId())) {
-		Optional<UserEntity> findById = userRepository.findById(panelDTO.getPanelId());
-		panelEntity.setUserEntity(findById.get());
+	if (userRepository.existsById(panelDTO.getPanelId())) {
+		UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
+		panelEntity.setUserEntity(findById);
 	} else {
 		throw new UserNotFoundException("User Not Found");
 	}
-	if (gradeRepository.existsByGradeId(panelDTO.getGradeId())) {
-		GradeEntity findByGradeId = gradeRepository.findByGradeId(panelDTO.getGradeId());
+	if (gradeRepository.existsById(panelDTO.getGradeId())) {
+		GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
 		panelEntity.setGradeEntity(findByGradeId);
 	} else {
 		throw new GradeNotFoundException("Grade not found");
 	}
-	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
-		InterviewTypesEntity findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+	if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
+		InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId()).get();
 		panelEntity.setInterviewType(findByTypeId);
 	} else {
 		throw new InterviewTypeNotFoundException("Interview Type not found");
 	}
 	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
 		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
-				.findById(panelDTO.getPanelRoleId());
+				.findById(panelDTO.getPanelRoleId()).get();
 		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
 	} else {
 		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
@@ -629,7 +629,7 @@ public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
     int passwordNumber = 100 + (int) (Math.random() * 999);
     common = common + passwordUserName + passwordNumber;
     userEntity.setUserPassword(common);
-	if (!userRepository.existsByUserIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
+	if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
 		userEntity.setEmail(panelDTO.getEmail());
 	} else {
 		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
@@ -662,7 +662,7 @@ public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
 	userEntity.setUpdatedOn(LocalDateTime.now()); // created userEntity
     String userName = loginDelegate.isTokenValid(token).getUserName();
     userEntity.setUpdatedBy(userName);
-	if (!userRepository.existsByUserIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
+	if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
 		userEntity.setEmail(panelDTO.getEmail());
 	} else {
 		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");

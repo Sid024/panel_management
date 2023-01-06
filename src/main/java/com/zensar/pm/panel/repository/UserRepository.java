@@ -16,8 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	
 	public List<UserEntity> findByUserName(String userName);
 
-	UserEntity findByUserId(int i);
-
 	Optional<UserEntity> findByEmail(String email);
 	
 	public boolean existsByEmail(String email);
@@ -25,11 +23,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	public boolean existsByUserName(String userName);
 	
 
-	public List<UserEntity> findByUserIdNotAndEmail(int userId, String email);
+	public List<UserEntity> findByIdNotAndEmail(int userId, String email);
 	
-	public List<UserEntity> findByUserIdNotAndUserName(int userId, String userName);
+	public List<UserEntity> findByIdNotAndUserName(int userId, String userName);
 
-	boolean existsByUserId(int panelId);
-
-	boolean existsByUserIdNotAndEmail(int userId, String email);
+	boolean existsByIdNotAndEmail(int userId, String email);
 }
