@@ -535,7 +535,7 @@ public PanelDTO createPanel(PanelDTO panelDTO, String token) {
 		throw new GradeNotFoundException("Grade not found");
 	}
 	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
-		InterviewTypes findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+		InterviewTypesEntity findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
 		panelEntity.setInterviewType(findByTypeId);
 	} else {
 		throw new InterviewTypeNotFoundException("Interview Type not found");
@@ -593,7 +593,7 @@ public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
 		throw new GradeNotFoundException("Grade not found");
 	}
 	if (interviewTypeRepository.existsByTypeId(panelDTO.getInterviewTypeId())) {
-		InterviewTypes findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
+		InterviewTypesEntity findByTypeId = interviewTypeRepository.findByTypeId(panelDTO.getInterviewTypeId());
 		panelEntity.setInterviewType(findByTypeId);
 	} else {
 		throw new InterviewTypeNotFoundException("Interview Type not found");
