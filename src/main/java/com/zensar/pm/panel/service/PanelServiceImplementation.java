@@ -121,15 +121,15 @@ public class PanelServiceImplementation implements PanelService {
 				existingPanel.setUpdatedOn(LocalDateTime.now());
 				existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
 				existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
-				existingPanel.setPanelAvailablityStatusEntity(availabilityEntity);
+			//	existingPanel.setPanelAvailablityStatusEntity(availabilityEntity);
 
 				// existingPanel.setPanesAvail(panelsAvailabilityDTO.getPanelsAvailabilityStatus());
 
 				PanelAvailabilityEntity save = repo.save(existingPanel);
 
 				PanelAvailabilityDTO panelAvaialablityDTO = modelMapper.map(save, PanelAvailabilityDTO.class);
-				panelAvaialablityDTO.setPanelAvailablityId(availabilityEntity.getAvailablityStatusId());
-				;
+				panelAvaialablityDTO.setPanelAvailablityId(availabilityEntity.getId());
+				
 				return panelAvaialablityDTO;
 			}
 
@@ -417,8 +417,8 @@ public class PanelServiceImplementation implements PanelService {
 			panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
 			panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewType().getType());
 			panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
-			panelDto.setAvailabilityStatus(entityList.get(x).getPanelAvailablityStatusEntity().getAvailablityStatus());
-	        panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
+			//panelDto.setAvailabilityStatus(entityList.get(x).getPanelAvailablityStatusEntity().getAvailablityStatus());
+	        //panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
 	        panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
 	        //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
 	        panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
@@ -440,7 +440,7 @@ public class PanelServiceImplementation implements PanelService {
 		for (PanelAvailabilityStatusEntity p : entityList) {
 			PanelAvailabilityStatusDTO statusDTO = new PanelAvailabilityStatusDTO();
 			statusDTO.setAvailabilityStatus(p.getAvailablityStatus());
-			statusDTO.setAvailabilityStatusId(p.getAvailablityStatusId());
+			statusDTO.setAvailabilityStatusId(p.getId());
 			dtoList.add(statusDTO);
 		}
         dtoList.add(new PanelAvailabilityStatusDTO(0,"Select Availability Status"));

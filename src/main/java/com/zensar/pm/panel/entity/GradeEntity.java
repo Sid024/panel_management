@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class GradeEntity {
 	@GeneratedValue
 	@Id
+	@Column(name="id")
 	private Integer gradeId;
 	private String grade;
 	private String createdBy;

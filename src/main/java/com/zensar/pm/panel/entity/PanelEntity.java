@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "panels")
 public class PanelEntity {
 	@Id
-	@Column(name = "panel_id")
+	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)

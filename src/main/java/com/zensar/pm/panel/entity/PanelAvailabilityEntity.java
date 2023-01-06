@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -17,14 +18,13 @@ import javax.persistence.Table;
 
 
 @Entity
-
 @Table(name="panels_availability")
 public class PanelAvailabilityEntity {
 
 	@Id
-	@GeneratedValue
-	@Column(name="panels_availability_id")
-	private int panelAvailablityId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
+	private int id;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "panel_id")
@@ -72,44 +72,12 @@ public class PanelAvailabilityEntity {
 		super();
 	}
 
-
-	public PanelAvailabilityEntity(int panelAvailablityId, PanelEntity panelId, LocalDate date, String startTime,
-			String endTime, PanelAvailabilityStatusEntity availablityStatusId, String createdBy,
-			LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
-			LocalDateTime deletedOn, boolean isDeleted, UserEntity userEntity) {
-		super();
-		this.panelAvailablityId = panelAvailablityId;
-		this.panelId = panelId;
-		this.date = date;
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.availablityStatusId = availablityStatusId;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-		this.deletedBy = deletedBy;
-		this.deletedOn = deletedOn;
-		this.isDeleted = isDeleted;
-		this.userEntity = userEntity;
+	public int getId() {
+		return id;
 	}
 
-
-	public PanelAvailabilityEntity(String startTime, String endTime, LocalDate date, PanelEntity panelEntity) {
-
-		super();
-		this.panelId = panelEntity;
-		this.date = date;
-		this.startTime = startTime;
-		this.endTime = endTime;
-	}
-
-	public int getPanelAvailablityId() {
-		return panelAvailablityId;
-	}
-
-	public void setPanelAvailablityId(int panelAvailablityId) {
-		this.panelAvailablityId = panelAvailablityId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public PanelEntity getPanelId() {
@@ -144,12 +112,12 @@ public class PanelAvailabilityEntity {
 		this.endTime = endTime;
 	}
 
-	public PanelAvailabilityStatusEntity getPanelAvailablityStatusEntity() {
+	public PanelAvailabilityStatusEntity getAvailablityStatusId() {
 		return availablityStatusId;
 	}
 
-	public void setPanelAvailablityStatusEntity(PanelAvailabilityStatusEntity panelAvailabilityStatusEntity) {
-		this.availablityStatusId = panelAvailabilityStatusEntity;
+	public void setAvailablityStatusId(PanelAvailabilityStatusEntity availablityStatusId) {
+		this.availablityStatusId = availablityStatusId;
 	}
 
 	public String getCreatedBy() {
@@ -207,60 +175,35 @@ public class PanelAvailabilityEntity {
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
-	
-	
-
-	public PanelAvailabilityStatusEntity getAvailablityStatusId() {
-		return availablityStatusId;
-	}
-
-
-	public void setAvailablityStatusId(PanelAvailabilityStatusEntity availablityStatusId) {
-		this.availablityStatusId = availablityStatusId;
-	}
-
 
 	public UserEntity getUserEntity() {
 		return userEntity;
 	}
 
-
 	public void setUserEntity(UserEntity userEntity) {
 		this.userEntity = userEntity;
 	}
 
-
-	@Override
-	public String toString() {
-		return "PanelAvailablityEntity [panelAvailablityId=" + panelAvailablityId + ", panelId=" + panelId + ", date="
-				+ date + ", startTime=" + startTime + ", endTime=" + endTime + ", panelAvailablityStatusEntity="
-				+ availablityStatusId + ", createdBy=" + createdBy + ", createdOn=" + createdOn
-				+ ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", deletedBy=" + deletedBy + ", deletedOn="
-				+ deletedOn + ", isDeleted=" + isDeleted + "]";
+	public PanelAvailabilityEntity(int id, PanelEntity panelId, LocalDate date, String startTime, String endTime,
+			PanelAvailabilityStatusEntity availablityStatusId, String createdBy, LocalDateTime createdOn,
+			String updatedBy, LocalDateTime updatedOn, String deletedBy, LocalDateTime deletedOn, boolean isDeleted,
+			UserEntity userEntity) {
+		super();
+		this.id = id;
+		this.panelId = panelId;
+		this.date = date;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.availablityStatusId = availablityStatusId;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+		this.deletedBy = deletedBy;
+		this.deletedOn = deletedOn;
+		this.isDeleted = isDeleted;
+		this.userEntity = userEntity;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(createdBy, createdOn, date, deletedBy, deletedOn, endTime, isDeleted, panelAvailablityId,
-				availablityStatusId, panelId, startTime, updatedBy, updatedOn);
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PanelAvailabilityEntity other = (PanelAvailabilityEntity) obj;
-		return Objects.equals(createdBy, other.createdBy) && Objects.equals(createdOn, other.createdOn)
-				&& Objects.equals(date, other.date) && Objects.equals(deletedBy, other.deletedBy)
-				&& Objects.equals(deletedOn, other.deletedOn) && Objects.equals(endTime, other.endTime)
-				&& isDeleted == other.isDeleted && panelAvailablityId == other.panelAvailablityId
-				&& Objects.equals(availablityStatusId, other.availablityStatusId)
-				&& Objects.equals(panelId, other.panelId) && Objects.equals(startTime, other.startTime)
-				&& Objects.equals(updatedBy, other.updatedBy) && Objects.equals(updatedOn, other.updatedOn);
-	}
-	
 }

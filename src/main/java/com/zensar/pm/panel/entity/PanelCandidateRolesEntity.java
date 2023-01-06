@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,8 +20,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "panel_candidate_roles")
 public class PanelCandidateRolesEntity {
 	@Id
-	@GeneratedValue
-	@Column(name = "panel_candidate_role_id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
 	private int id;
 	@Column(name = "role", nullable = false)
 	private String role;

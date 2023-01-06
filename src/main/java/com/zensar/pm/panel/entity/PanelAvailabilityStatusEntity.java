@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,9 +15,9 @@ import javax.persistence.Table;
 public class PanelAvailabilityStatusEntity {
 	
 	@Id
-	@GeneratedValue
-	@Column(name="availability_status_id")
-	private int availablityStatusId;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
+	private int id;
 	
 	@Column(name="availability_status")
 	private String availablityStatus;
@@ -46,11 +47,11 @@ public class PanelAvailabilityStatusEntity {
 		super();
 	}
 
-	public PanelAvailabilityStatusEntity(int availablityStatusId, String availablityStatus, String createdBy,
+	public PanelAvailabilityStatusEntity(int id, String availablityStatus, String createdBy,
 			LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
 			LocalDateTime deletedOn, boolean isDeleted) {
 		super();
-		this.availablityStatusId = availablityStatusId;
+		this.id = id;
 		this.availablityStatus = availablityStatus;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
@@ -61,12 +62,14 @@ public class PanelAvailabilityStatusEntity {
 		this.isDeleted = isDeleted;
 	}
 
-	public int getAvailablityStatusId() {
-		return availablityStatusId;
+	
+
+	public int getId() {
+		return id;
 	}
 
-	public void setAvailablityStatusId(int availablityStatusId) {
-		this.availablityStatusId = availablityStatusId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getAvailablityStatus() {
@@ -135,7 +138,7 @@ public class PanelAvailabilityStatusEntity {
 
 	@Override
 	public String toString() {
-		return "PanelAvailablityStatusEntity [availablityStatusId=" + availablityStatusId + ", availablityStatus="
+		return "PanelAvailablityStatusEntity [availablityStatusId=" + id + ", availablityStatus="
 				+ availablityStatus + ", createdBy=" + createdBy + ", createdOn=" + createdOn + ", updatedBy="
 				+ updatedBy + ", updatedOn=" + updatedOn + ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn
 				+ ", isDeleted=" + isDeleted + "]";

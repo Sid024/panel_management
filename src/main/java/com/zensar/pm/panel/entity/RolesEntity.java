@@ -2,6 +2,7 @@ package com.zensar.pm.panel.entity;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 public class RolesEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
 	private int roleId;
 	@NotNull @NotEmpty
 	private String roleName;

@@ -2,6 +2,7 @@ package com.zensar.pm.panel.entity;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class InterviewTypes {
 	@Id
+	@Column(name="id")
 	private String typeId;
 	private String type;
 	private String created_by;

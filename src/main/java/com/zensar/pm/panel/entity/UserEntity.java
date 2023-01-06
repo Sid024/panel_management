@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class UserEntity {
 
 	@Id
-	@Column(name = "user_id")
+	@Column(name = "id")
 	private int userId;
 	@Column(name = "name")
 	private String userName;
