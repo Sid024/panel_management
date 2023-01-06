@@ -140,6 +140,7 @@ public class PanelAvailabilityController {
 	
 		int panelIdint=0;
 		
+		
 	
 		
 		if(panelId!=null && !panelId.isEmpty())
@@ -151,6 +152,34 @@ public class PanelAvailabilityController {
 
 
 	}
+	
+	
+	/// search for panel
+	@GetMapping(value = "/search/filter/panel", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ShowPanelAvailabilityListDTO searchAdvertisesByFilterCriteriaPanel(
+
+			@RequestParam(value = "availabilityStatus", required = false) String availabilityStatus,
+			@RequestParam(name = "fromDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate,
+			@RequestParam(name = "toDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate toDate,
+			@RequestParam(value = "interviewType", required = false) String interviewType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+			@RequestHeader("Authorization") String token) 
+	
+	
+			{
+	
+		
+		return panelService.SearchByPanel(availabilityStatus, fromDate, toDate,interviewType, pageNo, pageSize,token);
+
+
+	}
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping(value = "/getAllStatus",produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<PanelAvailabilityStatusDTO>AvailabilityStatus()

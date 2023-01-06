@@ -45,7 +45,7 @@ public class PanelAvailabilityEntity {
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "availability_status_id")
-	private PanelAvailabilityStatusEntity panelAvailablityStatus; //FK to PanelAvailablityStatusEntity
+	private PanelAvailabilityStatusEntity panelAvailabilityStatusEntity; //FK to PanelAvailablityStatusEntity
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -114,14 +114,16 @@ public class PanelAvailabilityEntity {
 
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
+		
+		
 	}
 
 	public PanelAvailabilityStatusEntity getAvailablityStatusId() {
-		return panelAvailablityStatus;
+		return panelAvailabilityStatusEntity;
 	}
 
 	public void setAvailablityStatusId(PanelAvailabilityStatusEntity availablityStatusId) {
-		this.panelAvailablityStatus = availablityStatusId;
+		this.panelAvailabilityStatusEntity = availablityStatusId;
 	}
 
 	public String getCreatedBy() {
@@ -198,7 +200,7 @@ public class PanelAvailabilityEntity {
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.panelAvailablityStatus = availablityStatusId;
+		this.panelAvailabilityStatusEntity = availablityStatusId;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 		this.updatedBy = updatedBy;

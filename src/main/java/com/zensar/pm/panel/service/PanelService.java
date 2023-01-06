@@ -23,7 +23,7 @@ import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 public interface PanelService {
 
 
-	       	
+	public ShowPanelAvailabilityListDTO SearchByPanel(String availabilityStatus, LocalDate fromDate, LocalDate toDate, String interviewType,int  pageNo,int  pageSize,String token);  	
 	
 	public List<PanelAvailabilityListDTO> ExportPanelBYFilter(int panelId, String role,
             String email,LocalDate fromDate,LocalDate toDate, String interviewType, String panelName,
@@ -31,6 +31,8 @@ public interface PanelService {
 	public ShowPanelAvailabilityListDTO  SearchPanelBYFilter(int panelId, String panelName, String email,
 			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
 			int pageNo, int pageSize, String jwtToken);
+	
+	
 	
 	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId, PanelAvailabilityDTO panelAvailablityDTO,String jwtToken);
 	

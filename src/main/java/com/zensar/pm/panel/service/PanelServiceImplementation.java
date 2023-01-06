@@ -99,46 +99,7 @@ public class PanelServiceImplementation implements PanelService {
 	@Autowired
 	UserCreatedSuccessfullyMail userCreatedSuccessfullyMail;
 
-	/// Update --> table need to change--> not done
 
-	@Override
-	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
-			PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
-
-		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				) {
-			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
-			PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
-					.findById(panelAvailablityDTO.getAvailablityStatusId());
-			if (existingPanel == null)
-				throw new InvalidPanelException("Panel not found");
-			else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
-				throw new CustomNullPointerException("Empty value! enter the value");
-
-			else {
-				existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
-				existingPanel.setUpdatedOn(LocalDateTime.now());
-				existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
-				existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
-			//	existingPanel.setPanelAvailablityStatusEntity(availabilityEntity);
-
-				// existingPanel.setPanesAvail(panelsAvailabilityDTO.getPanelsAvailabilityStatus());
-
-				PanelAvailabilityEntity save = repo.save(existingPanel);
-
-				PanelAvailabilityDTO panelAvaialablityDTO = modelMapper.map(save, PanelAvailabilityDTO.class);
-				panelAvaialablityDTO.setPanelAvailablityId(availabilityEntity.getId());
-				
-				return panelAvaialablityDTO;
-			}
-
-		}
-
-		else {
-			throw new UnauthorizedUserException("Invalid User");
-		}
-	}
 
 	@Override
 	public PanelDTO getAllPanel() {
@@ -242,7 +203,50 @@ public class PanelServiceImplementation implements PanelService {
 		}
 		return panelDtoList;
 	}
+///////////////////////////////////////// Team 10 /////////////////////////
+	/// Update --> table need to change--> not done
 
+	@Override
+	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
+			PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
+
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+				) {
+			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
+			PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
+					.findById(panelAvailablityDTO.getAvailablityStatusId());
+			if (existingPanel == null)
+				throw new InvalidPanelException("Panel not found");
+			else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
+				throw new CustomNullPointerException("Empty value! enter the value");
+
+			else {
+				existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
+				existingPanel.setUpdatedOn(LocalDateTime.now());
+				existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
+				existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
+			//	existingPanel.setPanelAvailablityStatusEntity(availabilityEntity);
+
+				// existingPanel.setPanesAvail(panelsAvailabilityDTO.getPanelsAvailabilityStatus());
+
+				PanelAvailabilityEntity save = repo.save(existingPanel);
+
+				PanelAvailabilityDTO panelAvaialablityDTO = modelMapper.map(save, PanelAvailabilityDTO.class);
+				panelAvaialablityDTO.setPanelAvailablityId(availabilityEntity.getId());
+				
+				return panelAvaialablityDTO;
+				
+				
+			}
+			//;
+
+		}
+
+		else {
+			throw new UnauthorizedUserException("Invalid User");
+		}
+	}
 	/// For Export --> role not done
 
 	@Override 
@@ -284,20 +288,20 @@ public class PanelServiceImplementation implements PanelService {
 			
 			
 			if (email!=null && !email.isEmpty())
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("email"),"%"+email+"%"));
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("email"),"%"+email+"%"));
 
 			if (panelName!=null && !panelName.isEmpty())
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("userName"),"%" + panelName + "%"));
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),"%" + panelName + "%"));
 
 
 			if (role!=null && !role.isEmpty() &&  !role.equals("Select Roles"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));	
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"),role));	
 
 			if (interviewType!=null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("interviewType").get("type"),"%"+interviewType+"%"));
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),"%"+interviewType+"%"));
 	       
 			if(availabilityStatus!=null && !availabilityStatus.isEmpty() && !availabilityStatus.equals("Select Availability Status"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("availablityStatusId").get("availablityStatus"),"%"+availabilityStatus+"%"));
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),"%"+availabilityStatus+"%"));
 				
 		criteriaQuery.select(rootEntity)
 				.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
@@ -321,11 +325,72 @@ public class PanelServiceImplementation implements PanelService {
 	  throw new UnauthorizedUserException("Invalid User");
 
 	}
+/// for panel search---->> If panel Logins
+	@Override
+	public ShowPanelAvailabilityListDTO SearchByPanel(String availabilityStatus, LocalDate fromDate, LocalDate toDate, String interviewType,int  pageNo,int  pageSize,String token)
+	{
+		if (Constants.ROLE_PANEL.equalsIgnoreCase(loginDelegate.isTokenValid(token).getRoleName()))
+				{
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
+				.createQuery(PanelAvailabilityEntity.class);
+		Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
+		
 
+		List<Predicate> predicates = new ArrayList<>();
+		String panelName=loginDelegate.isTokenValid(token).getUserName();
+		
+		if (panelName!=null && !panelName.isEmpty())
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),"%"+panelName+"%"));
+
+		if(fromDate!=null || toDate!=null)
+	 {      if (fromDate != null && toDate != null) 
+			{ if (fromDate.isBefore(toDate) == true) 
+			  predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
+			  else 
+			  throw new EmptyListException("Invalid Date");
+			}
+		  
+		  else if (fromDate!=null) 
+		  {   predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));}
+		    
+		  else
+			  predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
+		  
+	  }
+		if (interviewType!=null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),"%"+interviewType+"%"));
+       
+		if(availabilityStatus!=null && !availabilityStatus.isEmpty() && !availabilityStatus.equals("Select Availability Status"))
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),"%"+availabilityStatus+"%"));
+			
+		
+		criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
+
+		int sizeofdto = entityManager.createQuery(criteriaQuery).getResultList().size();
+
+		TypedQuery<PanelAvailabilityEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+
+		typedQuery.setFirstResult(pageNo * pageSize);
+		typedQuery.setMaxResults(pageSize);
+		List<PanelAvailabilityEntity> searchPanel = typedQuery.getResultList(); // Query is executed
+		
+		
+		
+		if(searchPanel.size()!=0)
+		return new ShowPanelAvailabilityListDTO (Convert(searchPanel,searchPanel.size()),sizeofdto);
+		else
+		throw new EmptyListException("List is Empty No records found");	
+		}
+
+		else 
+		throw new UnauthorizedUserException("Invalid User");
+
+	}
 	
 	
 
-	/// For Search--> role not done
+	/// For Search--> 
 	@Override
 	public ShowPanelAvailabilityListDTO SearchPanelBYFilter(int panelId, String panelName, String email,
 			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
@@ -364,20 +429,19 @@ public class PanelServiceImplementation implements PanelService {
 		
 				
 		if (email!=null && !email.isEmpty())
-			{predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("email"),"%"+email+"%"));}
+			{predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("email"),"%"+email+"%"));}
 
 		if (panelName!=null && !panelName.isEmpty())
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("userName"),"%"+panelName+"%"));
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),"%"+panelName+"%"));
 
 		if (role!=null && !role.isEmpty() &&  !role.equals("Select Roles"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));	
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"),role));	
 
 		if (interviewType!=null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("interviewType").get("type"),"%"+interviewType+"%"));
-       
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),"%"+interviewType+"%"));
+
 		if(availabilityStatus!=null && !availabilityStatus.isEmpty() && !availabilityStatus.equals("Select Availability Status"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("availablityStatusId").get("availablityStatus"),"%"+availabilityStatus+"%"));
-					
+			predicates.add(criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),"%"+availabilityStatus+"%"));	
 		
 		criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
 
@@ -417,7 +481,7 @@ public class PanelServiceImplementation implements PanelService {
 			panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
 			panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewType().getType());
 			panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
-			//panelDto.setAvailabilityStatus(entityList.get(x).getPanelAvailablityStatusEntity().getAvailablityStatus());
+			panelDto.setAvailabilityStatus(entityList.get(x).getAvailablityStatusId().getAvailablityStatus());
 	        //panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
 	        panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
 	        //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
@@ -491,7 +555,7 @@ interviewDToList.add(new InterviewTypeDTO("Select Interview Type",0));
 
 return interviewDToList;
 }
-
+//////////////////////////////////////Team 10/////////////////////////////////////////
 
 @Override
 public boolean createPanel(PanelDTO panelDTO, String token) {
