@@ -79,10 +79,8 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH-mm");
 
-		LocalTime start = LocalTime.parse("10:30", dateTimeFormatter);
-		entity.setStartTime(start);
-		LocalTime end = LocalTime.parse("11:30",dateTimeFormatter);
-		entity.setEndTime(end);
+		entity.setStartTime(dto.getStartTime());
+		entity.setEndTime(dto.getEndTime());
 		entity.setDate(date);
 		entity.setPanelId(panelEntity);
 		entity.setAvailablityStatusId(statusEntity);
