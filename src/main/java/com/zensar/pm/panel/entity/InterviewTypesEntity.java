@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -15,23 +17,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "panel_candidate_roles")
-public class PanelCandidateRolesEntity {
+@Table(name="interview_types")
+public class InterviewTypesEntity {
 	@Id
-	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name="id")
 	private int id;
-	@Column(name = "role", nullable = false)
-	private String role;
-	@Column(name = "deleted_on")
-	private LocalDateTime deletedOn;
-	@Column(name = "created_on")
+	private String type;
+	private String createdBy;
 	private LocalDateTime createdOn;
-	@Column(name = "updated_on")
+	private String updatedBy;
 	private LocalDateTime updatedOn;
-
-	public PanelCandidateRolesEntity(int id, String role) {
-		super();
-		this.id = id;
-		this.role = role;
-	}
+	private boolean isDeleted;
+	private String deletedBy;
+	private LocalDateTime deletedOn;
 }

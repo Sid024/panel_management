@@ -27,7 +27,7 @@ import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
 import com.zensar.pm.panel.entity.GradeEntity;
-import com.zensar.pm.panel.entity.InterviewTypes;
+import com.zensar.pm.panel.entity.InterviewTypesEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelCandidateRolesEntity;
@@ -477,14 +477,14 @@ public List<InterviewTypeDTO> DropDownConvertorInterviewType()
 {
 
 
-    List<InterviewTypes> stringList = interviewTypeRepo.findAll();
+    List<InterviewTypesEntity> stringList = interviewTypeRepo.findAll();
     List<InterviewTypeDTO> interviewDToList = new ArrayList<>(); 
-    for(InterviewTypes x : stringList)
+    for(InterviewTypesEntity x : stringList)
     {
     	InterviewTypeDTO roleDto = new InterviewTypeDTO(); 
                    
         roleDto.setInterviewType(x.getType());
-        roleDto.setInterviewID(Integer.parseInt(x.getTypeId()));
+        roleDto.setInterviewID(x.getId());
         interviewDToList.add(roleDto);
     }
 interviewDToList.add(new InterviewTypeDTO("Select Interview Type",0));

@@ -5,16 +5,18 @@ import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "users")
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class UserEntity {
-
 	@Id
 	@Column(name = "id")
-	private int userId;
+	private int id;
 	@Column(name = "name")
 	private String userName;
 	@Column(name = "password")
@@ -38,6 +40,7 @@ public class UserEntity {
 	@Column(name = "deleted_on")
 	private LocalDateTime deletedOn;
 
+
 	public UserEntity() {
 		super();
 	}
@@ -50,36 +53,35 @@ public class UserEntity {
 
 	public UserEntity(int userId, String userPassword) {
 		super();
-		this.userId = userId;
+		this.id = userId;
 		this.userPassword = userPassword;
 	}
-
-	public UserEntity(String userEmail, int userId) {
+	public UserEntity(String userEmail,int userId) {
 		super();
-		this.userId = userId;
+		this.id = userId;
 		this.email = userEmail;
 	}
 
-//		public UserEntity(String userName, UserRolesEntity userRolesEntity) {
-//			super();
-//			this.userName = userName;
-//			this.userRolesEntity = userRolesEntity;
-	//
-//		}
+//	public UserEntity(String userName, UserRolesEntity userRolesEntity) {
+//		super();
+//		this.userName = userName;
+//		this.userRolesEntity = userRolesEntity;
+//
+//	}
 
-//		public UserEntity(int userId, String userName, String email, UserRolesEntity userRolesEntity) {
-//			super();
-//			this.userId = userId;
-//			this.userName = userName;
-//			this.email = email;
-//			this.userRolesEntity = userRolesEntity;
-//		}
+//	public UserEntity(int userId, String userName, String email, UserRolesEntity userRolesEntity) {
+//		super();
+//		this.userId = userId;
+//		this.userName = userName;
+//		this.email = email;
+//		this.userRolesEntity = userRolesEntity;
+//	}
 
 	public UserEntity(int userId, String userName, String userPassword, String email, boolean isActive,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
 			String deletedBy, LocalDateTime deletedOn) {
 		super();
-		this.userId = userId;
+		this.id = userId;
 		this.userName = userName;
 		this.userPassword = userPassword;
 		this.email = email;
@@ -94,24 +96,32 @@ public class UserEntity {
 
 	}
 
-//		public UserEntity(UserRolesEntity userRolesEntity) {
-//			super();
-//			this.userRolesEntity = userRolesEntity;
-//		}
-
+//	public UserEntity(UserRolesEntity userRolesEntity) {
+//		super();
+//		this.userRolesEntity = userRolesEntity;
+//	}
+    
 	public UserEntity(int userId, String userName, String email) {
 		super();
-		this.userId = userId;
+		this.id = userId;
 		this.userName = userName;
 		this.email = email;
 	}
 
+	public UserEntity(int userId, String userName, String email, boolean isActive) {
+	super();
+	this.id = userId;
+	this.userName = userName;
+	this.email = email;
+	this.isActive = isActive;
+}
+
 	public int getUserId() {
-		return userId;
+		return id;
 	}
 
 	public void setUserId(int userId) {
-		this.userId = userId;
+		this.id = userId;
 	}
 
 	public String getUserName() {
@@ -198,21 +208,22 @@ public class UserEntity {
 		this.deletedOn = deletedOn;
 	}
 
-//		public UserRolesEntity getUserRolesEntity() {
-//			return userRolesEntity;
-//		}
+//	public UserRolesEntity getUserRolesEntity() {
+//		return userRolesEntity;
+//	}
 
-//		public void setUserRolesEntity(UserRolesEntity userRolesEntity) {
-//			this.userRolesEntity = userRolesEntity;
-//		}
+//	public void setUserRolesEntity(UserRolesEntity userRolesEntity) {
+//		this.userRolesEntity = userRolesEntity;
+//	}
 
 	public void setUpdatedOn(LocalDateTime updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+	
 
 	@Override
 	public String toString() {
-		return "UserEntity [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword + ", email="
+		return "UserEntity [userId=" + id + ", userName=" + userName + ", userPassword=" + userPassword + ", email="
 				+ email + ", isActive=" + isActive + ", createdBy=" + createdBy + ", createdOn=" + createdOn
 				+ ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted + ", deletedBy="
 				+ deletedBy + ", deletedOn=" + deletedOn + "]";
@@ -221,7 +232,7 @@ public class UserEntity {
 	@Override
 	public int hashCode() {
 		return Objects.hash(createdBy, createdOn, deletedBy, deletedOn, email, isActive, isDeleted, updatedBy,
-				updatedOn, userId, userName, userPassword);
+				updatedOn, id, userName, userPassword);
 	}
 
 	@Override
@@ -237,8 +248,10 @@ public class UserEntity {
 				&& Objects.equals(deletedBy, other.deletedBy) && Objects.equals(deletedOn, other.deletedOn)
 				&& Objects.equals(email, other.email) && isActive == other.isActive && isDeleted == other.isDeleted
 				&& Objects.equals(updatedBy, other.updatedBy) && Objects.equals(updatedOn, other.updatedOn)
-				&& userId == other.userId && Objects.equals(userName, other.userName)
+				&& id == other.id && Objects.equals(userName, other.userName)
 				&& Objects.equals(userPassword, other.userPassword);
 	}
+
+
 
 }

@@ -53,48 +53,12 @@ public class PanelEntity {
 	private LocalDateTime deletedOn;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id") // FK column
-	private InterviewTypes interviewType;
+	private InterviewTypesEntity interviewType;
 
+	
+	
 	public PanelEntity() {
 		super();
-	}
-
-
-	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
-			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
-			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewTypes interviewType) {
-		super();
-		this.id = id;
-		this.userEntity = userEntity;
-		this.contact = contact;
-		this.gradeEntity = gradeEntity;
-		this.panelLevelEntity = panelLevelEntity;
-		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
-		this.remark = remark;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.updatedBy = updatedBy;
-		this.updatedOn = updatedOn;
-		this.isDeleted = isDeleted;
-		this.deletedBy = deletedBy;
-		this.deletedOn = deletedOn;
-		this.interviewType = interviewType;
-
-	}
-
-
-	public PanelCandidateRolesEntity getPanelCandidateRolesEntity() {
-		return panelCandidateRolesEntity;
-	}
-
-	public void setPanelCandidateRolesEntity(PanelCandidateRolesEntity panelCandidateRolesEntity) {
-		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
-	}
-
-	public PanelEntity(int id) {
-		super();
-		this.id = id;
 	}
 
 	public int getId() {
@@ -135,6 +99,14 @@ public class PanelEntity {
 
 	public void setPanelLevelEntity(PanelLevelEntity panelLevelEntity) {
 		this.panelLevelEntity = panelLevelEntity;
+	}
+
+	public PanelCandidateRolesEntity getPanelCandidateRolesEntity() {
+		return panelCandidateRolesEntity;
+	}
+
+	public void setPanelCandidateRolesEntity(PanelCandidateRolesEntity panelCandidateRolesEntity) {
+		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
 	}
 
 	public String getRemark() {
@@ -201,25 +173,36 @@ public class PanelEntity {
 		this.deletedOn = deletedOn;
 	}
 
-	public InterviewTypes getInterviewType() {
+	public InterviewTypesEntity getInterviewType() {
 		return interviewType;
 	}
 
-	public void setInterviewType(InterviewTypes interviewType) {
+	public void setInterviewType(InterviewTypesEntity interviewType) {
+		this.interviewType = interviewType;
+	}
+
+	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
+			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
+			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
+			String deletedBy, LocalDateTime deletedOn, InterviewTypesEntity interviewType) {
+		super();
+		this.id = id;
+		this.userEntity = userEntity;
+		this.contact = contact;
+		this.gradeEntity = gradeEntity;
+		this.panelLevelEntity = panelLevelEntity;
+		this.panelCandidateRolesEntity = panelCandidateRolesEntity;
+		this.remark = remark;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+		this.isDeleted = isDeleted;
+		this.deletedBy = deletedBy;
+		this.deletedOn = deletedOn;
 		this.interviewType = interviewType;
 	}
 
 
-	@Override
-	public String toString() {
-		return "PanelEntity [id=" + id + ", userEntity=" + userEntity + ", contact=" + contact + ", gradeEntity="
-				+ gradeEntity + ", panelLevelEntity=" + panelLevelEntity + ", panelCandidateRolesEntity="
-				+ panelCandidateRolesEntity + ", remark=" + remark + ", createdBy=" + createdBy + ", createdOn="
-				+ createdOn + ", updatedBy=" + updatedBy + ", updatedOn=" + updatedOn + ", isDeleted=" + isDeleted
-				+ ", deletedBy=" + deletedBy + ", deletedOn=" + deletedOn + ", interviewType=" + interviewType + "]";
-	}
-
-	
-	
 
 }

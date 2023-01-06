@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -18,15 +19,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="panel_level")
+@Table(name="panel_level_master")
 public class PanelLevelEntity {
 	
 	
-	@NotNull
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id")
-	private int panelLevelId;
+	private int id;
 	@NotEmpty
 	private String panelLevel;
 	private String createdBy;
@@ -36,9 +36,9 @@ public class PanelLevelEntity {
 	private boolean isDeleted;
 	private String deletedBy;
 	private Date deletedOn;
-	public PanelLevelEntity(@NotNull int panelLevelId, @NotEmpty String panelLevel) {
+	public PanelLevelEntity(@NotNull int id, @NotEmpty String panelLevel) {
 		super();
-		this.panelLevelId = panelLevelId;
+		this.id = id;
 		this.panelLevel = panelLevel;
 	}
 }
