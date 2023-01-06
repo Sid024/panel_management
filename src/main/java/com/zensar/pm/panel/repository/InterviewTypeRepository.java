@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.zensar.pm.panel.entity.InterviewTypesEntity;
 
-public interface InterviewTypeRepository  extends JpaRepository<InterviewTypesEntity, String>{
+public interface InterviewTypeRepository  extends JpaRepository<InterviewTypesEntity, Integer>{
 	
 	
 
