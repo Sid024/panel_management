@@ -1,7 +1,7 @@
 package com.zensar.pm.panel.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.LocalTime;
 
 public class PanelAvailabilityListDTO {
 
@@ -16,26 +16,26 @@ public class PanelAvailabilityListDTO {
 	private String availabilityStatus;
 	private int panelAvailabilityId;
 	private String gradeId;
-	private String fromTime;
-	private String toTime;
+	private LocalTime fromTime;
+	private LocalTime toTime;
 	
 	
 	
 
 
-	public String getFromTime() {
+	public LocalTime getFromTime() {
 		return fromTime;
 	}
 
-	public void setFromTime(String fromTime) {
+	public void setFromTime(LocalTime fromTime) {
 		this.fromTime = fromTime;
 	}
 
-	public String getToTime() {
+	public LocalTime getToTime() {
 		return toTime;
 	}
 
-	public void setToTime(String toTime) {
+	public void setToTime(LocalTime toTime) {
 		this.toTime = toTime;
 	}
 

@@ -1,6 +1,8 @@
 package com.zensar.pm.panel.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
-import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.dto.PanelsGetAllDTO;
 import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
 import com.zensar.pm.panel.dto.UserDTO;
@@ -25,7 +26,6 @@ import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.entity.UserEntity;
-import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.exceptions.DuplicateStatusException;
 import com.zensar.pm.panel.exceptions.UnauthorizedUserException;
 import com.zensar.pm.panel.repository.PanelAvailabilityRepository;
@@ -64,23 +64,27 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 	@Override
 	public PanelAvailabilityDTO addPanelAvailablitySingle(PanelAvailabilityDTO dto) {
 
-		PanelAvailabilityEntity entity = modelMapper.map(dto, PanelAvailabilityEntity.class);
-		UserEntity userEntity=userRepo.findById(entity.getPanelId().getId()).get();
-		boolean panel = repository.existsByUserEntity(userEntity);
-		boolean startTime = repository.existsByStartTime(entity.getStartTime());
+		UserEntity userEntity = userRepo.findById(dto.getPanelId().getId()).get();
+		PanelEntity panelEntity = panelRepo.findByUserEntity(userEntity);
+		boolean panel = repository.existsByPanelEntity(panelEntity);
+		boolean startTime = repository.existsByStartTime(dto.getStartTime());
 		LocalDate date = dto.getDate();
 		boolean existDate = repository.existsByDate(date);
 		if (panel && startTime && existDate) {
 			throw new DuplicateStatusException("You are already booked");
 		}
-		
-		
-		PanelEntity panelEntity = panelRepo.findByUserEntity(userEntity);
-		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1);
 
-		
+		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1);
+		PanelAvailabilityEntity entity = new PanelAvailabilityEntity();
+
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH-mm");
+
+		LocalTime start = LocalTime.parse("10:30", dateTimeFormatter);
+		entity.setStartTime(start);
+		LocalTime end = LocalTime.parse("11:30",dateTimeFormatter);
+		entity.setEndTime(end);
+		entity.setDate(date);
 		entity.setPanelId(panelEntity);
-		entity.setUserEntity(userEntity);
 		entity.setAvailablityStatusId(statusEntity);
 		repository.save(entity);
 
@@ -103,8 +107,8 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName()).get(0);
 			String name = userEntity.getUserName();
 			int id = userEntity.getUserId();
-			PanelEntity entity=panelRepo.findByUserEntity(userEntity);
-			String grade=entity.getGradeEntity().getGrade();
+			PanelEntity entity = panelRepo.findByUserEntity(userEntity);
+			String grade = entity.getGradeEntity().getGrade();
 
 			PanelsGetAllDTO returnDTO = new PanelsGetAllDTO();
 			returnDTO.setPanelId(id);
@@ -144,8 +148,8 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			List<PanelsGetAllDTO> dtoList = new ArrayList<>();
 			for (PanelEntity panel : panelEntity) {
 				PanelsGetAllDTO dto = new PanelsGetAllDTO();
-				dto.setPanelId(panel.getId());
-				UserEntity userEntity = userRepo.findById(panel.getId()).get();
+				dto.setPanelId(panel.getUserEntity().getUserId());
+				UserEntity userEntity = userRepo.findById(panel.getUserEntity().getUserId()).get();
 				dto.setPanelName(userEntity.getUserName());
 				PanelEntity pan = panelRepo.findById(panel.getId()).get();
 				dto.setPanelGrade(pan.getGradeEntity().getGrade());
@@ -158,7 +162,5 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		}
 		return null;
 	}
-
-	
 
 }

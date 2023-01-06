@@ -2,6 +2,7 @@ package com.zensar.pm.panel.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import com.zensar.pm.panel.entity.PanelAvailabilityStatusEntity;
 import com.zensar.pm.panel.entity.PanelEntity;
@@ -12,8 +13,8 @@ public class PanelAvailabilityDTO {
  private int panelAvailablityId;
  private PanelEntity panelId; // FK to PanelEntity
  private LocalDate date;
- private String startTime;
- private String endTime;
+ private LocalTime startTime;
+ private LocalTime endTime;
  private PanelAvailabilityStatusEntity panelAvailablityStatusEntity; // FK to PanelAvailabilityStatusEntity
  private int availablityStatusId;
  private String createdBy;
@@ -42,16 +43,16 @@ public LocalDate getDate() {
 public void setDate(LocalDate date) {
 	this.date = date;
 }
-public String getStartTime() {
+public LocalTime getStartTime() {
 	return startTime;
 }
-public void setStartTime(String startTime) {
+public void setStartTime(LocalTime startTime) {
 	this.startTime = startTime;
 }
-public String getEndTime() {
+public LocalTime getEndTime() {
 	return endTime;
 }
-public void setEndTime(String endTime) {
+public void setEndTime(LocalTime endTime) {
 	this.endTime = endTime;
 }
 public PanelAvailabilityStatusEntity getPanelAvailablityStatusEntity() {
@@ -115,8 +116,8 @@ public boolean isDeleted() {
 public void setDeleted(boolean isDeleted) {
 	this.isDeleted = isDeleted;
 }
-public PanelAvailabilityDTO(int panelAvailablityId, PanelEntity panelId, LocalDate date, String startTime,
-		String endTime, PanelAvailabilityStatusEntity panelAvailablityStatusEntity, int availablityStatusId,
+public PanelAvailabilityDTO(int panelAvailablityId, PanelEntity panelId, LocalDate date, LocalTime startTime,
+		LocalTime endTime, PanelAvailabilityStatusEntity panelAvailablityStatusEntity, int availablityStatusId,
 		String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, String deletedBy,
 		LocalDateTime deletedOn, boolean isDeleted) {
 	super();
@@ -140,7 +141,7 @@ public PanelAvailabilityDTO() {
 	// TODO Auto-generated constructor stub
 }
 
-public PanelAvailabilityDTO(int panelAvailablityId, String startTime, String endTime, int availablityStatusId) {
+public PanelAvailabilityDTO(int panelAvailablityId, LocalTime startTime, LocalTime endTime, int availablityStatusId) {
 	super();
 	this.panelAvailablityId = panelAvailablityId;
 	this.startTime = startTime;

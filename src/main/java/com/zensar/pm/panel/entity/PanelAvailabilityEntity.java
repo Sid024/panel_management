@@ -2,7 +2,7 @@ package com.zensar.pm.panel.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.LocalTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,8 +12,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
@@ -26,22 +29,23 @@ public class PanelAvailabilityEntity {
 	@Column(name="id")
 	private int id;
 	
-	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "panel_id")
-	private PanelEntity panelId;  //FK to PanelEntity
+	@JsonIgnore
+    @ManyToOne( fetch = FetchType.LAZY)
+    @JoinColumn(name = "panel_id")
+	private PanelEntity panelEntity;  //FK to PanelEntity
 	
 	@Column(name="available_date")
 	private LocalDate date;
 	
 	@Column(name="start_time")
-	private String startTime;
+	private LocalTime startTime;
 	
 	@Column(name="end_time")
-	private String endTime;
+	private LocalTime endTime;
 	
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "availability_status_id")
-	private PanelAvailabilityStatusEntity availablityStatusId; //FK to PanelAvailablityStatusEntity
+	private PanelAvailabilityStatusEntity panelAvailablityStatus; //FK to PanelAvailablityStatusEntity
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -81,11 +85,11 @@ public class PanelAvailabilityEntity {
 	}
 
 	public PanelEntity getPanelId() {
-		return panelId;
+		return panelEntity;
 	}
 
 	public void setPanelId(PanelEntity panelId) {
-		this.panelId = panelId;
+		this.panelEntity = panelId;
 	}
 
 	public LocalDate getDate() {
@@ -96,28 +100,28 @@ public class PanelAvailabilityEntity {
 		this.date = date;
 	}
 
-	public String getStartTime() {
+	public LocalTime getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(String startTime) {
+	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
 	}
 
-	public String getEndTime() {
+	public LocalTime getEndTime() {
 		return endTime;
 	}
 
-	public void setEndTime(String endTime) {
+	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
 	}
 
 	public PanelAvailabilityStatusEntity getAvailablityStatusId() {
-		return availablityStatusId;
+		return panelAvailablityStatus;
 	}
 
 	public void setAvailablityStatusId(PanelAvailabilityStatusEntity availablityStatusId) {
-		this.availablityStatusId = availablityStatusId;
+		this.panelAvailablityStatus = availablityStatusId;
 	}
 
 	public String getCreatedBy() {
@@ -184,17 +188,17 @@ public class PanelAvailabilityEntity {
 		this.userEntity = userEntity;
 	}
 
-	public PanelAvailabilityEntity(int id, PanelEntity panelId, LocalDate date, String startTime, String endTime,
+	public PanelAvailabilityEntity(int id, PanelEntity panelId, LocalDate date, LocalTime startTime, LocalTime endTime,
 			PanelAvailabilityStatusEntity availablityStatusId, String createdBy, LocalDateTime createdOn,
 			String updatedBy, LocalDateTime updatedOn, String deletedBy, LocalDateTime deletedOn, boolean isDeleted,
 			UserEntity userEntity) {
 		super();
 		this.id = id;
-		this.panelId = panelId;
+		this.panelEntity = panelId;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
-		this.availablityStatusId = availablityStatusId;
+		this.panelAvailablityStatus = availablityStatusId;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 		this.updatedBy = updatedBy;
