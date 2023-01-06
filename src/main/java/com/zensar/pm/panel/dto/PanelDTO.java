@@ -12,13 +12,13 @@ public class PanelDTO {
 	private boolean isActive;
 	private int gradeId;
 	private String grade;
-	private String interviewTypeId;
+	private int interviewTypeId;
 	private String interviewType;
 	private int panelRoleId;
-	public  String panelRoles;
+	public String panelRoles;
 	public List<Integer> listPanelId;
 	public List<String> listPanelNames;
-	
+
 	public PanelDTO() {
 		super();
 	}
@@ -46,9 +46,9 @@ public class PanelDTO {
 		this.email = email;
 		this.isActive = isActive;
 		this.grade = grade;
-		this.panelRoles=panelRoles;
-		this.interviewType=interviewType;
-		
+		this.panelRoles = panelRoles;
+		this.interviewType = interviewType;
+
 	}
 
 	public int getPanelId() {
@@ -130,7 +130,6 @@ public class PanelDTO {
 	public void setListPanelNames(List<String> listPanelNames) {
 		this.listPanelNames = listPanelNames;
 	}
-	
 
 	public int getGradeId() {
 		return gradeId;
@@ -140,11 +139,11 @@ public class PanelDTO {
 		this.gradeId = gradeId;
 	}
 
-	public String getInterviewTypeId() {
+	public int getInterviewTypeId() {
 		return interviewTypeId;
 	}
 
-	public void setInterviewTypeId(String interviewTypeId) {
+	public void setInterviewTypeId(int interviewTypeId) {
 		this.interviewTypeId = interviewTypeId;
 	}
 
@@ -186,6 +185,5 @@ public class PanelDTO {
 				&& Objects.equals(listPanelNames, other.listPanelNames) && panelId == other.panelId
 				&& Objects.equals(panelName, other.panelName) && Objects.equals(panelRoles, other.panelRoles);
 	}
-	
-	
+
 }

@@ -216,8 +216,8 @@ public class PanelAvailabilityController {
 			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, 
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public @ResponseBody ResponseEntity<String> createPanel(@RequestHeader(value = "Authorization") String token,@RequestBody @Valid PanelDTO panelDTO) {
-		panelDTO = panelService.createPanel(panelDTO,token);
-		if(panelDTO!=null){
+		boolean createPanel = panelService.createPanel(panelDTO,token);
+		if(createPanel){
 			return new ResponseEntity("Created Successfully", HttpStatus.CREATED);
 		}else {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -229,8 +229,8 @@ public class PanelAvailabilityController {
 			consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, 
 			produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public @ResponseBody ResponseEntity<String> updatePanel(@RequestHeader(value = "Authorization") String token,@RequestBody @Valid PanelDTO panelDTO) {
-		panelDTO = panelService.updatePanel(panelDTO,token);
-		if(panelDTO!=null){
+		boolean updatePanel = panelService.updatePanel(panelDTO,token);
+		if(updatePanel){
 			return new ResponseEntity("Updated Successfully", HttpStatus.OK);
 		}else {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);

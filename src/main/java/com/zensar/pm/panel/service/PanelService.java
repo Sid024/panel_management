@@ -50,8 +50,8 @@ public interface PanelService {
 
 	public List<InterviewTypeDTO> DropDownConvertorInterviewType();
 	public List<RoleDto> DropDownConvertorRole();
-	public PanelDTO createPanel(PanelDTO panelDTO, String token) ;
-    public PanelDTO updatePanel(PanelDTO panelDTO, String token) ;
+	public boolean createPanel(PanelDTO panelDTO, String token) ;
+    public boolean updatePanel(PanelDTO panelDTO, String token) ;
 
 
 }

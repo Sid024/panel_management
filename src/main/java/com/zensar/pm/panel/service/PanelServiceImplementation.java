@@ -494,7 +494,7 @@ return interviewDToList;
 
 
 @Override
-public PanelDTO createPanel(PanelDTO panelDTO, String token) {
+public boolean createPanel(PanelDTO panelDTO, String token) {
 	
 	String roleName = loginDelegate.isTokenValid(token).getRoleName();
 	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
@@ -548,19 +548,19 @@ public PanelDTO createPanel(PanelDTO panelDTO, String token) {
 		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
 	}
 	PanelEntity save = panelEntityRepository.save(panelEntity);
-	PanelDTO map = modelMapper.map(save, PanelDTO.class);
+	
 
-	return map;
+	return true;
 	}else {
 		throw new PanelAlreadyExists("Panel Already Exists");
 	}
 }else {
-	return null;
+	return false;
 }
 	
 }
 @Override
-public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
+public boolean updatePanel(PanelDTO panelDTO,String token) {
 	String roleName = loginDelegate.isTokenValid(token).getRoleName();
 	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 	PanelEntity panelEntity = panelEntityRepository.findByUserId(panelDTO.getPanelId());
@@ -606,14 +606,13 @@ public PanelDTO updatePanel(PanelDTO panelDTO,String token) {
 		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
 	}
 	PanelEntity save = panelEntityRepository.save(panelEntity);
-	PanelDTO map = modelMapper.map(save, PanelDTO.class);
-
-	return map;
+	
+	return true;
 	}else {
 		throw new PanelNotFound("Panel not found");
 	}
 	}else {
-		return null;
+		return false;
 	}
 }
 public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRolesEntity userRoleEntity,String token) {
