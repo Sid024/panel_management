@@ -2,8 +2,11 @@ package com.zensar.pm.panel.repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
@@ -21,6 +24,9 @@ public boolean existsByPanelEntity(PanelEntity panelEntity);
 public boolean existsByDate(LocalDate date);
 
 public boolean existsByUserEntity(UserEntity userEntity);
+
+@Query(value="select availablility_date from panels_availability where panel_id=?1",nativeQuery = true)
+List<Date> getDatesWithId(int panelId);
 
 
 }

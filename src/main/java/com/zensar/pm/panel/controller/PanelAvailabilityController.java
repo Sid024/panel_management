@@ -26,8 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zensar.pm.panel.dto.InterviewTypeDTO;
+import com.zensar.pm.panel.dto.PanelAvailDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityListDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilityPHDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilitySelfDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityStatusDTO;
 import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
@@ -266,4 +269,36 @@ public class PanelAvailabilityController {
 
 		}	
 	}
+	
+	
+	//team8
+	@GetMapping(value="/panel",produces= {MediaType.APPLICATION_JSON_VALUE})  
+    public ResponseEntity<List<PanelAvailDTO>> panelGetAll(
+            @RequestParam(value = "panelName", required = false) String panelName,@RequestHeader("Authorization") String token){
+        return new ResponseEntity<List<PanelAvailDTO>>(service.getPanelByFilterCriteria(panelName,token), HttpStatus.OK);
+
+    }
+	
+	@GetMapping(value="/panelName",produces= {MediaType.APPLICATION_JSON_VALUE})  //listofUsernames
+    public ResponseEntity<List<String>> listPanelNames() {
+        return new ResponseEntity<List<String>>(panelService.getAllPanelNames(),HttpStatus.OK);
+    }
+
+    @GetMapping(value="/panelName/{panelName}",produces= {MediaType.APPLICATION_JSON_VALUE})  //searchByName
+    public ResponseEntity<PanelAvailabilityPHDTO> getPanelDetails(@PathVariable ("panelName") String panelName,@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<PanelAvailabilityPHDTO>(service.getPanelDetails(panelName,token),HttpStatus.OK);
+    }
+    
+    
+    @GetMapping(value="/panel/self")
+	public ResponseEntity<PanelAvailabilitySelfDTO> searchUserByFilterCriteria(   //selfDetails
+            @RequestHeader(value = "Authorization") String token){
+    	return new ResponseEntity<PanelAvailabilitySelfDTO>(service.getLoginRoleByPanelAvail(token),HttpStatus.OK);
+    }
+    
+    @PostMapping(value="/panel/multipleSlots",produces= {MediaType.APPLICATION_JSON_VALUE},consumes= {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> postMultiple(@RequestBody PanelAvailDTO pa)
+    {
+    	return new ResponseEntity<String>(service.post(pa),HttpStatus.CREATED);
+    }
 }

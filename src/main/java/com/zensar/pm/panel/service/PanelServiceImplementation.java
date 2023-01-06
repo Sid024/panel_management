@@ -747,6 +747,31 @@ public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRol
 	
 }
 
+@Override
+public List<String> getAllPanelNames() {
+	List<PanelEntity> panelEntity=panelEntityRepository.findAll();
+    if(!(panelEntity.isEmpty())) {
+        List<PanelDTO> dtoList=new ArrayList<>();
+        List<String> listPanelNames=new ArrayList<>();
+        for(PanelEntity panel:panelEntity) {
+            System.out.println(panel);
+            UserEntity userEntity = panel.getUserEntity();
+            System.out.println(userEntity);
+            int panelId = userEntity.getUserId();
+            String panelName = userEntity.getUserName();
+            GradeEntity gradeEntity = panel.getGradeEntity();
+            String grade = gradeEntity.getGrade();
+            PanelDTO dto=new PanelDTO(panelId,panelName,panel.getContact(),grade);
+            dtoList.add(dto);
+            listPanelNames.add(panelName);
+        }
+        return listPanelNames;
+    }
+
+
+    return null;
+}
+
 
 
 

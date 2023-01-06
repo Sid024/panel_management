@@ -44,5 +44,76 @@ public class GradeEntity {
 		this.id = id;
 		this.grade = grade;
 	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getGrade() {
+		return grade;
+	}
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public LocalDate getCreatedOn() {
+		return createdOn;
+	}
+	public void setCreatedOn(LocalDate createdOn) {
+		this.createdOn = createdOn;
+	}
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	public LocalDate getUpdatedOn() {
+		return updatedOn;
+	}
+	public void setUpdatedOn(LocalDate updatedOn) {
+		this.updatedOn = updatedOn;
+	}
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	public String getDeletedBy() {
+		return deletedBy;
+	}
+	public void setDeletedBy(String deletedBy) {
+		this.deletedBy = deletedBy;
+	}
+	public LocalDate getDeletedOn() {
+		return deletedOn;
+	}
+	public void setDeletedOn(LocalDate deletedOn) {
+		this.deletedOn = deletedOn;
+	}
+	public GradeEntity(int id, String grade, String createdBy, LocalDate createdOn, String updatedBy,
+			LocalDate updatedOn, boolean isDeleted, String deletedBy, LocalDate deletedOn) {
+		super();
+		this.id = id;
+		this.grade = grade;
+		this.createdBy = createdBy;
+		this.createdOn = createdOn;
+		this.updatedBy = updatedBy;
+		this.updatedOn = updatedOn;
+		this.isDeleted = isDeleted;
+		this.deletedBy = deletedBy;
+		this.deletedOn = deletedOn;
+	}
+	public GradeEntity() {
+		super();
+	}
+	
 	
 }

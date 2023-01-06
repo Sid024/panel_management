@@ -54,6 +54,9 @@ public interface PanelService {
 	public List<RoleDto> DropDownConvertorRole();
 	public boolean createPanel(PanelDTO panelDTO, String token) ;
     public boolean updatePanel(PanelDTO panelDTO, String token) ;
+    
+    
+    public List<String> getAllPanelNames();
 
 
 }
