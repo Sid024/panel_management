@@ -206,6 +206,11 @@ public class UserDTO {
 				&& Objects.equals(userName, other.userName) && Objects.equals(userPassword, other.userPassword);
 	}
 
+	public UserDTO(int userId, String userName) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+	}
 	
 
 }

@@ -95,6 +95,22 @@ public class GlobalExceptionalHandler extends RuntimeException {
         //ExceptionEntity message = new ExceptionEntity(exception.getMessage());
         return new ResponseEntity<>("Something went wrong while sending the mail", HttpStatus.BAD_GATEWAY);
     }
+	@ExceptionHandler(TimeFormatException.class)
+    ResponseEntity<String> handleTimeFormat(TimeFormatException ex)
+    {
+	 return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(DateRangeException.class)
+    ResponseEntity<String> handleDateRange(DateRangeException ex)
+	{
+	return new ResponseEntity<String>("ToDate should be in that week",HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(DateAlreadyExistsException.class)
+	ResponseEntity<String> handleDateAlreadyExists(DateAlreadyExistsException ex)
+	{
+	return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+	}
 	
 	
 }

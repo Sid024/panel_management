@@ -95,50 +95,9 @@ public class PanelServiceImplementation implements PanelService {
 
 	@Autowired
 	PanelCandidateRolesRepository panelCandidateRolesRepository;
-	
+
 	@Autowired
 	UserCreatedSuccessfullyMail userCreatedSuccessfullyMail;
-
-	/// Update --> table need to change--> not done
-
-	@Override
-	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
-			PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
-
-		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				) {
-			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
-			PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
-					.findById(panelAvailablityDTO.getAvailablityStatusId());
-			if (existingPanel == null)
-				throw new InvalidPanelException("Panel not found");
-			else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
-				throw new CustomNullPointerException("Empty value! enter the value");
-
-			else {
-				existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
-				existingPanel.setUpdatedOn(LocalDateTime.now());
-				existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
-				existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
-			//	existingPanel.setPanelAvailablityStatusEntity(availabilityEntity);
-
-				// existingPanel.setPanesAvail(panelsAvailabilityDTO.getPanelsAvailabilityStatus());
-
-				PanelAvailabilityEntity save = repo.save(existingPanel);
-
-				PanelAvailabilityDTO panelAvaialablityDTO = modelMapper.map(save, PanelAvailabilityDTO.class);
-				panelAvaialablityDTO.setPanelAvailablityId(availabilityEntity.getId());
-				
-				return panelAvaialablityDTO;
-			}
-
-		}
-
-		else {
-			throw new UnauthorizedUserException("Invalid User");
-		}
-	}
 
 	@Override
 	public PanelDTO getAllPanel() {
@@ -159,7 +118,7 @@ public class PanelServiceImplementation implements PanelService {
 
 	@Override
 	public SearchByFilterDTO searchPanelByFilter(int panelId, String panelName, String email, String grade, String role,
-			String type, boolean isActive, String token) {
+			String type, boolean isActive, String token, int pageNumber, int pageSize) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PanelEntity> criteriaQuery = criteriaBuilder.createQuery(PanelEntity.class);
@@ -168,8 +127,6 @@ public class PanelServiceImplementation implements PanelService {
 			throw new InvalidPanelException("Panel does not exist");
 		}
 
-		PanelDTO allPanelDto = getAllPanel();
-		List<Integer> listPanelId = allPanelDto.getListPanelId();
 		Root<PanelEntity> rootEntity = criteriaQuery.from(PanelEntity.class);
 
 		Predicate predicateId = criteriaBuilder.and();
@@ -179,20 +136,16 @@ public class PanelServiceImplementation implements PanelService {
 		Predicate predicateRole = criteriaBuilder.and();
 		Predicate predicateType = criteriaBuilder.and();
 		Predicate predicateIsActive = criteriaBuilder.and();
+		Predicate predicateActive = criteriaBuilder.and();
 
 		if (panelId != 0) {
-			if (listPanelId.contains(panelId)) {
-				predicateId = criteriaBuilder.equal(rootEntity.get("userEntity").get("userId"), panelId);
-			}
-			else {
-				throw new InvalidPanelException("The User is not a Panel");
-			}
+			predicateId = criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId);
 		}
 		if (panelName != null && !"".equals(panelName)) {
-			predicateName = criteriaBuilder.equal(rootEntity.get("userEntity").get("userName"), panelName);
+			predicateName = criteriaBuilder.like(rootEntity.get("userEntity").get("userName"), ("%" + panelName + "%"));
 		}
 		if (email != null && !"".equals(email)) {
-			predicateEmail = criteriaBuilder.equal(rootEntity.get("userEntity").get("email"), email);
+			predicateEmail = criteriaBuilder.like(rootEntity.get("userEntity").get("email"), ("%" + email + "%"));
 		}
 		if (grade != null && !"".equals(grade)) {
 			predicateGrade = criteriaBuilder.equal(rootEntity.get("gradeEntity").get("grade"), grade);
@@ -211,15 +164,15 @@ public class PanelServiceImplementation implements PanelService {
 			// criteriaQuery.where(predicateName);
 		}
 		if (isActive != true && !"".equals(isActive)) {
-			Predicate predicateActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
+			predicateActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
 		}
 		Predicate finalPredicate = criteriaBuilder.and(predicateId, predicateName, predicateEmail, predicateGrade,
-				predicateRole, predicateType, predicateIsActive);
+				predicateRole, predicateType, predicateIsActive, predicateActive);
 		criteriaQuery.where(finalPredicate);
 
 		TypedQuery<PanelEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-		typedQuery.setFirstResult(0);
-		typedQuery.setMaxResults(10);
+		typedQuery.setFirstResult((pageNumber - 1) * pageSize);
+		typedQuery.setMaxResults(pageSize);
 		List<PanelEntity> panelEntityList = typedQuery.getResultList();
 		int totalNoOfRecords = panelEntityList.size();
 		List<PanelDTO> convertedDtoList = convertEntityListIntoDTOList(panelEntityList);
@@ -243,194 +196,348 @@ public class PanelServiceImplementation implements PanelService {
 		return panelDtoList;
 	}
 
+	@Override
+	public String updateIsActive(int panelId, String token) {
+		if (loginDelegate.isTokenValid(token).getRoleName().equals("PANEL")
+				|| loginDelegate.isTokenValid(token).getRoleName().equals("TA")) {
+			throw new InvalidPanelException("Panel does not exist");
+		}
+		List<PanelEntity> listPanelEntity = panelEntityRepository.findByUserId(panelId);
+		PanelEntity panelEntity = listPanelEntity.get(0);
+		UserEntity userEntity = new UserEntity();
+		UserRolesEntity userRolesEntity = new UserRolesEntity();
+		if (panelEntity.getUserEntity().getIsActive() == false) {
+			panelEntity.getUserEntity().setActive(true);
+		} else {
+			panelEntity.getUserEntity().setActive(false);
+		}
+		panelEntityRepository.save(panelEntity);
+		Optional<UserEntity> opUser = userRepository.findById(panelId);
+		if (opUser.isPresent()) {
+			userEntity = opUser.get();
+		}
+		userRepository.save(userEntity);
+		List<UserRolesEntity> listUserRolesEntity = userRolesRepository.findByUserId(userEntity.getUserId());
+		userRolesEntity = listUserRolesEntity.get(0);
+		userRolesEntity.setActive(userEntity.getIsActive());
+		userRolesRepository.save(userRolesEntity);
+
+		return "Update Successful!";
+	}
+///////////////////////////////////////// Team 10 /////////////////////////
+	/// Update --> table need to change--> not done
+    @Override
+    public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
+            PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
+
+ 
+
+        if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+                || Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
+            PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
+
+            //PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
+            //        .findById(panelAvailablityDTO.getAvailablityStatusId());
+            if (existingPanel == null)
+                throw new InvalidPanelException("Panel not found");
+            else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
+                throw new CustomNullPointerException("Empty value! enter the value");
+
+ 
+
+            else {
+                existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
+                existingPanel.setUpdatedOn(LocalDateTime.now());
+                existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
+                existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
+                if(panelAvailablityDTO.getAvailablityStatusId()!=0)
+                existingPanel.setAvailablityStatusId(panelAvailabilityStatusRepo.findById(panelAvailablityDTO.getAvailablityStatusId()));
+                else
+                {existingPanel.setAvailablityStatusId(existingPanel.getAvailablityStatusId());    
+
+                }
+
+ 
+
+
+                PanelAvailabilityEntity save = repo.save(existingPanel);
+
+ 
+
+                return null;
+
+ 
+
+            }
+
+        }
+
+ 
+
+        else {
+            throw new UnauthorizedUserException("Invalid User");
+        }
+    }
+	
 	/// For Export --> role not done
 
-	@Override 
+	@Override
 	public List<PanelAvailabilityListDTO> ExportPanelBYFilter(int panelId, String role, String email,
-			LocalDate fromDate, LocalDate toDate, String interviewType, String panelName,
-			String availabilityStatus,String jwtToken) {
-		
-		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())||
-				Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {// only for practice head 
-			                                                  /// if any other access than we have to change
+			LocalDate fromDate, LocalDate toDate, String interviewType, String panelName, String availabilityStatus,
+			String jwtToken) {
 
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
-				.createQuery(PanelAvailabilityEntity.class);
-		Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {// only
+																														// for
+																														// practice
+																														// head
+			/// if any other access than we have to change
 
-		List<Predicate> predicates = new ArrayList<>();
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
+					.createQuery(PanelAvailabilityEntity.class);
+			Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
 
-		
-		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
-	     
-			if(fromDate!=null || toDate!=null)
-		 {      if (fromDate != null && toDate != null) 
-				{ if (fromDate.isBefore(toDate) == true) 
-				  predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
-				  else 
-				  throw new EmptyListException("Invalid Date");
+			List<Predicate> predicates = new ArrayList<>();
+
+			if (panelId != 0)
+				predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
+
+			if (fromDate != null || toDate != null) {
+				if (fromDate != null && toDate != null) {
+					if (fromDate.isBefore(toDate) == true)
+						predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
+					else
+						throw new EmptyListException("Invalid Date");
 				}
-			  
-			  else if (fromDate!=null) 
-			  {   predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));}
-			    
-			  else
-				  predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
-			  
-		  }
 
-			
-			
-			if (email!=null && !email.isEmpty())
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("email"),"%"+email+"%"));
+				else if (fromDate != null) {
+					predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));
+				}
 
-			if (panelName!=null && !panelName.isEmpty())
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("userName"),"%" + panelName + "%"));
+				else
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
 
+			}
 
-			if (role!=null && !role.isEmpty() &&  !role.equals("Select Roles"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));	
+			if (email != null && !email.isEmpty())
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("email"),
+						"%" + email + "%"));
 
-			if (interviewType!=null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("interviewType").get("type"),"%"+interviewType+"%"));
-	       
-			if(availabilityStatus!=null && !availabilityStatus.isEmpty() && !availabilityStatus.equals("Select Availability Status"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("availablityStatusId").get("availablityStatus"),"%"+availabilityStatus+"%"));
-				
-		criteriaQuery.select(rootEntity)
-				.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+			if (panelName != null && !panelName.isEmpty())
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),
+						"%" + panelName + "%"));
 
-		List<PanelAvailabilityEntity> exportpanel = entityManager.createQuery(criteriaQuery).getResultList();
-        
-	
-		
-		//criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
+			if (role != null && !role.isEmpty() && !role.equals("Select Roles"))
+				predicates.add(criteriaBuilder
+						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
-		//int sizeofdto = entityManager.createQuery(criteriaQuery).getResultList().size();
-		
-		
-		if(exportpanel.size()!=0)
-		return Convert(exportpanel, exportpanel.size());
-		else
-		 throw new EmptyListException("List is Empty No records found ");
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+						"%" + interviewType + "%"));
+
+			if (availabilityStatus != null && !availabilityStatus.isEmpty()
+					&& !availabilityStatus.equals("Select Availability Status"))
+				predicates.add(
+						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
+								"%" + availabilityStatus + "%"));
+
+			criteriaQuery.select(rootEntity)
+					.where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+
+			List<PanelAvailabilityEntity> exportpanel = entityManager.createQuery(criteriaQuery).getResultList();
+
+			// criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[]
+			// {}));
+
+			// int sizeofdto =
+			// entityManager.createQuery(criteriaQuery).getResultList().size();
+
+			if (exportpanel.size() != 0)
+				return Convert(exportpanel, exportpanel.size());
+			else
+				throw new EmptyListException("List is Empty No records found ");
 		}
 
-	 else 
-	  throw new UnauthorizedUserException("Invalid User");
+		else
+			throw new UnauthorizedUserException("Invalid User");
 
 	}
 
-	
-	
+/// for panel search---->> If panel Logins
+	@Override
+	public ShowPanelAvailabilityListDTO SearchByPanel(String availabilityStatus, LocalDate fromDate, LocalDate toDate,
+			String interviewType, int pageNo, int pageSize, String token) {
+		if (Constants.ROLE_PANEL.equalsIgnoreCase(loginDelegate.isTokenValid(token).getRoleName())) {
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
+					.createQuery(PanelAvailabilityEntity.class);
+			Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
 
-	/// For Search--> role not done
+			List<Predicate> predicates = new ArrayList<>();
+			String panelName = loginDelegate.isTokenValid(token).getUserName();
+
+			if (panelName != null && !panelName.isEmpty())
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),
+						"%" + panelName + "%"));
+
+			if (fromDate != null || toDate != null) {
+				if (fromDate != null && toDate != null) {
+					if (fromDate.isBefore(toDate) == true)
+						predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
+					else
+						throw new EmptyListException("Invalid Date");
+				}
+
+				else if (fromDate != null) {
+					predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));
+				}
+
+				else
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
+
+			}
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+						"%" + interviewType + "%"));
+
+			if (availabilityStatus != null && !availabilityStatus.isEmpty()
+					&& !availabilityStatus.equals("Select Availability Status"))
+				predicates.add(
+						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
+								"%" + availabilityStatus + "%"));
+
+			criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
+
+			int sizeofdto = entityManager.createQuery(criteriaQuery).getResultList().size();
+
+			TypedQuery<PanelAvailabilityEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+
+			typedQuery.setFirstResult(pageNo * pageSize);
+			typedQuery.setMaxResults(pageSize);
+			List<PanelAvailabilityEntity> searchPanel = typedQuery.getResultList(); // Query is executed
+
+			if (searchPanel.size() != 0)
+				return new ShowPanelAvailabilityListDTO(Convert(searchPanel, searchPanel.size()), sizeofdto);
+			else
+				throw new EmptyListException("List is Empty No records found");
+		}
+
+		else
+			throw new UnauthorizedUserException("Invalid User");
+
+	}
+
+	/// For Search-->
 	@Override
 	public ShowPanelAvailabilityListDTO SearchPanelBYFilter(int panelId, String panelName, String email,
 			String availabilityStatus, LocalDate fromDate, LocalDate toDate, String role, String interviewType,
-			int pageNo, int pageSize,String jwtToken) {
-		
-	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName()) ||
+			int pageNo, int pageSize, String jwtToken) {
+
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName()) ||
 
 				Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				
-				) {
-		
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
-				.createQuery(PanelAvailabilityEntity.class);
-		Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
-		List<Predicate> predicates = new ArrayList<Predicate>();
-		
-		if (panelId != 0)
-			predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
-     
-		if(fromDate!=null || toDate!=null)
-	 {      if (fromDate != null && toDate != null) 
-			{ if (fromDate.isBefore(toDate) == true) 
-			  predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
-			  else 
-			  throw new EmptyListException("Invalid Date");
+
+		) {
+
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+			CriteriaQuery<PanelAvailabilityEntity> criteriaQuery = criteriaBuilder
+					.createQuery(PanelAvailabilityEntity.class);
+			Root<PanelAvailabilityEntity> rootEntity = criteriaQuery.from(PanelAvailabilityEntity.class);
+			List<Predicate> predicates = new ArrayList<Predicate>();
+
+			if (panelId != 0)
+				predicates.add(criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId));
+
+			if (fromDate != null || toDate != null) {
+				if (fromDate != null && toDate != null) {
+					if (fromDate.isBefore(toDate) == true)
+						predicates.add(criteriaBuilder.between(rootEntity.<LocalDate>get("date"), fromDate, toDate));
+					else
+						throw new EmptyListException("Invalid Date");
+				}
+
+				else if (fromDate != null) {
+					predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));
+				}
+
+				else
+					predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
+
 			}
-		  
-		  else if (fromDate!=null) 
-		  {   predicates.add(criteriaBuilder.greaterThanOrEqualTo(rootEntity.<LocalDate>get("date"), fromDate));}
-		    
-		  else
-			  predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
-		  
-	  }
-		
-				
-		if (email!=null && !email.isEmpty())
-			{predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("email"),"%"+email+"%"));}
 
-		if (panelName!=null && !panelName.isEmpty())
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("userEntity").get("userName"),"%"+panelName+"%"));
+			if (email != null && !email.isEmpty()) {
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("email"),
+						"%" + email + "%"));
+			}
 
-		if (role!=null && !role.isEmpty() &&  !role.equals("Select Roles"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("panelCandidateRolesEntity").get("role"),role));	
+			if (panelName != null && !panelName.isEmpty())
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),
+						"%" + panelName + "%"));
 
-		if (interviewType!=null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("panelId").get("interviewType").get("type"),"%"+interviewType+"%"));
-       
-		if(availabilityStatus!=null && !availabilityStatus.isEmpty() && !availabilityStatus.equals("Select Availability Status"))
-			predicates.add(criteriaBuilder.like(rootEntity.get("availablityStatusId").get("availablityStatus"),"%"+availabilityStatus+"%"));
-					
-		
-		criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
+			if (role != null && !role.isEmpty() && !role.equals("Select Roles"))
+				predicates.add(criteriaBuilder
+						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
-		int sizeofdto = entityManager.createQuery(criteriaQuery).getResultList().size();
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+						"%" + interviewType + "%"));
 
-		TypedQuery<PanelAvailabilityEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+			if (availabilityStatus != null && !availabilityStatus.isEmpty()
+					&& !availabilityStatus.equals("Select Availability Status"))
+				predicates.add(
+						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
+								"%" + availabilityStatus + "%"));
 
-		typedQuery.setFirstResult(pageNo * pageSize);
-		typedQuery.setMaxResults(pageSize);
-		List<PanelAvailabilityEntity> searchPanel = typedQuery.getResultList(); // Query is executed
-		
-		
-		
-		if(searchPanel.size()!=0)
-		return new ShowPanelAvailabilityListDTO (Convert(searchPanel,searchPanel.size()),sizeofdto);
-		else
-		throw new EmptyListException("List is Empty No records found");	
+			criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
+
+			int sizeofdto = entityManager.createQuery(criteriaQuery).getResultList().size();
+
+			TypedQuery<PanelAvailabilityEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+
+			typedQuery.setFirstResult(pageNo * pageSize);
+			typedQuery.setMaxResults(pageSize);
+			List<PanelAvailabilityEntity> searchPanel = typedQuery.getResultList(); // Query is executed
+
+			if (searchPanel.size() != 0)
+				return new ShowPanelAvailabilityListDTO(Convert(searchPanel, searchPanel.size()), sizeofdto);
+			else
+				throw new EmptyListException("List is Empty No records found");
 		}
 
-		else 
-		throw new UnauthorizedUserException("Invalid User");
+		else
+			throw new UnauthorizedUserException("Invalid User");
 
 	}
-	
 
 	//// removing unwanted info---> only pass the required info
 
 	public List<PanelAvailabilityListDTO> Convert(List<PanelAvailabilityEntity> entityList, int size) {
 		List<PanelAvailabilityListDTO> panelDtoList = new ArrayList<>();
 
-		for (int x = 0; x < size; x++) {
-			PanelAvailabilityListDTO panelDto = new PanelAvailabilityListDTO();
-			panelDto.setDate(entityList.get(x).getDate());
-			panelDto.setPanelId(entityList.get(x).getUserEntity().getUserId());
-			panelDto.setContact(entityList.get(x).getPanelId().getContact());
-			panelDto.setEmail(entityList.get(x).getPanelId().getUserEntity().getEmail());
-			panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
-			panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewType().getType());
-			panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
-			//panelDto.setAvailabilityStatus(entityList.get(x).getPanelAvailablityStatusEntity().getAvailablityStatus());
-	        //panelDto.setPanelAvailabilityId(entityList.get(x).getPanelAvailablityId());
-	        panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
-	        //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
-	        panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
-	        panelDto.setFromTime(entityList.get(x).getStartTime());
-	        panelDto.setToTime(entityList.get(x).getEndTime());
-			panelDtoList.add(panelDto);
-		}
+        for (int x = 0; x < size; x++) {
+            PanelAvailabilityListDTO panelDto = new PanelAvailabilityListDTO();
+            panelDto.setDate(entityList.get(x).getDate());
+            panelDto.setPanelId(entityList.get(x).getUserEntity().getUserId());
+            panelDto.setContact(entityList.get(x).getPanelId().getContact());
+            panelDto.setEmail(entityList.get(x).getPanelId().getUserEntity().getEmail());
+            panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
+            panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewType().getType());
+            panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
+        //// changed
+            panelDto.setAvailabilityStatus(entityList.get(x).getAvailablityStatusId().getAvailablityStatus());
+            panelDto.setPanelAvailabilityId(entityList.get(x).getAvailablityStatusId().getId());
+            panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
+            //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
+            panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
+            panelDto.setFromTime(entityList.get(x).getStartTime());
+            panelDto.setToTime(entityList.get(x).getEndTime());
+            panelDtoList.add(panelDto);
+        }
 		return panelDtoList;
 	}
 
 	//// panel availability status
-
 
 	@Override
 	public List<PanelAvailabilityStatusDTO> getByAvailabilityStatus() {
@@ -443,247 +550,271 @@ public class PanelServiceImplementation implements PanelService {
 			statusDTO.setAvailabilityStatusId(p.getId());
 			dtoList.add(statusDTO);
 		}
-        dtoList.add(new PanelAvailabilityStatusDTO(0,"Select Availability Status"));
+		dtoList.add(new PanelAvailabilityStatusDTO(0, "Select Availability Status"));
 		return dtoList;
 	}
 
 	/// dynamic dropdown
-    @Autowired
-    PanelCandidateRolesRepository candidateRoleRepo;
-    @Override
-    public List<RoleDto> DropDownConvertorRole()
-    {
- 
+	@Autowired
+	PanelCandidateRolesRepository candidateRoleRepo;
 
-        List<PanelCandidateRolesEntity> stringList = candidateRoleRepo.findAll();
-        List<RoleDto> roleDToList = new ArrayList<>(); 
-        for(PanelCandidateRolesEntity x : stringList)
-        {
-        	RoleDto roleDto = new RoleDto(); 
-                       
-            roleDto.setRoleId(x.getId());
-            roleDto.setRoleString(x.getRole());
-            roleDToList.add(roleDto);
-        }
-       roleDToList.add(new RoleDto("Select Roles", 0));
+	@Override
+	public List<RoleDto> DropDownConvertorRole() {
 
-    return roleDToList;
-    }
-@Autowired
-InterviewTypeRepository interviewTypeRepo;
-    
-@Override
-public List<InterviewTypeDTO> DropDownConvertorInterviewType()
-{
+		List<PanelCandidateRolesEntity> stringList = candidateRoleRepo.findAll();
+		List<RoleDto> roleDToList = new ArrayList<>();
+		for (PanelCandidateRolesEntity x : stringList) {
+			RoleDto roleDto = new RoleDto();
 
-
-    List<InterviewTypesEntity> stringList = interviewTypeRepo.findAll();
-    List<InterviewTypeDTO> interviewDToList = new ArrayList<>(); 
-    for(InterviewTypesEntity x : stringList)
-    {
-    	InterviewTypeDTO roleDto = new InterviewTypeDTO(); 
-                   
-        roleDto.setInterviewType(x.getType());
-        roleDto.setInterviewID(x.getId());
-        interviewDToList.add(roleDto);
-    }
-interviewDToList.add(new InterviewTypeDTO("Select Interview Type",0));
-
-return interviewDToList;
-}
-
-
-@Override
-public boolean createPanel(PanelDTO panelDTO, String token) {
-	
-	String roleName = loginDelegate.isTokenValid(token).getRoleName();
-	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
-
-	if(panelEntityRepository.findByUserId(panelDTO.getPanelId())==null) {
-	PanelEntity panelEntity = new PanelEntity();
-	panelEntity.setContact(panelDTO.getContact());
-	String userName = loginDelegate.isTokenValid(token).getUserName();
-	panelEntity.setCreatedBy(userName);
-	panelEntity.setCreatedOn(LocalDateTime.now());
-	
-	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
-	if(findByUserId.size()>0) {
-		UserRolesEntity userRoleEntity=findByUserId.get(0);
-		if(userRepository.existsById(panelDTO.getPanelId())) {
-			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
-			setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
-		}else {
-			throw new UserNotFoundException("User Not Found");
+			roleDto.setRoleId(x.getId());
+			roleDto.setRoleString(x.getRole());
+			roleDToList.add(roleDto);
 		}
-		
-	}else {
-		UserRolesEntity userRoleEntity = new UserRolesEntity();
-		UserEntity userEntity = new UserEntity();
-		setCreateUserEntity(panelDTO, userEntity, userRoleEntity,token);
-	}
-	
-	if (userRepository.existsById(panelDTO.getPanelId())) {
-		UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
-		panelEntity.setUserEntity(findById);
-	} else {
-		throw new UserNotFoundException("User Not Found");
-	}
-	if (gradeRepository.existsById(panelDTO.getGradeId())) {
-		GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
-		panelEntity.setGradeEntity(findByGradeId);
-	} else {
-		throw new GradeNotFoundException("Grade not found");
-	}
-	if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
-		InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId()).get();
-		panelEntity.setInterviewType(findByTypeId);
-	} else {
-		throw new InterviewTypeNotFoundException("Interview Type not found");
-	}
-	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
-		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
-				.findById(panelDTO.getPanelRoleId()).get();
-		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
-	} else {
-		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
-	}
-	PanelEntity save = panelEntityRepository.save(panelEntity);
-	
+		roleDToList.add(new RoleDto("Select Roles", 0));
 
-	return true;
-	}else {
-		throw new PanelAlreadyExists("Panel Already Exists");
+		return roleDToList;
 	}
-}else {
-	return false;
-}
-	
-}
-@Override
-public boolean updatePanel(PanelDTO panelDTO,String token) {
-	String roleName = loginDelegate.isTokenValid(token).getRoleName();
-	if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
-	PanelEntity panelEntity = panelEntityRepository.findByUserId(panelDTO.getPanelId());
-	if(panelEntity!=null) {
-	panelEntity.setContact(panelDTO.getContact());
-	String userName = loginDelegate.isTokenValid(token).getUserName();
-	panelEntity.setUpdatedBy(userName);
-	panelEntity.setUpdatedOn(LocalDateTime.now());
-	List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
-	if(findByUserId.size()==1) {
-		UserRolesEntity userRolesEntity=findByUserId.get(0);
-		if(userRepository.existsById(panelDTO.getPanelId())) {
-			UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
-			setUpdateUserEntity(panelDTO, userEntity, userRolesEntity,token);
-		}else {
-			throw new UserNotFoundException("User Not Found");
+
+	@Autowired
+	InterviewTypeRepository interviewTypeRepo;
+
+	@Override
+	public List<InterviewTypeDTO> DropDownConvertorInterviewType() {
+
+		List<InterviewTypesEntity> stringList = interviewTypeRepo.findAll();
+		List<InterviewTypeDTO> interviewDToList = new ArrayList<>();
+		for (InterviewTypesEntity x : stringList) {
+			InterviewTypeDTO roleDto = new InterviewTypeDTO();
+
+			roleDto.setInterviewType(x.getType());
+			roleDto.setInterviewID(x.getId());
+			interviewDToList.add(roleDto);
+		}
+		interviewDToList.add(new InterviewTypeDTO("Select Interview Type", 0));
+
+		return interviewDToList;
+	}
+//////////////////////////////////////Team 10/////////////////////////////////////////
+
+	@Override
+	public boolean createPanel(PanelDTO panelDTO, String token) {
+
+		String roleName = loginDelegate.isTokenValid(token).getRoleName();
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
+
+			if (panelEntityRepository.findByUserId(panelDTO.getPanelId()) == null) {
+				PanelEntity panelEntity = new PanelEntity();
+				panelEntity.setContact(panelDTO.getContact());
+				String userName = loginDelegate.isTokenValid(token).getUserName();
+				panelEntity.setCreatedBy(userName);
+				panelEntity.setCreatedOn(LocalDateTime.now());
+
+				List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
+				if (findByUserId.size() > 0) {
+					UserRolesEntity userRoleEntity = findByUserId.get(0);
+					if (userRepository.existsById(panelDTO.getPanelId())) {
+						UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
+						setCreateUserEntity(panelDTO, userEntity, userRoleEntity, token);
+					} else {
+						throw new UserNotFoundException("User Not Found");
+					}
+
+				} else {
+					UserRolesEntity userRoleEntity = new UserRolesEntity();
+					UserEntity userEntity = new UserEntity();
+					setCreateUserEntity(panelDTO, userEntity, userRoleEntity, token);
+				}
+
+				if (userRepository.existsById(panelDTO.getPanelId())) {
+					UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
+					panelEntity.setUserEntity(findById);
+				} else {
+					throw new UserNotFoundException("User Not Found");
+				}
+				if (gradeRepository.existsById(panelDTO.getGradeId())) {
+					GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
+					panelEntity.setGradeEntity(findByGradeId);
+				} else {
+					throw new GradeNotFoundException("Grade not found");
+				}
+				if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
+					InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId())
+							.get();
+					panelEntity.setInterviewType(findByTypeId);
+				} else {
+					throw new InterviewTypeNotFoundException("Interview Type not found");
+				}
+				if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
+					PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
+							.findById(panelDTO.getPanelRoleId()).get();
+					panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
+				} else {
+					throw new PanelCandidateRoleNotFoundException("Panel Role not found");
+				}
+				PanelEntity save = panelEntityRepository.save(panelEntity);
+
+				return true;
+			} else {
+				throw new PanelAlreadyExists("Panel Already Exists");
+			}
+		} else {
+			return false;
+		}
+
+	}
+
+	@Override
+	public boolean updatePanel(PanelDTO panelDTO, String token) {
+		String roleName = loginDelegate.isTokenValid(token).getRoleName();
+		PanelEntity panelEntity = new PanelEntity();
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
+			List<PanelEntity> list = panelEntityRepository.findByUserId(panelDTO.getPanelId());
+			panelEntity = list.get(0);
+			if (panelEntity != null) {
+				panelEntity.setContact(panelDTO.getContact());
+				String userName = loginDelegate.isTokenValid(token).getUserName();
+				panelEntity.setUpdatedBy(userName);
+				panelEntity.setUpdatedOn(LocalDateTime.now());
+				List<UserRolesEntity> findByUserId = userRolesRepository.findByUserId(panelDTO.getPanelId());
+				if (findByUserId.size() == 1) {
+					UserRolesEntity userRolesEntity = findByUserId.get(0);
+					if (userRepository.existsById(panelDTO.getPanelId())) {
+						UserEntity userEntity = userRepository.findById(panelDTO.getPanelId()).get();
+						setUpdateUserEntity(panelDTO, userEntity, userRolesEntity, token);
+					} else {
+						throw new UserNotFoundException("User Not Found");
+					}
+				}
+
+				if (userRepository.existsById(panelDTO.getPanelId())) {
+					UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
+					panelEntity.setUserEntity(findById);
+				} else {
+					throw new UserNotFoundException("User Not Found");
+				}
+				if (gradeRepository.existsById(panelDTO.getGradeId())) {
+					GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
+					panelEntity.setGradeEntity(findByGradeId);
+				} else {
+					throw new GradeNotFoundException("Grade not found");
+				}
+				if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
+					InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId())
+							.get();
+					panelEntity.setInterviewType(findByTypeId);
+				} else {
+					throw new InterviewTypeNotFoundException("Interview Type not found");
+				}
+				if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
+					PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
+							.findById(panelDTO.getPanelRoleId()).get();
+					panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
+				} else {
+					throw new PanelCandidateRoleNotFoundException("Panel Role not found");
+				}
+				PanelEntity save = panelEntityRepository.save(panelEntity);
+
+				return true;
+			} else {
+				throw new PanelNotFound("Panel not found");
+			}
+		} else {
+			return false;
 		}
 	}
-	
-	if (userRepository.existsById(panelDTO.getPanelId())) {
-		UserEntity findById = userRepository.findById(panelDTO.getPanelId()).get();
-		panelEntity.setUserEntity(findById);
-	} else {
-		throw new UserNotFoundException("User Not Found");
-	}
-	if (gradeRepository.existsById(panelDTO.getGradeId())) {
-		GradeEntity findByGradeId = gradeRepository.findById(panelDTO.getGradeId()).get();
-		panelEntity.setGradeEntity(findByGradeId);
-	} else {
-		throw new GradeNotFoundException("Grade not found");
-	}
-	if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
-		InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId()).get();
-		panelEntity.setInterviewType(findByTypeId);
-	} else {
-		throw new InterviewTypeNotFoundException("Interview Type not found");
-	}
-	if (panelCandidateRolesRepository.existsById(panelDTO.getPanelRoleId())) {
-		PanelCandidateRolesEntity findByPanelRoleId = panelCandidateRolesRepository
-				.findById(panelDTO.getPanelRoleId()).get();
-		panelEntity.setPanelCandidateRolesEntity(findByPanelRoleId);
-	} else {
-		throw new PanelCandidateRoleNotFoundException("Panel Role not found");
-	}
-	PanelEntity save = panelEntityRepository.save(panelEntity);
-	
-	return true;
-	}else {
-		throw new PanelNotFound("Panel not found");
-	}
-	}else {
-		return false;
-	}
-}
-public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRolesEntity userRoleEntity,String token) {
-	
-	userEntity.setUserId(panelDTO.getPanelId());
-	userEntity.setUserName(panelDTO.getPanelName());
-	userEntity.setActive(panelDTO.getIsActive());
-	userEntity.setCreatedOn(LocalDateTime.now()); // created userEntity
-    String userName = loginDelegate.isTokenValid(token).getUserName();
-    userEntity.setCreatedBy(userName);
-    String common = "@ZEN^";
-    String passwordUserName = panelDTO.getPanelName().substring(0, 3);
-    int passwordNumber = 100 + (int) (Math.random() * 999);
-    common = common + passwordUserName + passwordNumber;
-    userEntity.setUserPassword(common);
-	if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
-		userEntity.setEmail(panelDTO.getEmail());
-	} else {
-		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
-	}
-	List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
-	RolesEntity rolesEntity = findByRoleName.get(0);
-	if (rolesEntity != null) {
-		userRoleEntity.setUserEntity(userEntity);
-		userRoleEntity.setRolesEntity(rolesEntity);
-		userRoleEntity.setActive(userEntity.getIsActive());
-		userRoleEntity.setActive(userEntity.getIsActive());
-		userRoleEntity.setCreatedBy(userEntity.getCreatedBy());
-		userRoleEntity.setCreatedOn(userEntity.getCreatedOn());
-		if (userEntity.getIsActive()) {
-			userCreatedSuccessfullyMail.userCreatedSuccessfully(userEntity.getUserId(),userEntity.getUserName(), userEntity.getEmail(),
-					userEntity.getUserPassword());
+
+	public void setCreateUserEntity(PanelDTO panelDTO, UserEntity userEntity, UserRolesEntity userRoleEntity,
+			String token) {
+
+		userEntity.setUserId(panelDTO.getPanelId());
+		userEntity.setUserName(panelDTO.getPanelName());
+		userEntity.setActive(panelDTO.getIsActive());
+		userEntity.setCreatedOn(LocalDateTime.now()); // created userEntity
+		String userName = loginDelegate.isTokenValid(token).getUserName();
+		userEntity.setCreatedBy(userName);
+		String common = "@ZEN^";
+		String passwordUserName = panelDTO.getPanelName().substring(0, 3);
+		int passwordNumber = 100 + (int) (Math.random() * 999);
+		common = common + passwordUserName + passwordNumber;
+		userEntity.setUserPassword(common);
+		if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(), panelDTO.getEmail())) {
+			userEntity.setEmail(panelDTO.getEmail());
+		} else {
+			throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
 		}
-		userRolesRepository.save(userRoleEntity);	
-	}else {
-		throw new NoSuchRoleFoundException("No Such Role Found");
+		List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+		RolesEntity rolesEntity = findByRoleName.get(0);
+		if (rolesEntity != null) {
+			userRoleEntity.setUserEntity(userEntity);
+			userRoleEntity.setRolesEntity(rolesEntity);
+			userRoleEntity.setActive(userEntity.getIsActive());
+			userRoleEntity.setActive(userEntity.getIsActive());
+			userRoleEntity.setCreatedBy(userEntity.getCreatedBy());
+			userRoleEntity.setCreatedOn(userEntity.getCreatedOn());
+			if (userEntity.getIsActive()) {
+				userCreatedSuccessfullyMail.userCreatedSuccessfully(userEntity.getUserId(), userEntity.getUserName(),
+						userEntity.getEmail(), userEntity.getUserPassword());
+			}
+			userRolesRepository.save(userRoleEntity);
+		} else {
+			throw new NoSuchRoleFoundException("No Such Role Found");
+		}
+
 	}
-	
-}
 
-public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity,UserRolesEntity userRoleEntity,String token) {
-	
-	userEntity.setUserId(panelDTO.getPanelId());
-	userEntity.setUserName(panelDTO.getPanelName());
-	userEntity.setActive(panelDTO.getIsActive());
-	userEntity.setUpdatedOn(LocalDateTime.now()); // created userEntity
-    String userName = loginDelegate.isTokenValid(token).getUserName();
-    userEntity.setUpdatedBy(userName);
-	if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(),panelDTO.getEmail())) {
-		userEntity.setEmail(panelDTO.getEmail());
-	} else {
-		throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
+	public void setUpdateUserEntity(PanelDTO panelDTO, UserEntity userEntity, UserRolesEntity userRoleEntity,
+			String token) {
+
+		userEntity.setUserId(panelDTO.getPanelId());
+		userEntity.setUserName(panelDTO.getPanelName());
+		userEntity.setActive(panelDTO.getIsActive());
+		userEntity.setUpdatedOn(LocalDateTime.now()); // created userEntity
+		String userName = loginDelegate.isTokenValid(token).getUserName();
+		userEntity.setUpdatedBy(userName);
+		if (!userRepository.existsByIdNotAndEmail(panelDTO.getPanelId(), panelDTO.getEmail())) {
+			userEntity.setEmail(panelDTO.getEmail());
+		} else {
+			throw new EmailAlreadyExistException("EMAIL ALREADY EXISTS");
+		}
+		List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
+		RolesEntity rolesEntity = findByRoleName.get(0);
+		if (rolesEntity != null) {
+			userRoleEntity.setUserEntity(userEntity);
+			userRoleEntity.setRolesEntity(rolesEntity);
+			userRoleEntity.setActive(userEntity.getIsActive());
+			userRoleEntity.setActive(userEntity.getIsActive());
+			userRoleEntity.setUpdatedBy(userEntity.getCreatedBy());
+			userRoleEntity.setUpdatedOn(userEntity.getCreatedOn());
+			userRolesRepository.save(userRoleEntity);
+
+		} else {
+			throw new NoSuchRoleFoundException("No Such Role Found");
+		}
+
 	}
-	List<RolesEntity> findByRoleName = rolesRepository.findByRoleName(Constants.ROLE_PANEL);
-	RolesEntity rolesEntity = findByRoleName.get(0);
-	if (rolesEntity != null) {
-		userRoleEntity.setUserEntity(userEntity);
-		userRoleEntity.setRolesEntity(rolesEntity);
-		userRoleEntity.setActive(userEntity.getIsActive());
-		userRoleEntity.setActive(userEntity.getIsActive());
-		userRoleEntity.setUpdatedBy(userEntity.getCreatedBy());
-		userRoleEntity.setUpdatedOn(userEntity.getCreatedOn());
-		userRolesRepository.save(userRoleEntity);
 
-	}else {
-		throw new NoSuchRoleFoundException("No Such Role Found");
+	@Override
+	public List<String> getAllPanelNames() {
+		List<PanelEntity> panelEntity = panelEntityRepository.findAll();
+		if (!(panelEntity.isEmpty())) {
+			List<PanelDTO> dtoList = new ArrayList<>();
+			List<String> listPanelNames = new ArrayList<>();
+			for (PanelEntity panel : panelEntity) {
+				System.out.println(panel);
+				UserEntity userEntity = panel.getUserEntity();
+				System.out.println(userEntity);
+				int panelId = userEntity.getUserId();
+				String panelName = userEntity.getUserName();
+				GradeEntity gradeEntity = panel.getGradeEntity();
+				String grade = gradeEntity.getGrade();
+				PanelDTO dto = new PanelDTO(panelId, panelName, panel.getContact(), grade);
+				dtoList.add(dto);
+				listPanelNames.add(panelName);
+			}
+			return listPanelNames;
+		}
+
+		return null;
 	}
-	
-}
-
-
-
 
 }

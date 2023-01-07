@@ -26,8 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zensar.pm.panel.dto.InterviewTypeDTO;
+import com.zensar.pm.panel.dto.PanelAvailDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityListDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilityPHDTO;
+import com.zensar.pm.panel.dto.PanelAvailabilitySelfDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityStatusDTO;
 import com.zensar.pm.panel.dto.PanelDTO;
 import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
@@ -140,6 +143,7 @@ public class PanelAvailabilityController {
 	
 		int panelIdint=0;
 		
+		
 	
 		
 		if(panelId!=null && !panelId.isEmpty())
@@ -151,6 +155,34 @@ public class PanelAvailabilityController {
 
 
 	}
+	
+	
+	/// search for panel
+	@GetMapping(value = "/search/filter/panel", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ShowPanelAvailabilityListDTO searchAdvertisesByFilterCriteriaPanel(
+
+			@RequestParam(value = "availabilityStatus", required = false) String availabilityStatus,
+			@RequestParam(name = "fromDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate fromDate,
+			@RequestParam(name = "toDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate toDate,
+			@RequestParam(value = "interviewType", required = false) String interviewType,
+			@RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
+			@RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
+			@RequestHeader("Authorization") String token) 
+	
+	
+			{
+	
+		
+		return panelService.SearchByPanel(availabilityStatus, fromDate, toDate,interviewType, pageNo, pageSize,token);
+
+
+	}
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping(value = "/getAllStatus",produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<PanelAvailabilityStatusDTO>AvailabilityStatus()
@@ -166,8 +198,8 @@ public class PanelAvailabilityController {
 	@GetMapping(value="/panel/list")
 	public ResponseEntity<SearchByFilterDTO> searchUserByFilterCriteria(
             @RequestHeader(value = "Authorization") String token,
-            @Valid @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @Valid @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "panelId", defaultValue = "0") int panelId,
             @RequestParam(value = "panelName", required = false) String panelName,
             @RequestParam(value = "email", required = false) String email,
@@ -177,7 +209,7 @@ public class PanelAvailabilityController {
             @RequestParam(value = "isActive", required = false) boolean isActive)
                     throws InvalidPanelException {
 
-        SearchByFilterDTO searchPanelByFilter = panelService.searchPanelByFilter(panelId, panelName, email, grade, role, type, isActive, token);
+        SearchByFilterDTO searchPanelByFilter = panelService.searchPanelByFilter(panelId, panelName, email, grade, role, type, isActive, token, pageNumber, pageSize);
         if (searchPanelByFilter != null) {
             if (searchPanelByFilter.getTotalNumberOfRecords() > 0) {
                 return new ResponseEntity<SearchByFilterDTO>(searchPanelByFilter, HttpStatus.OK);
@@ -191,6 +223,19 @@ public class PanelAvailabilityController {
  
 
     }
+	
+	@PutMapping(value = "/panel/toggle/{panelId}")
+    public ResponseEntity<String> updateIsActive(@PathVariable("panelId") int panelId,@RequestHeader(value = "Authorization") String token) {
+        String updateIsActive = panelService.updateIsActive(panelId, token);
+        if(updateIsActive!=null) {
+            return new ResponseEntity<String>("Status Updated",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Status not updated",HttpStatus.BAD_REQUEST);
+
+
+
+    }
+                   
 	
 		
 	
@@ -237,4 +282,36 @@ public class PanelAvailabilityController {
 
 		}	
 	}
+	
+	
+	//team8
+	@GetMapping(value="/panel",produces= {MediaType.APPLICATION_JSON_VALUE})  
+    public ResponseEntity<List<PanelAvailDTO>> panelGetAll(
+            @RequestParam(value = "panelName", required = false) String panelName,@RequestHeader("Authorization") String token){
+        return new ResponseEntity<List<PanelAvailDTO>>(service.getPanelByFilterCriteria(panelName,token), HttpStatus.OK);
+
+    }
+	
+	@GetMapping(value="/panelName",produces= {MediaType.APPLICATION_JSON_VALUE})  //listofUsernames
+    public ResponseEntity<List<String>> listPanelNames() {
+        return new ResponseEntity<List<String>>(panelService.getAllPanelNames(),HttpStatus.OK);
+    }
+
+    @GetMapping(value="/panelName/{panelName}",produces= {MediaType.APPLICATION_JSON_VALUE})  //searchByName
+    public ResponseEntity<PanelAvailabilityPHDTO> getPanelDetails(@PathVariable ("panelName") String panelName,@RequestHeader("Authorization") String token) {
+        return new ResponseEntity<PanelAvailabilityPHDTO>(service.getPanelDetails(panelName,token),HttpStatus.OK);
+    }
+    
+    
+    @GetMapping(value="/panel/self")
+	public ResponseEntity<PanelAvailabilitySelfDTO> searchUserByFilterCriteria(   //selfDetails
+            @RequestHeader(value = "Authorization") String token){
+    	return new ResponseEntity<PanelAvailabilitySelfDTO>(service.getLoginRoleByPanelAvail(token),HttpStatus.OK);
+    }
+    
+    @PostMapping(value="/panel/multipleSlots",produces= {MediaType.APPLICATION_JSON_VALUE},consumes= {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> postMultiple(@RequestBody PanelAvailDTO pa)
+    {
+    	return new ResponseEntity<String>(service.post(pa),HttpStatus.CREATED);
+    }
 }

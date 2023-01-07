@@ -185,5 +185,13 @@ public class PanelDTO {
 				&& Objects.equals(listPanelNames, other.listPanelNames) && panelId == other.panelId
 				&& Objects.equals(panelName, other.panelName) && Objects.equals(panelRoles, other.panelRoles);
 	}
+	
+	public PanelDTO(int panelId, String panelName, String contact, String grade) {
+		super();
+		this.panelId = panelId;
+		this.panelName = panelName;
+		this.contact = contact;
+		this.grade = grade;
+	}
 
 }
