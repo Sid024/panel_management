@@ -328,7 +328,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			List<Predicate> predicates = new ArrayList<Predicate>();
 			if (panelName != null && panelName.length() >= 3 && !"".equals(panelName)) {
 				Predicate predicateLevelId = criteriaBuilder
-						.like(root.get("panelsEntity").get("userEntity").get("userName"), '%' + panelName + '%');
+						.like(root.get("panelEntity").get("userEntity").get("userName"), '%' + panelName + '%');
 				predicates.add(predicateLevelId);
 			}
 			criteriaQuery.select(root).where(predicates.toArray(new Predicate[] {}));
