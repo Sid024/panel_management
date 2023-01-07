@@ -156,7 +156,14 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		}
 		criteriaQuery.select(rootEntity).where(predicates.toArray(new Predicate[] {}));
 		TypedQuery<PanelEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-		List<PanelEntity> panelEntity = typedQuery.getResultList();
+		List<PanelEntity> allPanel = typedQuery.getResultList();
+		
+		List<PanelEntity> panelEntity=new ArrayList<>();
+		for (PanelEntity panel : allPanel) {
+			if(panel.isDeleted()==false) {
+				panelEntity.add(panel);
+			}
+		}
 		if (!(panelEntity.isEmpty())) {
 			List<PanelsGetAllDTO> dtoList = new ArrayList<>();
 			for (PanelEntity panel : panelEntity) {
