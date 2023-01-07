@@ -198,8 +198,8 @@ public class PanelAvailabilityController {
 	@GetMapping(value="/panel/list")
 	public ResponseEntity<SearchByFilterDTO> searchUserByFilterCriteria(
             @RequestHeader(value = "Authorization") String token,
-            @Valid @RequestParam(value = "pageSize", defaultValue = "5") int pageSize,
-            @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+            @Valid @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(value = "panelId", defaultValue = "0") int panelId,
             @RequestParam(value = "panelName", required = false) String panelName,
             @RequestParam(value = "email", required = false) String email,
@@ -209,7 +209,7 @@ public class PanelAvailabilityController {
             @RequestParam(value = "isActive", required = false) boolean isActive)
                     throws InvalidPanelException {
 
-        SearchByFilterDTO searchPanelByFilter = panelService.searchPanelByFilter(panelId, panelName, email, grade, role, type, isActive, token);
+        SearchByFilterDTO searchPanelByFilter = panelService.searchPanelByFilter(panelId, panelName, email, grade, role, type, isActive, token, pageNumber, pageSize);
         if (searchPanelByFilter != null) {
             if (searchPanelByFilter.getTotalNumberOfRecords() > 0) {
                 return new ResponseEntity<SearchByFilterDTO>(searchPanelByFilter, HttpStatus.OK);
@@ -223,6 +223,19 @@ public class PanelAvailabilityController {
  
 
     }
+	
+	@PutMapping(value = "/panel/toggle/{panelId}")
+    public ResponseEntity<String> updateIsActive(@PathVariable("panelId") int panelId,@RequestHeader(value = "Authorization") String token) {
+        String updateIsActive = panelService.updateIsActive(panelId, token);
+        if(updateIsActive!=null) {
+            return new ResponseEntity<String>("Status Updated",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Status not updated",HttpStatus.BAD_REQUEST);
+
+
+
+    }
+                   
 	
 		
 	

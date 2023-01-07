@@ -12,7 +12,7 @@ import com.zensar.pm.panel.entity.UserEntity;
 @Repository
 public interface PanelEntityRepository extends JpaRepository<PanelEntity, Integer>{
 	@Query("Select p from PanelEntity p where p.userEntity.id=?1")
-	PanelEntity findByUserId(int userId);
+	List<PanelEntity> findByUserId(int userId);
 
 	PanelEntity findByUserEntity(UserEntity userEntity);
 	

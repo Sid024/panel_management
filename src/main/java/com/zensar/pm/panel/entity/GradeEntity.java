@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "grades_master")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class GradeEntity {
 	
 	@Id
@@ -114,6 +114,7 @@ public class GradeEntity {
 	public GradeEntity() {
 		super();
 	}
+
 	
 	
 }

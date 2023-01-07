@@ -39,7 +39,9 @@ public interface PanelService {
 	public PanelDTO getAllPanel();
 
 	public SearchByFilterDTO searchPanelByFilter(int panelId, String panelName, String email, String grade, String role,
-			String type, boolean isActive, String token);
+			String type, boolean isActive, String token, int pageNumber, int pageSize);
+	
+	public String updateIsActive(int panelId, String token);
 
 
 
