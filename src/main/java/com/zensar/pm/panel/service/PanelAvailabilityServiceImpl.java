@@ -77,7 +77,6 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		PanelAvailabilityStatusEntity statusEntity = panelStatusRepo.findById(1);
 		PanelAvailabilityEntity entity = new PanelAvailabilityEntity();
 
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH-mm");
 
 		entity.setStartTime(dto.getStartTime());
 		entity.setEndTime(dto.getEndTime());
@@ -158,7 +157,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 			responseDTO.setList(dtoList);
 			return responseDTO;
 		}
-		return null;
+		throw new DuplicateStatusException();
 	}
 
 }

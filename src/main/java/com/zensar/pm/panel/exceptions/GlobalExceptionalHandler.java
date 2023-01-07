@@ -42,7 +42,7 @@ public class GlobalExceptionalHandler extends RuntimeException {
 	
 	@ExceptionHandler(value = DuplicateStatusException.class)
 	public ResponseEntity<String> duplicateStatus(DuplicateStatusException ex) {
-		return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<String>("List Empty", HttpStatus.BAD_REQUEST);
 	}
 	@ExceptionHandler(value = AssociateIdAlreadyExistsException.class)
 	public ResponseEntity<String> handleException(AssociateIdAlreadyExistsException ex) {
