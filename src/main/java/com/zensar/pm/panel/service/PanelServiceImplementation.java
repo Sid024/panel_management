@@ -43,6 +43,7 @@ import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.GradeNotFoundException;
 import com.zensar.pm.panel.exceptions.InterviewTypeNotFoundException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
+import com.zensar.pm.panel.exceptions.MatchNotFoundException;
 import com.zensar.pm.panel.exceptions.NoSuchRoleFoundException;
 import com.zensar.pm.panel.exceptions.PanelAlreadyExists;
 import com.zensar.pm.panel.exceptions.PanelCandidateRoleNotFoundException;
@@ -357,7 +358,7 @@ public class PanelServiceImplementation implements PanelService {
 			if (exportpanel.size() != 0)
 				return Convert(exportpanel, exportpanel.size());
 			else
-				throw new EmptyListException("List is Empty No records found ");
+				throw new MatchNotFoundException("List is Empty No records found ");
 		}
 
 		else
@@ -527,7 +528,7 @@ public class PanelServiceImplementation implements PanelService {
             panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
         //// changed
             panelDto.setAvailabilityStatus(entityList.get(x).getAvailablityStatusId().getAvailablityStatus());
-            panelDto.setPanelAvailabilityId(entityList.get(x).getAvailablityStatusId().getId());
+            panelDto.setPanelAvailabilityId(entityList.get(x).getId());
             panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
             //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
             panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
