@@ -180,13 +180,50 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 	@Override
 	public String post(PanelAvailDTO pa) {
+UserDTO dto2 = loginDelegate.isTokenValid(token);
+		String roleName = dto2.getRoleName();
+
+		if (roleName.equals("Practice Head")) {
+			List<PanelsGetAllDTO> emptyPanel = new ArrayList<PanelsGetAllDTO>();
+			PanelsGetAllResponseDTO dto = new PanelsGetAllResponseDTO();
+			dto.setList(emptyPanel);
+			dto.setRoleName(roleName);
+			return dto;
+
+		} else if (roleName.equals("PANEL")) {
+			UserEntity userEntity = userRepo.findByUserName(dto2.getUserName()).get(0);
+			String name = userEntity.getUserName();
+			int id = userEntity.getUserId();
+			PanelEntity entity = panelRepo.findByUserEntity(userEntity);
+			String grade = entity.getGradeEntity().getGrade();
+
+			PanelsGetAllDTO returnDTO = new PanelsGetAllDTO();
+			returnDTO.setPanelId(id);
+			returnDTO.setPanelName(name);
+			returnDTO.setPanelGrade(grade);
+
+			List<PanelsGetAllDTO> list = Arrays.asList(returnDTO);
+
+			PanelsGetAllResponseDTO dto = new PanelsGetAllResponseDTO();
+			dto.setList(list);
+			dto.setRoleName(roleName);
+			return dto;
+
+		}
+		throw new UnauthorizedUserException("Invalid User");
+	}
+
+
+	@Override
+	public String post(PanelAvailDTO pa) {
 		int panelId = pa.getPanelId();  //userId
-		PanelEntity panelsEntity = panelRepo.getPanelsDetails(panelId);
-		PanelAvailabilityStatusEntity panelAvailabilityStatusEntity = panelStatusRepo.findById(1); //.get()
-		System.out.println("---------------------------"+panelAvailabilityStatusEntity);
-		System.out.println(panelsEntity);
-		int id = panelsEntity.getId();
-		System.out.println(id);
+        PanelEntity panelsEntity = panelRepo.getPanelsDetails(panelId);
+//        System.out.println("---------------------------"+panelsEntity);
+        PanelAvailabilityStatusEntity panelAvailabilityStatusEntity = panelStatusRepo.findById(1);
+        System.out.println("----------------------"+panelAvailabilityStatusEntity);
+        System.out.println(panelsEntity);
+        int id = panelsEntity.getId();
+        System.out.println(id);
 //        PanelEntity panelsEntity = panelRepo.findById(panelId).get();
 //        int id = panelsEntity.getId();
         LocalDate fromDate = pa.getFromDate();
@@ -205,6 +242,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
         datesWithId.addAll(set);
         List<LocalDate> finalDays=new ArrayList<>();
         List<LocalDate> result=new ArrayList<>();
+        List<LocalDate> submittedDates=new ArrayList<>();
         for(int i=0;i<datesWithId.size();i++)
         {
             String strDate = datesWithId.get(i).toString();
@@ -234,13 +272,15 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 && listOfDays.contains(collect.get(i).getDayOfWeek().toString())) {
                             if(finalDays.contains(collect.get(i)))
                             {
-                                //result.add(collect.get(i));
-                                throw new DateAlreadyExistsException("Enter another date");
+                                result.add(collect.get(i));
+                                //throw new DateAlreadyExistsException("Enter another date");
+                                break;
 
  
 
                             } else {
-                            	repository.save(new PanelAvailabilityEntity(panelsEntity,collect.get(i),panelAvailabilityStatusEntity,pa.getCreatedBy(),pa.getCreatedOn(),pa.getUpdatedOn(),pa.getUpdatedBy(),pa.isDeleted(),pa.getDeletedBy(),pa.getDeletedOn(),startTime,startTime.plusHours(1)));
+                                repository.save(new PanelAvailabilityEntity(panelsEntity,collect.get(i),panelAvailabilityStatusEntity,pa.getCreatedBy(),pa.getCreatedOn(),pa.getUpdatedOn(),pa.getUpdatedBy(),pa.isDeleted(),pa.getDeletedBy(),pa.getDeletedOn(),startTime,startTime.plusHours(1)));
+                                submittedDates.add(collect.get(i));
                             startTime = startTime.plusHours(1);
                             }
                         }
@@ -256,8 +296,23 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
         else {
             throw new DateRangeException("Date should be in that week");
         }
-        System.out.println(endDate);
+        if(result.size()>0)
+        {
+            Set<LocalDate> set1 = new LinkedHashSet<>();
+            set1.addAll(submittedDates);
+            submittedDates.clear();
+            submittedDates.addAll(set1);
+            if(submittedDates.size()==0)
+            {
+            throw new DateAlreadyExistsException("for dates "+result.toString().replace("[", "").replace("]", "")+" slots has been alloted enter another date/dates ");
+            }
+            else
+            {
+                throw new DateAlreadyExistsException("for dates "+result.toString().replace("[", "").replace("]", "")+" slots has been alloted enter another date/dates and "+submittedDates.toString().replace("[", "").replace("]","")+" has been submitted successfully");
+            }
+        }
         return "Submitted Successfully";
+
 	}
 
 	@Override
