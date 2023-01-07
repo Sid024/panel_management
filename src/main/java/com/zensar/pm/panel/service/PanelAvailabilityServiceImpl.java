@@ -274,9 +274,9 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 						} else {
 							repository.save(new PanelAvailabilityEntity(panelsEntity, collect.get(i),
-									panelAvailabilityStatusEntity, pa.getCreatedBy(), pa.getCreatedOn(),
-									pa.getUpdatedOn(), pa.getUpdatedBy(), pa.isDeleted(), pa.getDeletedBy(),
-									pa.getDeletedOn(), startTime, startTime.plusHours(1)));
+									panelAvailabilityStatusEntity, pa.getCreatedBy(), pa.getCreatedOn().atStartOfDay(),
+									pa.getUpdatedOn().atStartOfDay(), pa.getUpdatedBy(), pa.isDeleted(), pa.getDeletedBy(),
+									pa.getDeletedOn().atStartOfDay(), startTime, startTime.plusHours(1)));
 							submittedDates.add(collect.get(i));
 							startTime = startTime.plusHours(1);
 						}
@@ -339,23 +339,24 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 
 	@Override
 	public PanelAvailDTO create(PanelAvailDTO pa, String token) {
-		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(token).getRoleName())) {
-			int availabilityStatusId = pa.getAvailabilityStatusId();
-			PanelAvailabilityStatusEntity panelAvailabilityStatusEntity = panelStatusRepo
-					.findById(availabilityStatusId);
-			int panelId = pa.getPanelId();
-			PanelEntity panelsEntity = panelRepo.findById(panelId).get();
-			PanelAvailabilityEntity panelAvailEntity = new PanelAvailabilityEntity(pa.getPanelsAvailabilityId(),
-					panelsEntity, pa.getDate(), pa.getStartTime(), pa.getEndTime(), panelAvailabilityStatusEntity,
-					pa.getCreatedBy(), pa.getCreatedOn(), pa.getUpdatedBy(), pa.getUpdatedOn(), pa.getDeletedBy(),
-					pa.getDeletedOn(), pa.isDeleted());
-			PanelAvailabilityEntity newPanelAvailEntity = repository.save(panelAvailEntity);
-			PanelAvailDTO newPanelAvailDto = PanelAvailConstants
-					.convertPanelAvailEntityIntoPanelAvailDto(newPanelAvailEntity);
-			return newPanelAvailDto;
-		} else {
-			throw new UnauthorizedUserException("User must be Practice Head");
-		}
+//		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(token).getRoleName())) {
+//			int availabilityStatusId = pa.getAvailabilityStatusId();
+//			PanelAvailabilityStatusEntity panelAvailabilityStatusEntity = panelStatusRepo
+//					.findById(availabilityStatusId);
+//			int panelId = pa.getPanelId();
+//			PanelEntity panelsEntity = panelRepo.findById(panelId).get();
+//			PanelAvailabilityEntity panelAvailEntity = new PanelAvailabilityEntity(pa.getPanelsAvailabilityId(),
+//					panelsEntity, pa.getDate(), pa.getStartTime(), pa.getEndTime(), panelAvailabilityStatusEntity,
+//					pa.getCreatedBy(), pa.getCreatedOn(), pa.getUpdatedBy(), pa.getUpdatedOn(), pa.getDeletedBy(),
+//					pa.getDeletedOn(), pa.isDeleted());
+//			PanelAvailabilityEntity newPanelAvailEntity = repository.save(panelAvailEntity);
+//			PanelAvailDTO newPanelAvailDto = PanelAvailConstants
+//					.convertPanelAvailEntityIntoPanelAvailDto(newPanelAvailEntity);
+//			return newPanelAvailDto;
+//		} else {
+//			throw new UnauthorizedUserException("User must be Practice Head");
+//		}
+		return null;
 	}
 
 	@Override

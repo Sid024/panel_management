@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 
 public class PanelAvailDTO {
 	
@@ -15,22 +17,28 @@ public class PanelAvailDTO {
     private String panelName; 
     private int panelId;
     private String grade;
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
     private int availabilityStatusId;
     private String createdBy;
-    private LocalDateTime createdOn;
-    private LocalDateTime updatedOn;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate createdOn;
+    //@DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate updatedOn;
     private String updatedBy;
     private boolean isDeleted;
     private String deletedBy;
-    private LocalDateTime deletedOn;
+    //@DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deletedOn;
     @NotNull
     @DateTimeFormat(pattern="HH:mm")
     private LocalTime startTime;
     @NotNull
     @DateTimeFormat(pattern="HH:mm")
     private LocalTime endTime;
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+   @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate fromDate;
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate toDate;
@@ -80,16 +88,16 @@ public class PanelAvailDTO {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
-	public LocalDateTime getCreatedOn() {
+	public LocalDate getCreatedOn() {
 		return createdOn;
 	}
-	public void setCreatedOn(LocalDateTime createdOn) {
+	public void setCreatedOn(LocalDate createdOn) {
 		this.createdOn = createdOn;
 	}
-	public LocalDateTime getUpdatedOn() {
+	public LocalDate getUpdatedOn() {
 		return updatedOn;
 	}
-	public void setUpdatedOn(LocalDateTime updatedOn) {
+	public void setUpdatedOn(LocalDate updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 	public String getUpdatedBy() {
@@ -110,10 +118,10 @@ public class PanelAvailDTO {
 	public void setDeletedBy(String deletedBy) {
 		this.deletedBy = deletedBy;
 	}
-	public LocalDateTime getDeletedOn() {
+	public LocalDate getDeletedOn() {
 		return deletedOn;
 	}
-	public void setDeletedOn(LocalDateTime deletedOn) {
+	public void setDeletedOn(LocalDate deletedOn) {
 		this.deletedOn = deletedOn;
 	}
 	public LocalTime getStartTime() {
@@ -148,8 +156,8 @@ public class PanelAvailDTO {
 	}
 	
 	public PanelAvailDTO(int panelsAvailabilityId, String panelName, int panelId, String grade, LocalDate date,
-			int availabilityStatusId, String createdBy, LocalDateTime createdOn, LocalDateTime updatedOn,
-			String updatedBy, boolean isDeleted, String deletedBy, LocalDateTime deletedOn,
+			int availabilityStatusId, String createdBy, LocalDate createdOn, LocalDate updatedOn,
+			String updatedBy, boolean isDeleted, String deletedBy, LocalDate deletedOn,
 			@NotNull LocalTime startTime, @NotNull LocalTime endTime, LocalDate fromDate, LocalDate toDate,
 			List<String> listOfDays) {
 		super();
@@ -176,8 +184,8 @@ public class PanelAvailDTO {
         super();
     }
     public PanelAvailDTO(int panelsAvailabilityId, String panelName, int panelId, String grade,
-            LocalDate date, int availabilityStatusId, String createdBy, LocalDateTime createdOn,
-            LocalDateTime updatedOn, String updatedBy, boolean isDeleted, String deletedBy, LocalDateTime deletedOn,
+            LocalDate date, int availabilityStatusId, String createdBy, LocalDate createdOn,
+            LocalDate updatedOn, String updatedBy, boolean isDeleted, String deletedBy, LocalDate deletedOn,
             @NotNull LocalTime startTime, @NotNull LocalTime endTime) {
         super();
         this.panelsAvailabilityId = panelsAvailabilityId;

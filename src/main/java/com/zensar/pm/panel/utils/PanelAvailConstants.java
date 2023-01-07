@@ -49,7 +49,7 @@ public class PanelAvailConstants {
         String panelName = userEntity.getUserName();
         int panelId = userEntity.getUserId();
         PanelDTO panelDto=new PanelDTO(panelId,panelName,panelsEntity.getContact(),grade);
-        return new PanelAvailDTO(panelAvailEntity.getId(), panelName, panelId, grade, panelAvailEntity.getDate(),availabilityStatusId ,panelAvailEntity.getCreatedBy(),panelAvailEntity.getCreatedOn(),panelAvailEntity.getUpdatedOn(),panelAvailEntity.getUpdatedBy(),panelAvailEntity.isDeleted(),panelAvailEntity.getDeletedBy(),panelAvailEntity.getDeletedOn(),panelAvailEntity.getStartTime(),panelAvailEntity.getEndTime());
+        return new PanelAvailDTO(panelAvailEntity.getId(), panelName, panelId, grade, panelAvailEntity.getDate(),availabilityStatusId ,panelAvailEntity.getCreatedBy(),panelAvailEntity.getCreatedOn().toLocalDate(),panelAvailEntity.getUpdatedOn().toLocalDate(),panelAvailEntity.getUpdatedBy(),panelAvailEntity.isDeleted(),panelAvailEntity.getDeletedBy(),panelAvailEntity.getDeletedOn().toLocalDate(),panelAvailEntity.getStartTime(),panelAvailEntity.getEndTime());
     }
 
  
