@@ -25,7 +25,7 @@ public boolean existsByDate(LocalDate date);
 
 public boolean existsByUserEntity(UserEntity userEntity);
 
-@Query(value="select availablility_date from panels_availability where panel_id=?1",nativeQuery = true)
+@Query(value="select available_date from panels_availability where panel_id=?1",nativeQuery = true)
 List<Date> getDatesWithId(int panelId);
 
 

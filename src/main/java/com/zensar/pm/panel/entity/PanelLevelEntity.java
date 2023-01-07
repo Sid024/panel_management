@@ -108,5 +108,9 @@ public class PanelLevelEntity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 	}
+	public PanelLevelEntity() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 }

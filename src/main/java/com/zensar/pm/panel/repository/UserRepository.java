@@ -29,6 +29,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 
 	boolean existsByIdNotAndEmail(int userId, String email);
 	
-	@Query(value="select * from user_entity where name=?1",nativeQuery=true)
+	@Query(value="select * from users where name=?1",nativeQuery=true)
     UserEntity getUserDetails(String UserName);
 }

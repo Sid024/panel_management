@@ -12,6 +12,7 @@ public class TimeFormatException extends RuntimeException{
 	private String message;
 	
 	public TimeFormatException(String message) {
+		super(message);
 		this.message=message;
 	}
 
