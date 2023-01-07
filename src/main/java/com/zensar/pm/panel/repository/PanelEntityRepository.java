@@ -18,7 +18,9 @@ public interface PanelEntityRepository extends JpaRepository<PanelEntity, Intege
 	
 	@Query(value="select * from panels where user_id=?1",nativeQuery=true)
     PanelEntity getPanelsDetails(int id);
-
-
-
+	
+	boolean existsByContact(String contact);
+	
+    boolean existsByIdNotAndContact(int panelId,String contact);
+    
 }

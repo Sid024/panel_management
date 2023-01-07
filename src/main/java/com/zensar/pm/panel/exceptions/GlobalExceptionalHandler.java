@@ -112,5 +112,10 @@ public class GlobalExceptionalHandler extends RuntimeException {
 	return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler(value = ContactAlreadyExistsException.class)
+    public ResponseEntity<String> exception(ContactAlreadyExistsException exception) {
+        return new ResponseEntity<String>("Contact is already in use", HttpStatus.BAD_REQUEST);
+    }
+	
 	
 }

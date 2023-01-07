@@ -36,6 +36,7 @@ import com.zensar.pm.panel.entity.RolesEntity;
 import com.zensar.pm.panel.entity.UserEntity;
 import com.zensar.pm.panel.entity.UserRolesEntity;
 import com.zensar.pm.panel.enums.Constants;
+import com.zensar.pm.panel.exceptions.ContactAlreadyExistsException;
 import com.zensar.pm.panel.exceptions.CustomNullPointerException;
 import com.zensar.pm.panel.exceptions.EmailAlreadyExistException;
 import com.zensar.pm.panel.exceptions.EmptyListException;
@@ -602,9 +603,14 @@ public class PanelServiceImplementation implements PanelService {
 		String roleName = loginDelegate.isTokenValid(token).getRoleName();
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 
-			if (panelEntityRepository.findByUserId(panelDTO.getPanelId()) == null) {
+			List<PanelEntity> panelList = panelEntityRepository.findByUserId(panelDTO.getPanelId());
+			if (panelList.size()==0) {
 				PanelEntity panelEntity = new PanelEntity();
-				panelEntity.setContact(panelDTO.getContact());
+				if(!panelEntityRepository.existsByContact(panelDTO.getContact())) {
+					panelEntity.setContact(panelDTO.getContact());
+				}else {
+					throw new ContactAlreadyExistsException("Contact Already Exists");
+				}				
 				String userName = loginDelegate.isTokenValid(token).getUserName();
 				panelEntity.setCreatedBy(userName);
 				panelEntity.setCreatedOn(LocalDateTime.now());
@@ -669,9 +675,13 @@ public class PanelServiceImplementation implements PanelService {
 		PanelEntity panelEntity = new PanelEntity();
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 			List<PanelEntity> list = panelEntityRepository.findByUserId(panelDTO.getPanelId());
-			panelEntity = list.get(0);
-			if (panelEntity != null) {
-				panelEntity.setContact(panelDTO.getContact());
+			if(list.size()>0) {
+				panelEntity = list.get(0);
+				if(!panelEntityRepository.existsByIdNotAndContact(panelEntity.getId(),panelDTO.getContact())) {
+					panelEntity.setContact(panelDTO.getContact());
+				}else {
+					throw new ContactAlreadyExistsException("Contact Already Exists");
+				}
 				String userName = loginDelegate.isTokenValid(token).getUserName();
 				panelEntity.setUpdatedBy(userName);
 				panelEntity.setUpdatedOn(LocalDateTime.now());
