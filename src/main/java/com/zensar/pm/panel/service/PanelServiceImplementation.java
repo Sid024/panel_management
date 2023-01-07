@@ -127,7 +127,6 @@ public class PanelServiceImplementation implements PanelService {
 			throw new InvalidPanelException("Panel does not exist");
 		}
 
-
 		Root<PanelEntity> rootEntity = criteriaQuery.from(PanelEntity.class);
 
 		Predicate predicateId = criteriaBuilder.and();
@@ -137,6 +136,7 @@ public class PanelServiceImplementation implements PanelService {
 		Predicate predicateRole = criteriaBuilder.and();
 		Predicate predicateType = criteriaBuilder.and();
 		Predicate predicateIsActive = criteriaBuilder.and();
+		Predicate predicateActive = criteriaBuilder.and();
 
 		if (panelId != 0) {
 			predicateId = criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId);
@@ -164,14 +164,14 @@ public class PanelServiceImplementation implements PanelService {
 			// criteriaQuery.where(predicateName);
 		}
 		if (isActive != true && !"".equals(isActive)) {
-			Predicate predicateActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
+			predicateActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
 		}
 		Predicate finalPredicate = criteriaBuilder.and(predicateId, predicateName, predicateEmail, predicateGrade,
-				predicateRole, predicateType, predicateIsActive);
+				predicateRole, predicateType, predicateIsActive, predicateActive);
 		criteriaQuery.where(finalPredicate);
 
 		TypedQuery<PanelEntity> typedQuery = entityManager.createQuery(criteriaQuery);
-		typedQuery.setFirstResult((pageNumber-1)*pageSize);
+		typedQuery.setFirstResult((pageNumber - 1) * pageSize);
 		typedQuery.setMaxResults(pageSize);
 		List<PanelEntity> panelEntityList = typedQuery.getResultList();
 		int totalNoOfRecords = panelEntityList.size();
@@ -195,36 +195,35 @@ public class PanelServiceImplementation implements PanelService {
 		}
 		return panelDtoList;
 	}
+
 	@Override
-    public String updateIsActive(int panelId, String token) {
+	public String updateIsActive(int panelId, String token) {
 		if (loginDelegate.isTokenValid(token).getRoleName().equals("PANEL")
 				|| loginDelegate.isTokenValid(token).getRoleName().equals("TA")) {
 			throw new InvalidPanelException("Panel does not exist");
 		}
-        List<PanelEntity> listPanelEntity = panelEntityRepository.findByUserId(panelId);
-        PanelEntity panelEntity = listPanelEntity.get(0);
-        UserEntity userEntity=new UserEntity();
-        UserRolesEntity userRolesEntity=new UserRolesEntity();
-        if(panelEntity.getUserEntity().getIsActive()==false) {
-            panelEntity.getUserEntity().setActive(true);
-        }
-        else {
-            panelEntity.getUserEntity().setActive(false);
-        }
-        panelEntityRepository.save(panelEntity);
-        Optional<UserEntity> opUser = userRepository.findById(panelId);
-        if(opUser.isPresent()) {
-            userEntity = opUser.get();
-        }
-        userRepository.save(userEntity);
-        List<UserRolesEntity> listUserRolesEntity = userRolesRepository.findByUserId(userEntity.getUserId());
-        userRolesEntity = listUserRolesEntity.get(0);
-        userRolesEntity.setActive(userEntity.getIsActive());
-        userRolesRepository.save(userRolesEntity);
+		List<PanelEntity> listPanelEntity = panelEntityRepository.findByUserId(panelId);
+		PanelEntity panelEntity = listPanelEntity.get(0);
+		UserEntity userEntity = new UserEntity();
+		UserRolesEntity userRolesEntity = new UserRolesEntity();
+		if (panelEntity.getUserEntity().getIsActive() == false) {
+			panelEntity.getUserEntity().setActive(true);
+		} else {
+			panelEntity.getUserEntity().setActive(false);
+		}
+		panelEntityRepository.save(panelEntity);
+		Optional<UserEntity> opUser = userRepository.findById(panelId);
+		if (opUser.isPresent()) {
+			userEntity = opUser.get();
+		}
+		userRepository.save(userEntity);
+		List<UserRolesEntity> listUserRolesEntity = userRolesRepository.findByUserId(userEntity.getUserId());
+		userRolesEntity = listUserRolesEntity.get(0);
+		userRolesEntity.setActive(userEntity.getIsActive());
+		userRolesRepository.save(userRolesEntity);
 
-
-        return "Update Successful!";
-    }
+		return "Update Successful!";
+	}
 ///////////////////////////////////////// Team 10 /////////////////////////
 	/// Update --> table need to change--> not done
 
@@ -653,10 +652,10 @@ public class PanelServiceImplementation implements PanelService {
 	@Override
 	public boolean updatePanel(PanelDTO panelDTO, String token) {
 		String roleName = loginDelegate.isTokenValid(token).getRoleName();
-		PanelEntity panelEntity=new PanelEntity();
+		PanelEntity panelEntity = new PanelEntity();
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 			List<PanelEntity> list = panelEntityRepository.findByUserId(panelDTO.getPanelId());
-			panelEntity=list.get(0);
+			panelEntity = list.get(0);
 			if (panelEntity != null) {
 				panelEntity.setContact(panelDTO.getContact());
 				String userName = loginDelegate.isTokenValid(token).getUserName();
