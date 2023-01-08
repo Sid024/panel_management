@@ -222,7 +222,7 @@ public class PanelServiceImplementation implements PanelService {
 		return "Update Successful!";
 	}
 
-///////////////////////////////////////// Team 10 /////////////////////////
+///////////////////////////////////////// /////////////////////////
 	/// Update --> table need to change--> not done
 	@Override
 	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
@@ -320,7 +320,7 @@ public class PanelServiceImplementation implements PanelService {
 						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
 			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
@@ -385,7 +385,7 @@ public class PanelServiceImplementation implements PanelService {
 
 			}
 			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
@@ -467,7 +467,7 @@ public class PanelServiceImplementation implements PanelService {
 						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
 			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
-				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewType").get("type"),
+				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
