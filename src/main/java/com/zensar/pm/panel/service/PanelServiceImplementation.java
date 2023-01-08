@@ -229,7 +229,8 @@ public class PanelServiceImplementation implements PanelService {
 			PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
 
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
+				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+		                || Constants.ROLE_PANEL.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
 			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
 
 			// PanelAvailabilityStatusEntity availabilityEntity =
