@@ -99,6 +99,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 		entity.setDate(date);
 		entity.setPanelId(panelEntity);
 		entity.setAvailablityStatusId(statusEntity);
+		entity.setUserEntity(userEntity);
 		repository.save(entity);
 
 		return dto;
