@@ -150,6 +150,16 @@ public class PanelAvailabilityController {
 		if(panelId!=null && !panelId.isEmpty())
 		{try{panelIdint=Integer.parseInt(panelId);} catch(Exception e) {throw new EmptyListException("Panel Id must Be integer");}}	
 		
+		    if(panelName!=null && !panelName.isEmpty())
+        {
+            int charcter = panelName.charAt(0);
+            if(charcter>=65 && charcter<=95 || charcter>=97 && charcter<=122)
+            {
+
+            }
+            else
+                throw new EmptyListException("Please write a proper Name");
+        }
 		
 		return panelService.SearchPanelBYFilter(panelIdint, panelName, email,
 				availabilityStatus, fromDate, toDate, role, interviewType, pageNo, pageSize,token);
