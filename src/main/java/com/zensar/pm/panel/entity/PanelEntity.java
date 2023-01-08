@@ -49,7 +49,7 @@ public class PanelEntity {
 	@Column(name = "updated_on")
 	private LocalDateTime updatedOn;
 	@Column(name = "is_deleted")
-	private boolean isDeleted;
+	private Boolean isDeleted;
 	@Column(name = "deleted_by")
 	private String deletedBy;
 	@Column(name = "deleted_on")
@@ -154,11 +154,11 @@ public class PanelEntity {
 		this.updatedOn = updatedOn;
 	}
 
-	public boolean isDeleted() {
+	public Boolean isDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean isDeleted) {
+	public void setDeleted(Boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
 

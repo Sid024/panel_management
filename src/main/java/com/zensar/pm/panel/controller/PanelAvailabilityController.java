@@ -37,6 +37,7 @@ import com.zensar.pm.panel.dto.PanelsGetAllResponseDTO;
 import com.zensar.pm.panel.dto.RoleDto;
 import com.zensar.pm.panel.dto.SearchByFilterDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
+import com.zensar.pm.panel.entity.PanelEntity;
 import com.zensar.pm.panel.exceptions.EmptyListException;
 import com.zensar.pm.panel.exceptions.InvalidPanelException;
 import com.zensar.pm.panel.export.FileExporter;
@@ -189,11 +190,11 @@ public class PanelAvailabilityController {
 	{
 	return panelService.getByAvailabilityStatus();	
 	}
-	@GetMapping(value = "/panelList")
-	public ResponseEntity<PanelDTO> getAllPanel(){
-		PanelDTO allPanel = panelService.getAllPanel();
-		return new ResponseEntity<PanelDTO>(allPanel, HttpStatus.OK);
-	}
+//	@GetMapping(value = "/panelList")
+//	public ResponseEntity<List<PanelDTO>> getAllPanel(){
+//		List<PanelDTO> allPanel = panelService.getAllPanel();
+//		return new ResponseEntity<List<PanelDTO>>(allPanel, HttpStatus.OK);
+//	}
 	
 	@GetMapping(value="/panel/list")
 	public ResponseEntity<SearchByFilterDTO> searchUserByFilterCriteria(
@@ -206,7 +207,7 @@ public class PanelAvailabilityController {
             @RequestParam(value = "grade", required = false) String grade,
             @RequestParam(value = "role", required = false) String role,
             @RequestParam(value = "type", required = false) String type,
-            @RequestParam(value = "isActive", required = false) boolean isActive)
+            @RequestParam(value = "isActive", required = false, defaultValue = "true") boolean isActive)
                     throws InvalidPanelException {
 
         SearchByFilterDTO searchPanelByFilter = panelService.searchPanelByFilter(panelId, panelName, email, grade, role, type, isActive, token, pageNumber, pageSize);

@@ -101,22 +101,17 @@ public class PanelServiceImplementation implements PanelService {
 	@Autowired
 	UserCreatedSuccessfullyMail userCreatedSuccessfullyMail;
 
-	@Override
-	public PanelDTO getAllPanel() {
-		List<UserRolesEntity> listUserRolesEntity = userRolesRepository.findByRoleId(3);
-		List<Integer> listPanelId = new ArrayList<>();
-		List<String> listPanelNames = new ArrayList<>();
-		for (UserRolesEntity userRolesEntity : listUserRolesEntity) {
-			int userId = userRolesEntity.getUserEntity().getUserId();
-			listPanelId.add(userId);
-			UserEntity userEntity = userRepository.findById(userId).get();
-			listPanelNames.add(userEntity.getUserName());
-		}
-		PanelDTO panelDto = new PanelDTO();
-		panelDto.setListPanelId(listPanelId);
-		panelDto.setListPanelNames(listPanelNames);
-		return panelDto;
-	}
+//	@Override
+//	public List<PanelDTO> getAllPanel() {
+//		List<PanelEntity> listPanelEntity = panelEntityRepository.findAll();
+//		List<PanelDTO> panelDto=new ArrayList<>();
+//		for(PanelEntity panel: listPanelEntity) {
+//			if(panel.getUserEntity()!=null) {
+//				panelDto = convertEntityListIntoDTOList(listPanelEntity);
+//			}
+//		}
+//		return panelDto;
+//	}
 
 	@Override
 	public SearchByFilterDTO searchPanelByFilter(int panelId, String panelName, String email, String grade, String role,
@@ -138,7 +133,7 @@ public class PanelServiceImplementation implements PanelService {
 		Predicate predicateRole = criteriaBuilder.and();
 		Predicate predicateType = criteriaBuilder.and();
 		Predicate predicateIsActive = criteriaBuilder.and();
-		Predicate predicateActive = criteriaBuilder.and();
+//		Predicate predicateActive = criteriaBuilder.and();
 
 		if (panelId != 0) {
 			predicateId = criteriaBuilder.equal(rootEntity.get("userEntity").get("id"), panelId);
@@ -166,17 +161,18 @@ public class PanelServiceImplementation implements PanelService {
 			// criteriaQuery.where(predicateName);
 		}
 		if (isActive != true && !"".equals(isActive)) {
-			predicateActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
+			predicateIsActive = criteriaBuilder.equal(rootEntity.get("userEntity").get("isActive"), isActive);
 		}
 		Predicate finalPredicate = criteriaBuilder.and(predicateId, predicateName, predicateEmail, predicateGrade,
-				predicateRole, predicateType, predicateIsActive, predicateActive);
+				predicateRole, predicateType, predicateIsActive);
 		criteriaQuery.where(finalPredicate);
 
 		TypedQuery<PanelEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		List<PanelEntity> resultList = typedQuery.getResultList();
 		typedQuery.setFirstResult((pageNumber - 1) * pageSize);
 		typedQuery.setMaxResults(pageSize);
 		List<PanelEntity> panelEntityList = typedQuery.getResultList();
-		int totalNoOfRecords = panelEntityList.size();
+		int totalNoOfRecords = resultList.size();
 		List<PanelDTO> convertedDtoList = convertEntityListIntoDTOList(panelEntityList);
 		SearchByFilterDTO SearchByFilterDTO = new SearchByFilterDTO();
 		SearchByFilterDTO.setPanelDtoList(convertedDtoList);

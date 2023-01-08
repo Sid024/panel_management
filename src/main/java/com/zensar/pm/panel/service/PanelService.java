@@ -19,6 +19,7 @@ import com.zensar.pm.panel.dto.InterviewTypeDTO;
 import com.zensar.pm.panel.dto.PanelAvailabilityDTO;
 import com.zensar.pm.panel.dto.ShowPanelAvailabilityListDTO;
 import com.zensar.pm.panel.entity.PanelAvailabilityEntity;
+import com.zensar.pm.panel.entity.PanelEntity;
 
 public interface PanelService {
 
@@ -36,7 +37,7 @@ public interface PanelService {
 	
 	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId, PanelAvailabilityDTO panelAvailablityDTO,String jwtToken);
 	
-	public PanelDTO getAllPanel();
+	//public List<PanelDTO> getAllPanel();
 
 	public SearchByFilterDTO searchPanelByFilter(int panelId, String panelName, String email, String grade, String role,
 			String type, boolean isActive, String token, int pageNumber, int pageSize);
