@@ -17,11 +17,11 @@ import lombok.NoArgsConstructor;
 //@AllArgsConstructor
 //@NoArgsConstructor
 @Entity
-@Table(name="interview_types")
+@Table(name = "interview_types")
 public class InterviewTypesEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
 	private String type;
 	private String createdBy;
@@ -31,60 +31,79 @@ public class InterviewTypesEntity {
 	private boolean isDeleted;
 	private String deletedBy;
 	private LocalDateTime deletedOn;
+
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public void setType(String type) {
 		this.type = type;
 	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
 	public LocalDateTime getCreatedOn() {
 		return createdOn;
 	}
+
 	public void setCreatedOn(LocalDateTime createdOn) {
 		this.createdOn = createdOn;
 	}
+
 	public String getUpdatedBy() {
 		return updatedBy;
 	}
+
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
 	public LocalDateTime getUpdatedOn() {
 		return updatedOn;
 	}
+
 	public void setUpdatedOn(LocalDateTime updatedOn) {
 		this.updatedOn = updatedOn;
 	}
+
 	public boolean isDeleted() {
 		return isDeleted;
 	}
+
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
 	public String getDeletedBy() {
 		return deletedBy;
 	}
+
 	public void setDeletedBy(String deletedBy) {
 		this.deletedBy = deletedBy;
 	}
+
 	public LocalDateTime getDeletedOn() {
 		return deletedOn;
 	}
+
 	public void setDeletedOn(LocalDateTime deletedOn) {
 		this.deletedOn = deletedOn;
 	}
+
 	public InterviewTypesEntity(int id, String type, String createdBy, LocalDateTime createdOn, String updatedBy,
 			LocalDateTime updatedOn, boolean isDeleted, String deletedBy, LocalDateTime deletedOn) {
 		super();
@@ -98,9 +117,9 @@ public class InterviewTypesEntity {
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
 	}
+
 	public InterviewTypesEntity() {
 		super();
 	}
-	
-	
+
 }

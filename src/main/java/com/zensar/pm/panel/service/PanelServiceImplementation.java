@@ -152,8 +152,7 @@ public class PanelServiceImplementation implements PanelService {
 			// criteriaQuery.where(predicateName);
 		}
 		if (type != null && !"".equals(type)) {
-			predicateType = criteriaBuilder
-					.equal(rootEntity.get("panelCandidateRolesEntity").get("interviewType").get("type"), type);
+			predicateType = criteriaBuilder.equal(rootEntity.get("interviewTypesEntity").get("type"), type);
 			// criteriaQuery.where(predicateName);
 		}
 		if (isActive != false && !"".equals(isActive)) {
@@ -187,8 +186,8 @@ public class PanelServiceImplementation implements PanelService {
 			PanelDTO panelDto = new PanelDTO(panelEntity.getUserEntity().getUserId(),
 					panelEntity.getUserEntity().getUserName(), panelEntity.getUserEntity().getEmail(),
 					panelEntity.getContact(), panelEntity.getGradeEntity().getGrade(),
-					panelEntity.getPanelCandidateRolesEntity().getRole(), panelEntity.getInterviewType().getType(),
-					panelEntity.getUserEntity().getIsActive());
+					panelEntity.getPanelCandidateRolesEntity().getRole(),
+					panelEntity.getInterviewTypesEntity().getType(), panelEntity.getUserEntity().getIsActive());
 			panelDtoList.add(panelDto);
 		}
 		return panelDtoList;
@@ -222,61 +221,51 @@ public class PanelServiceImplementation implements PanelService {
 
 		return "Update Successful!";
 	}
+
 ///////////////////////////////////////// Team 10 /////////////////////////
 	/// Update --> table need to change--> not done
-    @Override
-    public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
-            PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
+	@Override
+	public PanelAvailabilityDTO updatePanelAvailability(Integer panelAvailablityId,
+			PanelAvailabilityDTO panelAvailablityDTO, String jwtToken) {
 
- 
+		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
+				|| Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
+			PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
 
-        if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())
-                || Constants.TALENT_ACQUISITION.equalsIgnoreCase(loginDelegate.isTokenValid(jwtToken).getRoleName())) {
-            PanelAvailabilityEntity existingPanel = repo.findById(panelAvailablityId).orElse(null);
+			// PanelAvailabilityStatusEntity availabilityEntity =
+			// panelAvailabilityStatusRepo
+			// .findById(panelAvailablityDTO.getAvailablityStatusId());
+			if (existingPanel == null)
+				throw new InvalidPanelException("Panel not found");
+			else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
+				throw new CustomNullPointerException("Empty value! enter the value");
 
-            //PanelAvailabilityStatusEntity availabilityEntity = panelAvailabilityStatusRepo
-            //        .findById(panelAvailablityDTO.getAvailablityStatusId());
-            if (existingPanel == null)
-                throw new InvalidPanelException("Panel not found");
-            else if (panelAvailablityDTO.getStartTime() == null || panelAvailablityDTO.getEndTime() == null)
-                throw new CustomNullPointerException("Empty value! enter the value");
+			else {
+				existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
+				existingPanel.setUpdatedOn(LocalDateTime.now());
+				existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
+				existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
+				if (panelAvailablityDTO.getAvailablityStatusId() != 0)
+					existingPanel.setAvailablityStatusId(
+							panelAvailabilityStatusRepo.findById(panelAvailablityDTO.getAvailablityStatusId()));
+				else {
+					existingPanel.setAvailablityStatusId(existingPanel.getAvailablityStatusId());
 
- 
+				}
 
-            else {
-                existingPanel.setUpdatedBy(loginDelegate.isTokenValid(jwtToken).getUserName());
-                existingPanel.setUpdatedOn(LocalDateTime.now());
-                existingPanel.setStartTime(panelAvailablityDTO.getStartTime());
-                existingPanel.setEndTime(panelAvailablityDTO.getEndTime());
-                if(panelAvailablityDTO.getAvailablityStatusId()!=0)
-                existingPanel.setAvailablityStatusId(panelAvailabilityStatusRepo.findById(panelAvailablityDTO.getAvailablityStatusId()));
-                else
-                {existingPanel.setAvailablityStatusId(existingPanel.getAvailablityStatusId());    
+				PanelAvailabilityEntity save = repo.save(existingPanel);
 
-                }
+				return null;
 
- 
+			}
 
+		}
 
-                PanelAvailabilityEntity save = repo.save(existingPanel);
+		else {
+			throw new UnauthorizedUserException("Invalid User");
+		}
+	}
 
- 
-
-                return null;
-
- 
-
-            }
-
-        }
-
- 
-
-        else {
-            throw new UnauthorizedUserException("Invalid User");
-        }
-    }
-	
 	/// For Export --> role not done
 
 	@Override
@@ -513,25 +502,25 @@ public class PanelServiceImplementation implements PanelService {
 	public List<PanelAvailabilityListDTO> Convert(List<PanelAvailabilityEntity> entityList, int size) {
 		List<PanelAvailabilityListDTO> panelDtoList = new ArrayList<>();
 
-        for (int x = 0; x < size; x++) {
-            PanelAvailabilityListDTO panelDto = new PanelAvailabilityListDTO();
-            panelDto.setDate(entityList.get(x).getDate());
-            panelDto.setPanelId(entityList.get(x).getUserEntity().getUserId());
-            panelDto.setContact(entityList.get(x).getPanelId().getContact());
-            panelDto.setEmail(entityList.get(x).getPanelId().getUserEntity().getEmail());
-            panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
-            panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewType().getType());
-            panelDto.setSlotTime(entityList.get(x).getStartTime()+"-"+entityList.get(x).getEndTime());
-        //// changed
-            panelDto.setAvailabilityStatus(entityList.get(x).getAvailablityStatusId().getAvailablityStatus());
-            panelDto.setPanelAvailabilityId(entityList.get(x).getId());
-            panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
-            //panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
-            panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
-            panelDto.setFromTime(entityList.get(x).getStartTime());
-            panelDto.setToTime(entityList.get(x).getEndTime());
-            panelDtoList.add(panelDto);
-        }
+		for (int x = 0; x < size; x++) {
+			PanelAvailabilityListDTO panelDto = new PanelAvailabilityListDTO();
+			panelDto.setDate(entityList.get(x).getDate());
+			panelDto.setPanelId(entityList.get(x).getUserEntity().getUserId());
+			panelDto.setContact(entityList.get(x).getPanelId().getContact());
+			panelDto.setEmail(entityList.get(x).getPanelId().getUserEntity().getEmail());
+			panelDto.setPanelName(entityList.get(x).getPanelId().getUserEntity().getUserName());
+			panelDto.setInterviewType(entityList.get(x).getPanelId().getInterviewTypesEntity().getType());
+			panelDto.setSlotTime(entityList.get(x).getStartTime() + "-" + entityList.get(x).getEndTime());
+			//// changed
+			panelDto.setAvailabilityStatus(entityList.get(x).getAvailablityStatusId().getAvailablityStatus());
+			panelDto.setPanelAvailabilityId(entityList.get(x).getId());
+			panelDto.setGradeId(entityList.get(x).getPanelId().getGradeEntity().getGrade());
+			// panelDto.setRole(entityList.get(x).getPanelId().getRoleType().getRoleName());
+			panelDto.setRole(entityList.get(x).getPanelId().getPanelCandidateRolesEntity().getRole());
+			panelDto.setFromTime(entityList.get(x).getStartTime());
+			panelDto.setToTime(entityList.get(x).getEndTime());
+			panelDtoList.add(panelDto);
+		}
 		return panelDtoList;
 	}
 
@@ -601,13 +590,13 @@ public class PanelServiceImplementation implements PanelService {
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 
 			List<PanelEntity> panelList = panelEntityRepository.findByUserId(panelDTO.getPanelId());
-			if (panelList.size()==0) {
+			if (panelList.size() == 0) {
 				PanelEntity panelEntity = new PanelEntity();
-				if(!panelEntityRepository.existsByContact(panelDTO.getContact())) {
+				if (!panelEntityRepository.existsByContact(panelDTO.getContact())) {
 					panelEntity.setContact(panelDTO.getContact());
-				}else {
+				} else {
 					throw new ContactAlreadyExistsException("Contact Already Exists");
-				}				
+				}
 				String userName = loginDelegate.isTokenValid(token).getUserName();
 				panelEntity.setCreatedBy(userName);
 				panelEntity.setCreatedOn(LocalDateTime.now());
@@ -643,7 +632,7 @@ public class PanelServiceImplementation implements PanelService {
 				if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
 					InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId())
 							.get();
-					panelEntity.setInterviewType(findByTypeId);
+					panelEntity.setInterviewTypesEntity(findByTypeId);
 				} else {
 					throw new InterviewTypeNotFoundException("Interview Type not found");
 				}
@@ -672,11 +661,11 @@ public class PanelServiceImplementation implements PanelService {
 		PanelEntity panelEntity = new PanelEntity();
 		if (Constants.ROLE_PRACTICE_HEAD.equalsIgnoreCase(roleName)) {
 			List<PanelEntity> list = panelEntityRepository.findByUserId(panelDTO.getPanelId());
-			if(list.size()>0) {
+			if (list.size() > 0) {
 				panelEntity = list.get(0);
-				if(!panelEntityRepository.existsByIdNotAndContact(panelEntity.getId(),panelDTO.getContact())) {
+				if (!panelEntityRepository.existsByIdNotAndContact(panelEntity.getId(), panelDTO.getContact())) {
 					panelEntity.setContact(panelDTO.getContact());
-				}else {
+				} else {
 					throw new ContactAlreadyExistsException("Contact Already Exists");
 				}
 				String userName = loginDelegate.isTokenValid(token).getUserName();
@@ -708,7 +697,7 @@ public class PanelServiceImplementation implements PanelService {
 				if (interviewTypeRepository.existsById(panelDTO.getInterviewTypeId())) {
 					InterviewTypesEntity findByTypeId = interviewTypeRepository.findById(panelDTO.getInterviewTypeId())
 							.get();
-					panelEntity.setInterviewType(findByTypeId);
+					panelEntity.setInterviewTypesEntity(findByTypeId);
 				} else {
 					throw new InterviewTypeNotFoundException("Interview Type not found");
 				}

@@ -56,7 +56,7 @@ public class PanelEntity {
 	private LocalDateTime deletedOn;
 	@OneToOne(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "type_id") // FK column
-	private InterviewTypesEntity interviewType;
+	private InterviewTypesEntity interviewTypesEntity;
 
 	@JsonIgnore
 	@OneToMany(cascade = { CascadeType.ALL }, fetch = FetchType.LAZY, mappedBy = "panelEntity")
@@ -178,18 +178,18 @@ public class PanelEntity {
 		this.deletedOn = deletedOn;
 	}
 
-	public InterviewTypesEntity getInterviewType() {
-		return interviewType;
+	public InterviewTypesEntity getInterviewTypesEntity() {
+		return interviewTypesEntity;
 	}
 
-	public void setInterviewType(InterviewTypesEntity interviewType) {
-		this.interviewType = interviewType;
+	public void setInterviewTypesEntity(InterviewTypesEntity interviewTypesEntity) {
+		this.interviewTypesEntity = interviewTypesEntity;
 	}
 
 	public PanelEntity(int id, UserEntity userEntity, String contact, GradeEntity gradeEntity,
 			PanelLevelEntity panelLevelEntity, PanelCandidateRolesEntity panelCandidateRolesEntity, String remark,
 			String createdBy, LocalDateTime createdOn, String updatedBy, LocalDateTime updatedOn, boolean isDeleted,
-			String deletedBy, LocalDateTime deletedOn, InterviewTypesEntity interviewType) {
+			String deletedBy, LocalDateTime deletedOn, InterviewTypesEntity interviewTypesEntity) {
 		super();
 		this.id = id;
 		this.userEntity = userEntity;
@@ -205,7 +205,7 @@ public class PanelEntity {
 		this.isDeleted = isDeleted;
 		this.deletedBy = deletedBy;
 		this.deletedOn = deletedOn;
-		this.interviewType = interviewType;
+		this.interviewTypesEntity = interviewTypesEntity;
 	}
 
 }
