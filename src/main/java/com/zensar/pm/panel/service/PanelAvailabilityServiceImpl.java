@@ -258,7 +258,7 @@ public class PanelAvailabilityServiceImpl implements PanelAvailabilityService {
 //        timeSet.addAll(timeWithId);
 //        timeWithId.clear();
 //        timeWithId.addAll(timeSet);
-		while (fromDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
+		while (fromDate.getDayOfWeek() != DayOfWeek.SATURDAY) {
 			fromDate = fromDate.plusDays(1);
 		}
 		LocalDate date2 = fromDate;
