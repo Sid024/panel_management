@@ -315,16 +315,16 @@ public class PanelServiceImplementation implements PanelService {
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),
 						"%" + panelName + "%"));
 
-			if (role != null && !role.isEmpty() && !role.equals("Select Roles"))
+			if (role != null && !role.isEmpty() && !role.equals(" Select Roles"))
 				predicates.add(criteriaBuilder
 						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
-			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals(" Select Interview Type"))
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
-					&& !availabilityStatus.equals("Select Availability Status"))
+					&& !availabilityStatus.equals(" Select Availability Status"))
 				predicates.add(
 						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
 								"%" + availabilityStatus + "%"));
@@ -384,12 +384,12 @@ public class PanelServiceImplementation implements PanelService {
 					predicates.add(criteriaBuilder.lessThanOrEqualTo(rootEntity.<LocalDate>get("date"), toDate));
 
 			}
-			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals(" Select Interview Type"))
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
-					&& !availabilityStatus.equals("Select Availability Status"))
+					&& !availabilityStatus.equals(" Select Availability Status"))
 				predicates.add(
 						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
 								"%" + availabilityStatus + "%"));
@@ -462,16 +462,16 @@ public class PanelServiceImplementation implements PanelService {
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("userEntity").get("userName"),
 						"%" + panelName + "%"));
 
-			if (role != null && !role.isEmpty() && !role.equals("Select Roles"))
+			if (role != null && !role.isEmpty() && !role.equals(" Select Roles"))
 				predicates.add(criteriaBuilder
 						.like(rootEntity.get("panelEntity").get("panelCandidateRolesEntity").get("role"), role));
 
-			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals("Select Interview Type"))
+			if (interviewType != null && !interviewType.isEmpty() && !interviewType.equals(" Select Interview Type"))
 				predicates.add(criteriaBuilder.like(rootEntity.get("panelEntity").get("interviewTypesEntity").get("type"),
 						"%" + interviewType + "%"));
 
 			if (availabilityStatus != null && !availabilityStatus.isEmpty()
-					&& !availabilityStatus.equals("Select Availability Status"))
+					&& !availabilityStatus.equals(" Select Availability Status"))
 				predicates.add(
 						criteriaBuilder.like(rootEntity.get("panelAvailabilityStatusEntity").get("availablityStatus"),
 								"%" + availabilityStatus + "%"));
@@ -537,7 +537,10 @@ public class PanelServiceImplementation implements PanelService {
 			statusDTO.setAvailabilityStatusId(p.getId());
 			dtoList.add(statusDTO);
 		}
-		dtoList.add(new PanelAvailabilityStatusDTO(0, "Select Availability Status"));
+		dtoList.add(new PanelAvailabilityStatusDTO(0, " Select Availability Status"));
+		 dtoList.sort((o1, o2)
+	                -> o1.getAvailabilityStatus().compareTo(
+	                    o2.getAvailabilityStatus()));
 		return dtoList;
 	}
 
@@ -557,8 +560,10 @@ public class PanelServiceImplementation implements PanelService {
 			roleDto.setRoleString(x.getRole());
 			roleDToList.add(roleDto);
 		}
-		roleDToList.add(new RoleDto("Select Roles", 0));
-
+		roleDToList.add(new RoleDto(" Select Roles", 0));
+		roleDToList.sort((o1, o2)
+                -> o1.getRoleString().compareTo(
+                    o2.getRoleString()));
 		return roleDToList;
 	}
 
@@ -577,8 +582,10 @@ public class PanelServiceImplementation implements PanelService {
 			roleDto.setInterviewID(x.getId());
 			interviewDToList.add(roleDto);
 		}
-		interviewDToList.add(new InterviewTypeDTO("Select Interview Type", 0));
-
+		interviewDToList.add(new InterviewTypeDTO(" Select Interview Type", 0));
+        interviewDToList.sort((o1, o2)
+                -> o1.getInterviewType().compareTo(
+                    o2.getInterviewType()));
 		return interviewDToList;
 	}
 //////////////////////////////////////Team 10/////////////////////////////////////////
