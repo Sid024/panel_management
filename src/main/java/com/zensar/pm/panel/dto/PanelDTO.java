@@ -194,4 +194,19 @@ public class PanelDTO {
 		this.grade = grade;
 	}
 
+	public PanelDTO(int panelId, String panelName, String email, String contact, String grade, String panelRoles,
+			String interviewType, boolean isActive, int interviewTypeId, int gradeId, int panelRoleId ) {
+		this.panelId = panelId;
+		this.panelName = panelName;
+		this.email=email;
+		this.contact = contact;
+		this.grade = grade;
+		this.panelRoles=panelRoles;
+		this.interviewType=interviewType;
+		this.isActive=isActive;
+		this.interviewTypeId=interviewTypeId;
+		this.gradeId=gradeId;
+		this.panelRoleId=panelRoleId;
+	}
+
 }

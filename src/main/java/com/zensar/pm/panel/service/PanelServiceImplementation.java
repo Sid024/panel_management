@@ -119,8 +119,7 @@ public class PanelServiceImplementation implements PanelService {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<PanelEntity> criteriaQuery = criteriaBuilder.createQuery(PanelEntity.class);
-		if (loginDelegate.isTokenValid(token).getRoleName().equals("PANEL")
-				|| loginDelegate.isTokenValid(token).getRoleName().equals("TA")) {
+		if (loginDelegate.isTokenValid(token).getRoleName().equals("PANEL")) {
 			throw new InvalidPanelException("Panel does not exist");
 		}
 
@@ -187,7 +186,7 @@ public class PanelServiceImplementation implements PanelService {
 					panelEntity.getUserEntity().getUserName(), panelEntity.getUserEntity().getEmail(),
 					panelEntity.getContact(), panelEntity.getGradeEntity().getGrade(),
 					panelEntity.getPanelCandidateRolesEntity().getRole(),
-					panelEntity.getInterviewTypesEntity().getType(), panelEntity.getUserEntity().getIsActive());
+					panelEntity.getInterviewTypesEntity().getType(), panelEntity.getUserEntity().getIsActive(), panelEntity.getInterviewTypesEntity().getId(), panelEntity.getGradeEntity().getId(), panelEntity.getPanelCandidateRolesEntity().getId());
 			panelDtoList.add(panelDto);
 		}
 		return panelDtoList;
